@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ user.firstname }}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
+
+        <div class="card w-full max-w-md bg-base-300 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl font-bold justify-center">
+                    Profil
+                </h2>
+
+                {% if app.user == user %}
+                    {% if not user.verified %}
+                        <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2">
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <span class="font-bold">Attention ! Votre compte n'est pas vérifié !</span>
+                            </div>
+                            <a href="{{ path('app_resend_verify_email') }}" class="btn btn-active w-full">
+                                Renvoyer l'email de vérification
+                            </a>
+                        </div>
+                    {% else %}
+                        <div role="alert" class="alert alert-info alert-soft flex flex-col items-start gap-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-check"></i>
+                                <span class="font-bold">Compte vérifié !</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="flex flex-col items-center justify-center">
+                    <fieldset class="fieldset w-full">
+                        <legend class="fieldset-legend">Prénom</legend>
+                        <label>
+                            <input type="text" class="input w-full" value="{{ user.firstname }}" disabled/>
+                        </label>
+                    </fieldset>
+                    <fieldset class="fieldset w-full">
+                        <legend class="fieldset-legend">Nom</legend>
+                        <label>
+                            <input type="text" class="input w-full" value="{{ user.lastname }}" disabled/>
+                        </label>
+                    </fieldset>
+                    <fieldset class="fieldset w-full">
+                        <legend class="fieldset-legend">Email</legend>
+                        <label>
+                            <input type="text" class="input w-full" value="{{ user.email }}" disabled/>
+                        </label>
+                    </fieldset>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
