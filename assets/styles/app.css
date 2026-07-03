@@ -1,5 +1,14 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
-body {
-    background-color: skyblue;
+@theme {
+    --color-back: #261447;
+    --color-front: #FFCAB1;
+    --color-middle: #82A7A6;
+    --color-middle2: #0D5C63;
+    --color-middle3: #A28497;
+    --font-roboto: 'Roboto', sans-serif;
+    --font-montserrat: 'Montserrat', sans-serif;
+    --font-nunito: 'Nunito', sans-serif;
+    --font-pacifico: 'Pacifico';
 }
