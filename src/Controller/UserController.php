@@ -6,15 +6,24 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_USER")]
 final class UserController extends AbstractController
 {
-    #[Route('/profil', name: 'user_profil')]
-    public function profil(#[CurrentUser] User $user): Response
+    #[Route('/user/{user}/profil', name: 'user_profil')]
+    public function profil(?User $user): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        if (!$user) {
+            $this->addFlash('warning', 'L\'utilisateur n\'existe pas');
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('user/profil.html.twig', [
+            'user' => $user,
         ]);
     }
+
+
+
+
 }
