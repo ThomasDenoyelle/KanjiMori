@@ -9,6 +9,11 @@
             <div class="card-body">
                 <h2 class="card-title text-2xl font-bold justify-center">
                     Profil
+                    {% if app.user == user and user.verified %}
+                        <a href="{{ path('user_update') }}">
+                            <i class="fa-solid fa-pen-to-square text-info hover:text-primary duration-200 transition-colors"></i>
+                        </a>
+                   {% endif%}
                 </h2>
 
                 {% if app.user == user %}
