@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -50,7 +51,7 @@ class RegistrationController extends AbstractController
                 new TemplatedEmail()
                     ->from(new Address('mailer@exemple.com', 'Kanji App'))
                     ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Veuillez confirmer votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
@@ -79,12 +80,34 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre adresse email a bien été vérifiée !');
+        return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
+    }
 
-        return $this->redirectToRoute('app_register');
+    #[Route('/resend-verify-email', name: 'app_resend_verify_email')]
+    public function resendVerifyEmail(#[CurrentUser] User $user): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($user->isVerified()) {
+            $this->addFlash('info', 'Votre compte est déjà vérifié.');
+            return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
+        }
+
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            new TemplatedEmail()
+                ->from(new Address('mailer@exemple.com', 'Kanji App'))
+                ->to((string) $user->getEmail())
+                ->subject('Veuillez confirmer votre email')
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+        );
+
+        $this->addFlash('success', 'Un nouvel email de vérification vous a été envoyé.');
+
+        return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
     }
 }
