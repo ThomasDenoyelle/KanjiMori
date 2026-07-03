@@ -1,50 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion - Kanjis{% endblock %}
 
 {% block body %}
-    <div class="min-h-screen flex items-center justify-center bg-base-200 p-4">
-        <div class="card w-full max-w-sm shadow-2xl bg-base-100">
-            <div class="card-body">
-                <h1 class="card-title text-2xl font-bold justify-center mb-6">Connexion</h1>
+    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
 
-                <form method="post">
+        <div class="card w-full max-w-md bg-base-200 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl font-bold justify-center mb-4">Connexion</h2>
+
+                <form method="post" class="flex flex-col gap-4">
+
+                    {# Gestion des erreurs de connexion #}
                     {% if error %}
-                        <div class="alert alert-error mb-4 text-sm shadow-sm">
+                        <div class="alert alert-error shadow-sm text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
                         </div>
                     {% endif %}
 
+                    {# Message si l'utilisateur est déjà connecté #}
                     {% if app.user %}
-                        <div class="alert alert-info mb-4 text-sm shadow-sm">
+                        <div class="alert alert-info shadow-sm text-sm">
                             <span>Connecté en tant que {{ app.user.userIdentifier }}</span>
-                            <a href="{{ logout_path() }}" class="btn btn-sm">Déconnexion</a>
+                            <a href="{{ logout_path() }}" class="btn btn-sm btn-ghost">Déconnexion</a>
                         </div>
                     {% endif %}
 
-                    <div class="form-control mb-4">
+                    {# Champ Email #}
+                    <div class="form-control">
                         <label for="username" class="label">
-                            <span class="label-text">Adresse email</span>
+                            <span class="label-text font-semibold">Adresse email</span>
                         </label>
                         <input type="email" value="{{ last_username }}" name="_username" id="username" class="input input-bordered w-full" autocomplete="email" required autofocus>
                     </div>
 
-                    <div class="form-control mb-6">
+                    {# Champ Mot de passe #}
+                    <div class="form-control">
                         <label for="password" class="label">
-                            <span class="label-text">Mot de passe</span>
+                            <span class="label-text font-semibold">Mot de passe</span>
                         </label>
                         <input type="password" name="_password" id="password" class="input input-bordered w-full" autocomplete="current-password" required>
                     </div>
 
-                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <div class="form-control mt-2">
+                    {# Bouton de soumission #}
+                    <div class="card-actions justify-end mt-4">
                         <button class="btn btn-primary w-full" type="submit">
                             Se connecter
                         </button>
                     </div>
                 </form>
+
+                {# Lien vers l'inscription #}
+                <div class="text-center mt-4">
+                    <a href="{{ path('app_register') }}" class="link link-hover text-sm text-base-content/70">Pas encore de compte ? Inscris-toi</a>
+                </div>
             </div>
         </div>
     </div>
