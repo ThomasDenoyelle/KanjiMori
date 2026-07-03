@@ -22,9 +22,10 @@ class Question
     #[ORM\Column(length: 255)]
     private ?string $translation = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'questions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Quiz $quiz = null;
+
 
     public function getId(): ?int
     {
