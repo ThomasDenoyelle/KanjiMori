@@ -18,7 +18,101 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="flex flex-col min-h-screen font-nunito">
+        <div class="navbar bg-base-300 shadow-lg">
+            <div class="navbar-start">
+                <div class="dropdown">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path> </svg>
+                    </div>
+                    <ul
+                        tabindex="-1"
+                        class="menu dropdown-content bg-neutral rounded-box z-1 mt-6 w-52 p-2 shadow">
+                        <li><a href="{{ path('home') }}">Home</a></li>
+                        <li>
+                            <details>
+                                <summary>Social</summary>
+                                <ul class="bg-neutral text-neutral-content/80 p-2">
+                                    <li><a href="">Fil de publications</a></li>
+                                    <li><a href="#">Messagerie</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary>Documents</summary>
+                                <ul class="bg-neutral text-neutral-content/80 p-2">
+                                    <li><a href="">Notes</a></li>
+                                    <li><a href="#">Projets</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary>Administration</summary>
+                                <ul class="bg-neutral text-neutral-content/80 p-2">
+                                    <li><a href="">Types de notes</a></li>
+                                    <li><a href="#">Paramètrage</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="navbar-center">
+                <a class="btn btn-ghost text-xl">{{ app_name }}</a>
+            </div>
+            <div class="navbar-end pe-2 gap-2">
+
+            </div>
+        </div>
+        {# -- navbar end -- #}
+
+        {# -- flashbag -- #}
+        <div class="toast toast-top toast-end z-50 mt-16">
+            {% for label, messages in app.flashes %}
+
+                {% set alert_class = 'alert-info' %}
+                {% set icon = 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' %}
+
+                {% if label == 'success' %}
+                    {% set alert_class = 'alert-success text-success-content' %}
+                    {% set icon = 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' %}
+                {% elseif label == 'error' or label == 'danger' %}
+                    {% set alert_class = 'alert-error text-error-content' %}
+                    {% set icon = 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z' %}
+                {% elseif label == 'warning' %}
+                    {% set alert_class = 'alert-warning text-warning-content' %}
+                    {% set icon = 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' %}
+                {% endif %}
+
+                {% for message in messages %}
+                    <div class="alert {{ alert_class }} shadow-lg mb-2 flex items-center transition-opacity duration-500 flash-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ icon }}"></path></svg>
+                        <span class="font-medium">{{ message }}</span>
+                        <button class="btn btn-sm btn-ghost btn-circle ml-auto" onclick="this.closest('.alert').remove()">✕</button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {# -- flashbag end -- #}
+
+        {# -- content -- #}
+        <div class="container mx-auto p-2 bg-base grow">
+            {% block body %}{% endblock %}
+        </div>
+        {# -- content end -- #}
+
+        {# -- footer -- #}
+        <footer class="bg-base-300 text-white flex justify-around items-center">
+            <div>
+                <p>{{ app_name }}</p>
+            </div>
+            <div>
+
+            </div>
+        </footer>
+        {# -- footer end -- #}
+
     </body>
 </html>
