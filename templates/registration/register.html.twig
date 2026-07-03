@@ -1,23 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="min-h-screen flex items-center justify-center bg-base-200 p-4">
 
-    <h1>Register</h1>
+        <div class="card w-full max-w-md bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl font-bold justify-center mb-4">Créer un compte</h2>
 
-    {{ form_errors(registrationForm) }}
+                {% for flash_error in app.flashes('verify_email_error') %}
+                    <div class="alert alert-error shadow-lg mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{{ flash_error }}</span>
+                    </div>
+                {% endfor %}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-4'}}) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <div class="form-control">
+                    {{ form_label(registrationForm.firstname, 'Prénom', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.firstname, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.firstname) }}</div>
+                </div>
+
+                <div class="form-control">
+                    {{ form_label(registrationForm.lastname, 'Nom', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.lastname, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.lastname) }}</div>
+                </div>
+
+                <div class="form-control">
+                    {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.email, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.email) }}</div>
+                </div>
+
+                <div class="form-control">
+                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.plainPassword) }}</div>
+                </div>
+
+                <div class="form-control mt-2">
+                    <label class="label cursor-pointer justify-start gap-4">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'checkbox checkbox-primary'}}) }}
+                        <span class="label-text">J'accepte les conditions d'utilisation</span>
+                    </label>
+                    <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <button type="submit" class="btn btn-primary w-full">M'inscrire</button>
+                </div>
+
+                {{ form_end(registrationForm) }}
+
+                <div class="text-center mt-4">
+                    <a href="{{ path('app_login') }}" class="link link-hover text-sm text-base-content/70">Déjà un compte ? Connecte-toi</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
