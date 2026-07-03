@@ -22,15 +22,23 @@ services:
   database:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+        POSTGRES_DB: ${DB_NAME}
+        POSTGRES_USER: ${DB_USER}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     env_file:
       - .env.local
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+        - "8025:8025"
+        - "1025:1025"
+    environment:
+        MP_MAX_MESSAGES: 5000
 
 volumes:
   db-data:
