@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Quiz{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4">
+        <div class="card w-full max-w-3xl bg-base-300 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl font-bold justify-center mb-2">Créer un Quiz</h2>
+
+                {{ include('quiz/_form.html.twig', {form: form}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
