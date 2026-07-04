@@ -1,0 +1,78 @@
+{{ form_start(form) }}
+
+<div class="mb-2">
+    {{ form_label(form.title, 'Titre du Quiz', {'label_attr': {'class': 'label font-bold text-lg'}}) }}
+    {{ form_widget(form.title, {'attr': {'class': 'input input-bordered w-full'}}) }}
+    <div class="text-error text-sm mt-1">{{ form_errors(form.title) }}</div>
+</div>
+
+<div class="divider">Questions</div>
+
+{% set questionPrototype %}
+    <tr class="hover border-b border-base-300">
+        <td class="p-2 font-bold text-center text-base-content/50 before:content-[counter(question)] [counter-increment:question]"></td>
+
+        <td class="p-2">
+            {{ form_widget(form.questions.vars.prototype.kanji, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+        </td>
+        <td class="p-2">
+            {{ form_widget(form.questions.vars.prototype.reading, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+        </td>
+        <td class="p-2">
+            {{ form_widget(form.questions.vars.prototype.translation, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+        </td>
+        <td class="action-cell text-right w-16 p-2"></td>
+    </tr>
+{% endset %}
+
+<div
+    data-controller="collection"
+    data-collection-allow-add-value="true"
+    data-collection-allow-delete-value="true"
+    data-collection-button-add-html-value='<button type="button" class="btn btn-secondary w-full mt-4">➕ Ajouter une question</button>'
+    data-collection-button-delete-html-value='<button type="button" class="btn btn-error btn-sm btn-square">🗑️</button>'
+    data-collection-prototype-value="{{ questionPrototype|e('html_attr') }}"
+>
+
+    <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 shadow-sm">
+        <table class="table table-fixed w-full">
+            <thead class="bg-base-200">
+            <tr>
+                <th class="p-4 w-12 text-center">N°</th>
+                <th class="p-4">Kanji</th>
+                <th class="p-4">Lecture</th>
+                <th class="p-4">Traduction</th>
+                <th class="p-4 w-16"></th>
+            </tr>
+            </thead>
+
+            <tbody data-collection-target="collection" class="[counter-reset:question]">
+            {% for questionForm in form.questions %}
+                <tr class="hover border-b border-base-300">
+                    <td class="p-2 font-bold text-center text-base-content/50 before:content-[counter(question)] [counter-increment:question]"></td>
+
+                    <td class="p-2">
+                        {{ form_widget(questionForm.kanji, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+                    </td>
+                    <td class="p-2">
+                        {{ form_widget(questionForm.reading, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+                    </td>
+                    <td class="p-2">
+                        {{ form_widget(questionForm.translation, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
+                    </td>
+                    <td class="action-cell text-right w-16 p-2"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% do form.questions.setRendered() %}
+</div>
+
+<div class="card-actions justify-end mt-8">
+    <a href="{{ path('quiz_list') }}" class="btn btn-ghost">Annuler</a>
+    <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer le Quiz') }}</button>
+</div>
+
+{{ form_end(form) }}
