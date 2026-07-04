@@ -39,7 +39,7 @@ final class QuizController extends AbstractController
             $entityManager->persist($quiz);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Votre quiz a bien été créé avec ses questions !');
+            $this->addFlash('success', 'Votre quiz a bien été créé avec ses questions');
             return $this->redirectToRoute('quiz_list');
         }
 
@@ -47,4 +47,29 @@ final class QuizController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/quiz/{quiz}/update', name: 'quiz_update')]
+    public function update(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?Quiz $quiz): Response
+    {
+        if (!$quiz || $quiz->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée ou quiz introuvable !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        $form = $this->createForm(QuizType::class, $quiz);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre quiz a bien été modifié');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        return $this->render('quiz/update.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+
+
 }
