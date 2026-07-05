@@ -141,5 +141,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="idiomorph" level="application" />
+    <orderEntry type="library" name="simple-datatables" level="application" />
   </component>
 </module>
