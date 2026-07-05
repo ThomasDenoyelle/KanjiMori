@@ -29,8 +29,8 @@
     data-controller="collection"
     data-collection-allow-add-value="true"
     data-collection-allow-delete-value="true"
-    data-collection-button-add-html-value='<button type="button" class="btn btn-secondary w-full mt-4">➕ Ajouter une question</button>'
-    data-collection-button-delete-html-value='<button type="button" class="btn btn-error btn-sm btn-square">🗑️</button>'
+    data-collection-button-add-html-value='<button type="button" class="btn btn-primary w-full mt-4"><i class="fa-solid fa-plus"></i> Ajouter une question</button>'
+    data-collection-button-delete-html-value='<button type="button" class="btn btn-error btn-sm btn-square"><i class="fa-solid fa-trash-can text-neutral"></i></button>'
     data-collection-prototype-value="{{ questionPrototype|e('html_attr') }}"
 >
 
@@ -71,8 +71,8 @@
 </div>
 
 <div class="card-actions justify-end mt-8">
-    <a href="{{ path('quiz_list') }}" class="btn btn-ghost">Annuler</a>
-    <button type="submit" class="btn btn-primary">{{ button_label|default('Enregistrer le Quiz') }}</button>
+    <a href="{{ path('quiz_list') }}" class="btn btn-ghost"><i class="fa-solid fa-arrow-left"></i> Annuler</a>
+    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Enregistrer le Quiz</button>
 </div>
 
 {{ form_end(form) }}
