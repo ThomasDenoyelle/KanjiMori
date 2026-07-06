@@ -20,7 +20,7 @@ final class QuizController extends AbstractController
     #[Route('/quiz', name: 'quiz_list')]
     public function list(#[CurrentUser] User $user, QuizRepository $quizRepository): Response
     {
-        $quizList = $quizRepository->findBy(['author' => $user]);
+        $quizList = $quizRepository->findAllQuizByUser($user);
 
         return $this->render('quiz/list.html.twig', [
             'quizList' => $quizList,
