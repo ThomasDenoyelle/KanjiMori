@@ -12,3 +12,57 @@
     --font-nunito: 'Nunito', sans-serif;
     --font-pacifico: 'Pacifico';
 }
+
+.datatable-pagination-list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.datatable-pagination-list li {
+    display: flex;
+}
+.datatable-pagination-list button {
+    @apply btn btn-sm join-item;
+}
+.datatable-pagination-list li.datatable-active button {
+    @apply btn-active;
+}
+
+.datatable-dropdown {
+    width: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+}
+
+.datatable-dropdown label {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    width: auto !important;
+}
+
+table.datatable-table th[aria-sort] {
+    cursor: pointer;
+    position: relative;
+    padding-right: 1.5rem !important;
+}
+table.datatable-table th[aria-sort]::after {
+    content: '⇅';
+    position: absolute;
+    right: 0.5rem;
+    opacity: 0.4;
+    font-size: 0.85em;
+}
+table.datatable-table th[aria-sort="ascending"]::after {
+    content: '↑';
+    opacity: 1;
+}
+table.datatable-table th[aria-sort="descending"]::after {
+    content: '↓';
+    opacity: 1;
+}
