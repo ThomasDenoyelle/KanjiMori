@@ -17,8 +17,8 @@
                 <thead>
                     <tr>
                         <th>Titre</th>
-                        <th>Date de création</th>
-                        <th>NB questions</th>
+                        <th>Création</th>
+                        <th class="tooltip tooltip-primary" data-tip="Nombre de questions">Qst <i class="fa-solid fa-circle-info text-primary"></i></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -27,18 +27,37 @@
                 {% for quiz in quizList %}
                     <tr>
                         <td>{{ quiz.title|capitalize }}</td>
-                        <td>{{ quiz.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ quiz.createdAt|date('d/m/y H:i') }}</td>
                         <td>{{ quiz.questions|length }}</td>
-                        <td>
-                            <div class="flex gap-2 justify-end">
-                                <a href="#" class="btn btn-sm btn-success">Lancer</a>
+                        <td class="px-0">
+                            <div class="gap-2 justify-end sm:flex hidden pe-4">
+                                <a href="#" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
 
-                                <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info">Modifier</a>
+                                <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
 
                                 <form method="post" action="{{ path('quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
-                                    <button class="btn btn-sm btn-error">Supprimer</button>
+                                    <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
                                 </form>
+                            </div>
+
+                            <div class="justify-end dropdown dropdown-left sm:hidden flex">
+                                <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
+                                <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
+                                    <li>
+                                        <a href="#" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                                    </li>
+                                    <li>
+                                        <form method="post" action="{{ path('quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
+                                            <button class="btn btn-sm btn-error w-full"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
+                                        </form>
+                                    </li>
+                                </ul>
+
                             </div>
                         </td>
                     </tr>

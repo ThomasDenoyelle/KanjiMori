@@ -21,11 +21,11 @@ export default class extends Controller {
                 searchable: true,
                 sortable: true,
                 template: (options, dom) => `
-                    <div class="grid grid-cols-3 items-center m-4 gap-4">
+                    <div class="sm:grid sm:grid-cols-3 items-center m-4 gap-4 flex-col justify-center">
                         <div></div>
                         <h2 class="text-2xl font-bold text-center">${title}</h2>
-                        <div class="${options.classes.search} justify-self-end">
-                            <input class="${options.classes.input} input input-bordered input-sm" placeholder="${options.labels.placeholder}" type="search">
+                        <div class="${options.classes.search} sm:justify-self-end justify-self-center pt-2 sm:pt-0">
+                            <input class="${options.classes.input} input input-bordered input-sm w-full sm:w-auto" placeholder="${options.labels.placeholder}" type="search">
                         </div>
                     </div>
                     <div class="${options.classes.container}"></div>
@@ -36,7 +36,7 @@ export default class extends Controller {
                                 lignes par page
                             </label>
                         </div>
-                        <nav class="${options.classes.pagination}">
+                        <nav class="${options.classes.pagination} join">
                             <ul class="${options.classes.paginationList}"></ul>
                         </nav>
                     </div>
