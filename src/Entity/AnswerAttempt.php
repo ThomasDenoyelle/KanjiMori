@@ -33,6 +33,15 @@ class AnswerAttempt
     #[ORM\JoinColumn(nullable: false)]
     private ?Question $question = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $askedKanji = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $askedReading = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $askedTranslation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +115,42 @@ class AnswerAttempt
     public function setQuestion(?Question $question): static
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    public function getAskedKanji(): ?string
+    {
+        return $this->askedKanji;
+    }
+
+    public function setAskedKanji(string $askedKanji): static
+    {
+        $this->askedKanji = $askedKanji;
+
+        return $this;
+    }
+
+    public function getAskedReading(): ?string
+    {
+        return $this->askedReading;
+    }
+
+    public function setAskedReading(string $askedReading): static
+    {
+        $this->askedReading = $askedReading;
+
+        return $this;
+    }
+
+    public function getAskedTranslation(): ?string
+    {
+        return $this->askedTranslation;
+    }
+
+    public function setAskedTranslation(string $askedTranslation): static
+    {
+        $this->askedTranslation = $askedTranslation;
 
         return $this;
     }
