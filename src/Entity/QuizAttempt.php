@@ -6,6 +6,7 @@ use App\Repository\QuizAttemptRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuizAttemptRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class QuizAttempt
 {
     #[ORM\Id]
@@ -108,5 +109,11 @@ class QuizAttempt
         $this->quiz = $quiz;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }
