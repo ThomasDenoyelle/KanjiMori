@@ -44,7 +44,7 @@ final class GameController extends AbstractController
                 ],
                 'label' => 'Mode de jeu',
                 'attr' => [
-                    'class' => 'form-control select',
+                    'class' => 'select w-full',
                 ],
                 'label_attr' => [
                     'class' => 'label',

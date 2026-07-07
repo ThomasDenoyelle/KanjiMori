@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choix du mode - {{ quiz.title }}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
+        <div class="card w-full max-w-md bg-base-300 shadow-xl">
+            <div class="card-body">
+                <h1 class="card-title text-2xl font-bold justify-center mb-2">{{ quiz.title }}</h1>
+                <p class="text-center text-base-content/70 mb-6">Choisissez le mode de jeu pour commencer.</p>
+
+                {{ form_start(form) }}
+                    <div class="form-control w-full mb-6">
+                        {{ form_label(form.mode) }}
+                        {{ form_widget(form.mode) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(form.mode) }}</div>
+                    </div>
+
+                    <div class="card-actions justify-end mt-2">
+                        <button type="submit" class="btn btn-primary w-full">Commencer le Quiz</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
