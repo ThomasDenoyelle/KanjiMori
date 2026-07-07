@@ -30,7 +30,7 @@ class AnswerAttempt
     private ?QuizAttempt $quizAttempt = null;
 
     #[ORM\ManyToOne(inversedBy: 'answerAttempts')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Question $question = null;
 
     #[ORM\Column(length: 255)]
