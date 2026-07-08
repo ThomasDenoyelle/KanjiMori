@@ -165,4 +165,22 @@ final class GameController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/quiz/result/{quizAttempt}', name: 'game_results', requirements: ['quizAttempt' => '\d+'])]
+    public function result(?QuizAttempt $quizAttempt, #[CurrentUser] User $user): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Quiz introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($user !== $quizAttempt->getAuthor()) {
+            $this->addFlash('error', 'Accès refusé !');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('game/result.html.twig', [
+            'quizAttempt' => $quizAttempt,
+        ]);
+    }
 }
