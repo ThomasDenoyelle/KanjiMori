@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\AnswerAttempt;
 use App\Entity\Quiz;
 use App\Entity\QuizAttempt;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -65,6 +67,100 @@ final class GameController extends AbstractController
 
         return $this->render('game/setup.html.twig', [
             'quiz' => $quiz,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/quiz/play/{quizAttempt}', name: 'game_play')]
+    public function play(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Quiz introuvable !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        if ($user !== $quizAttempt->getAuthor()) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        $currentIndexQuestion = count($quizAttempt->getAnswerAttempts());
+
+        if ($currentIndexQuestion >= $quizAttempt->getMaxScore()) {
+            $this->addFlash('info', 'Quiz terminé !');
+            return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        $questions = $quizAttempt->getQuiz()->getQuestions()->getValues();
+        $currentQuestion = $questions[$currentIndexQuestion];
+
+        $formBuilder = $this->createFormBuilder();
+        $mode = $quizAttempt->getMode();
+
+
+        if ($mode === 'mode_kanji') {
+            $formBuilder
+                ->add('givenReading', TextType::class, ['label' => 'Lecture'])
+                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)']);
+        } elseif ($mode === 'mode_reading') {
+            $formBuilder
+                ->add('givenKanji', TextType::class, ['label' => 'Kanji'])
+                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)']);
+        } elseif ($mode === 'mode_translation') {
+            $formBuilder
+                ->add('givenKanji', TextType::class, ['label' => 'Kanji'])
+                ->add('givenReading', TextType::class, ['label' => 'Lecture']);
+        }
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $answerAttempt = new AnswerAttempt();
+
+            $answerAttempt->setQuizAttempt($quizAttempt);
+            $answerAttempt->setQuestion($currentQuestion);
+
+            $data = $form->getData();
+            $expectedKanji = trim($currentQuestion->getKanji());
+            $expectedReading = trim($currentQuestion->getReading());
+            $expectedTranslation = trim(mb_strtolower($currentQuestion->getTranslation()));
+
+            $givenKanji = isset($data['givenKanji']) ? trim($data['givenKanji']) : null;
+            $givenReading = isset($data['givenReading']) ? trim($data['givenReading']) : null;
+            $givenTranslation = isset($data['givenTranslation']) ? trim(mb_strtolower($data['givenTranslation'])) : null;
+
+            $answerAttempt->setAskedKanji($currentQuestion->getKanji());
+            $answerAttempt->setAskedReading($currentQuestion->getReading());
+            $answerAttempt->setAskedTranslation($currentQuestion->getTranslation());
+            $answerAttempt->setGivenKanji($givenKanji);
+            $answerAttempt->setGivenReading($givenReading);
+            $answerAttempt->setGivenTranslation($givenTranslation);
+
+            $isCorrect = false;
+
+            if ($mode === 'mode_kanji') {
+                $isCorrect = ($expectedReading === $givenReading && $expectedTranslation === $givenTranslation);
+            } elseif ($mode === 'mode_reading') {
+                $isCorrect = ($expectedKanji === $givenKanji && $expectedTranslation === $givenTranslation);
+            } elseif ($mode === 'mode_translation') {
+                $isCorrect = ($expectedKanji === $givenKanji && $expectedReading === $givenReading);
+            }
+
+            $answerAttempt->setIsCorrect($isCorrect);
+            if ($isCorrect) {
+                $quizAttempt->setScore($quizAttempt->getScore() + 1);
+            }
+
+
+            $entityManager->persist($answerAttempt);
+            $entityManager->flush();
+            return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        return $this->render('game/play.html.twig', [
+            'quizAttempt' => $quizAttempt,
+            'currentIndexQuestion' => $currentIndexQuestion,
+            'currentQuestion' => $currentQuestion,
             'form' => $form,
         ]);
     }
