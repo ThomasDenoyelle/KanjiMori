@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_USER")]
 final class GameController extends AbstractController
 {
-    #[Route('/quiz/{quiz}/setup', name: 'game_setup')]
+    #[Route('/quiz/{quiz}/setup', name: 'game_setup', requirements: ['quiz' => '\d+'])]
     public function setup(?Quiz $quiz, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quiz) {
@@ -71,7 +71,7 @@ final class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/quiz/play/{quizAttempt}', name: 'game_play')]
+    #[Route('/quiz/play/{quizAttempt}', name: 'game_play', requirements: ['quizAttempt' => '\d+'])]
     public function play(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quizAttempt) {
@@ -79,6 +79,7 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('quiz_list');
         }
 
+        # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('quiz_list');
