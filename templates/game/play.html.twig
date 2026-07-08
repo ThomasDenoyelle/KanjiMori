@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Jouer - {{ quizAttempt.quiz.title }}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
+        <div class="w-full max-w-2xl flex flex-col items-center gap-6">
+
+            <div class="w-full text-center flex flex-col gap-2">
+                <h1 class="text-3xl font-bold">{{ quizAttempt.quiz.title }}</h1>
+                <p class="text-base-content/70 font-medium">
+                    Question {{ currentIndexQuestion + 1 }} / {{ quizAttempt.maxScore }}
+                </p>
+
+                <progress class="progress progress-primary w-full h-3" value="{{ currentIndexQuestion }}" max="{{ quizAttempt.maxScore }}"></progress>
+
+                <div class="flex flex-wrap justify-center gap-2 text-sm mt-2">
+                    <span class="badge badge-lg badge-outline font-bold">Score : {{ quizAttempt.score }}</span>
+                    <span class="badge badge-lg badge-outline">Mode : {{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}</span>
+                </div>
+            </div>
+
+            <div id="flashcard" class="swap swap-flip w-full h-[450px]">
+
+                <div class="swap-off flex flex-col items-center justify-center rounded-3xl bg-base-100 shadow-xl border-4 border-base-200 p-8 w-full h-full cursor-pointer hover:border-primary/50 transition-colors"
+                     onclick="document.getElementById('flashcard').classList.add('swap-active')">
+
+                    {% if quizAttempt.mode == 'mode_kanji' %}
+                        <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Kanji à traduire</p>
+                        <div class="text-9xl font-bold text-center mb-8">{{ currentQuestion.kanji }}</div>
+                    {% elseif quizAttempt.mode == 'mode_reading' %}
+                        <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Lecture</p>
+                        <div class="text-7xl font-bold text-center mb-8">{{ currentQuestion.reading }}</div>
+                    {% elseif quizAttempt.mode == 'mode_translation' %}
+                        <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Traduction</p>
+                        <div class="text-5xl font-bold text-center mb-8">{{ currentQuestion.translation }}</div>
+                    {% endif %}
+
+                    <div class="mt-auto animate-pulse flex flex-col items-center text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mb-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        <span class="font-semibold">Cliquez pour répondre</span>
+                    </div>
+                </div>
+
+                <div class="swap-on flex flex-col justify-center rounded-3xl bg-base-200 shadow-inner border-4 border-primary/20 p-8 w-full h-full">
+
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">Ta réponse</h3>
+                        <button class="btn btn-sm btn-ghost btn-circle" type="button" onclick="document.getElementById('flashcard').classList.remove('swap-active')" title="Revoir la question">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
+                        </button>
+                    </div>
+
+                    {{ form_start(form, {'attr': {'class': 'flex flex-col h-full'}}) }}
+                    <div class="flex flex-col gap-4 grow justify-center">
+                        {% if form.givenKanji is defined %}
+                            <div class="form-control w-full">
+                                {{ form_label(form.givenKanji, null, {'label_attr': {'class': 'label font-semibold'}}) }}
+                                {{ form_widget(form.givenKanji, {'attr': {'class': 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
+                                <div class="text-error text-sm mt-1">{{ form_errors(form.givenKanji) }}</div>
+                            </div>
+                        {% endif %}
+
+                        {% if form.givenReading is defined %}
+                            <div class="form-control w-full">
+                                {{ form_label(form.givenReading, null, {'label_attr': {'class': 'label font-semibold'}}) }}
+                                {{ form_widget(form.givenReading, {'attr': {'class': 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
+                                <div class="text-error text-sm mt-1">{{ form_errors(form.givenReading) }}</div>
+                            </div>
+                        {% endif %}
+
+                        {% if form.givenTranslation is defined %}
+                            <div class="form-control w-full">
+                                {{ form_label(form.givenTranslation, null, {'label_attr': {'class': 'label font-semibold'}}) }}
+                                {{ form_widget(form.givenTranslation, {'attr': {'class': 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
+                                <div class="text-error text-sm mt-1">{{ form_errors(form.givenTranslation) }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto pt-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-full">
+                            Valider la réponse
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
