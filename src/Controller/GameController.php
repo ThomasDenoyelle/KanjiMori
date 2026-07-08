@@ -100,16 +100,16 @@ final class GameController extends AbstractController
 
         if ($mode === 'mode_kanji') {
             $formBuilder
-                ->add('givenReading', TextType::class, ['label' => 'Lecture'])
-                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)']);
+                ->add('givenReading', TextType::class, ['label' => 'Lecture', 'attr' => ['autocomplete' => 'off']])
+                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)', 'attr' => ['autocomplete' => 'off']]);
         } elseif ($mode === 'mode_reading') {
             $formBuilder
-                ->add('givenKanji', TextType::class, ['label' => 'Kanji'])
-                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)']);
+                ->add('givenKanji', TextType::class, ['label' => 'Kanji', 'attr' => ['autocomplete' => 'off']])
+                ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)', 'attr' => ['autocomplete' => 'off']]);
         } elseif ($mode === 'mode_translation') {
             $formBuilder
-                ->add('givenKanji', TextType::class, ['label' => 'Kanji'])
-                ->add('givenReading', TextType::class, ['label' => 'Lecture']);
+                ->add('givenKanji', TextType::class, ['label' => 'Kanji', 'attr' => ['autocomplete' => 'off']])
+                ->add('givenReading', TextType::class, ['label' => 'Lecture', 'attr' => ['autocomplete' => 'off']]);
         }
         $form = $formBuilder->getForm();
 
