@@ -6,6 +6,7 @@ use App\Entity\AnswerAttempt;
 use App\Entity\Quiz;
 use App\Entity\QuizAttempt;
 use App\Entity\User;
+use App\Repository\QuizAttemptRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -181,6 +182,16 @@ final class GameController extends AbstractController
 
         return $this->render('game/result.html.twig', [
             'quizAttempt' => $quizAttempt,
+        ]);
+    }
+
+    #[Route('/quiz/history', name: 'game_history', requirements: ['quizAttempt' => '\d+'])]
+    public function history(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
+    {
+        $quizAttemptsList = $quizAttemptRepository->findBy(['author' => $user]);
+
+        return $this->render('game/history.html.twig', [
+            'quizAttemptsList' => $quizAttemptsList,
         ]);
     }
 }
