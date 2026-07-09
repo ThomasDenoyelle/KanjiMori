@@ -7,7 +7,7 @@
         <div class="card w-full max-w-md bg-base-300 shadow-xl">
             <div class="card-body">
                 <h1 class="card-title text-4xl font-bold justify-center">{{ quizAttempt.quiz.title }} - {{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}</h1>
-                <p class="text-center text-base-content/70">Voici les résultats de votre quiz. <br> {{ quizAttempt.createdAt|date('d/m/Y H:i') }}</p>
+                <p class="text-center text-base-content/70">Voici les résultats de votre quiz. <br> {{ quizAttempt.createdAt|date('d/m/Y H:i', 'Europe/Paris') }}</p>
 
                 <div class="flex flex-col gap-4 mt-6">
                     <div class="flex justify-between items-center">
@@ -20,7 +20,6 @@
                         <span class="font-bold text-3xl text-primary">{{ quizAttempt.score }} / {{ quizAttempt.maxScore }}</span>
                     </div>
                 </div>
-
 
             </div>
         </div>

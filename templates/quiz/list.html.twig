@@ -27,7 +27,7 @@
                 {% for quiz in quizList %}
                     <tr>
                         <td>{{ quiz.title|capitalize }}</td>
-                        <td>{{ quiz.createdAt|date('d/m/y H:i') }}</td>
+                        <td>{{ quiz.createdAt|date('d/m/y H:i', 'Europe/Paris') }}</td>
                         <td>{{ quiz.questions|length }}</td>
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
