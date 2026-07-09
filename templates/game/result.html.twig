@@ -3,25 +3,133 @@
 {% block title %}Résultat de votre quiz - {{ quizAttempt.quiz.title }} - {{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}{% endblock %}
 
 {% block body %}
-    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
-        <div class="card w-full max-w-md bg-base-300 shadow-xl">
-            <div class="card-body">
-                <h1 class="card-title text-4xl font-bold justify-center">{{ quizAttempt.quiz.title }} - {{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}</h1>
-                <p class="text-center text-base-content/70">Voici les résultats de votre quiz. <br> {{ quizAttempt.createdAt|date('d/m/Y H:i', 'Europe/Paris') }}</p>
 
-                <div class="flex flex-col gap-4 mt-6">
-                    <div class="flex justify-between items-center">
-                        <div class="badge badge-soft badge-success">Connu : {{ quizAttempt.score }}</div>
-                        <div class="badge badge-soft badge-error">Inconnu : {{ quizAttempt.maxScore - quizAttempt.score }}</div>
-                    </div>
-                    <div class="flex flex-col justify-between items-center gap-2">
-                        {% set percentage = (quizAttempt.score / quizAttempt.maxScore) * 100 %}
-                        <div class="radial-progress text-primary text-4xl" style="--value:{{ percentage }}; --size:12rem; --thickness: 1rem;" aria-valuenow="{{ percentage }}" role="progressbar">{{ percentage|round(0) }}%</div>
-                        <span class="font-bold text-3xl text-primary">{{ quizAttempt.score }} / {{ quizAttempt.maxScore }}</span>
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+
+        <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <div class="lg:col-span-1 flex flex-col gap-4 h-full">
+                <div class="card w-full bg-base-300 shadow-xl sticky top-4">
+                    <div class="card-body">
+                        <h1 class="card-title text-3xl lg:text-4xl font-bold justify-center text-center">{{ quizAttempt.quiz.title }}</h1>
+                        <h2 class="text-xl text-center font-semibold mb-2">
+                            Mode : <span class="badge badge-lg badge-ghost">{{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}</span>
+                        </h2>
+                        <p class="text-center text-sm text-base-content/70">Réalisé le {{ quizAttempt.createdAt|date('d/m/Y à H:i', 'Europe/Paris') }}</p>
+
+                        <div class="flex flex-col gap-4 mt-6">
+                            <div class="flex justify-between items-center px-4">
+                                <div class="badge badge-soft badge-success">Connu : {{ quizAttempt.score }}</div>
+                                <div class="badge badge-soft badge-error">Inconnu : {{ quizAttempt.maxScore - quizAttempt.score }}</div>
+                            </div>
+                            <div class="flex flex-col justify-between items-center gap-4 mt-4">
+                                {% set percentage = quizAttempt.maxScore > 0 ? (quizAttempt.score / quizAttempt.maxScore) * 100 : 0 %}
+                                <div class="radial-progress text-primary font-bold text-2xl bg-base-200 border-4 border-base-200" style="--value:{{ percentage }}; --size:12rem; --thickness: 1rem;" aria-valuenow="{{ percentage }}" role="progressbar">
+                                    {{ percentage|round(0) }}%
+                                </div>
+                                <span class="font-bold text-4xl text-primary">{{ quizAttempt.score }} / {{ quizAttempt.maxScore }}</span>
+                            </div>
+                        </div>
+
+                        <div class="card-actions justify-center mt-8">
+                            <a href="{{ path('game_history') }}" class="btn btn-outline btn-primary w-full">Retour à l'historique</a>
+                        </div>
                     </div>
                 </div>
-
             </div>
+
+            <div class="lg:col-span-2 w-full h-full">
+                <div class="card bg-base-300 shadow-xl h-full">
+                    <div class="card-body p-0 overflow-hidden">
+                        <div class="overflow-x-auto h-full" data-controller="datatable">
+                            <table class="table w-full border-hidden">
+                                <thead class="bg-base-200/50">
+                                <tr>
+                                    <th class="p-4">Statut</th>
+                                    <th class="p-4">Question ({{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }})</th>
+
+                                    <th class="p-4">Ta réponse ({{ quizAttempt.mode == 'mode_kanji' ? 'Lecture' : 'Kanji' }})</th>
+
+                                    <th class="p-4">Ta réponse ({{ quizAttempt.mode == 'mode_translation' ? 'Lecture' : 'Traduction' }})</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for answer in quizAttempt.answerAttempts %}
+                                    <tr class="hover border-b border-base-200 last:border-0">
+                                        <td class="p-4">
+                                            {% if answer.isCorrect %}
+                                                <div class="badge badge-success gap-2 shadow-sm">
+                                                    <i class="fa-solid fa-check"></i> Correct
+                                                </div>
+                                            {% else %}
+                                                <div class="badge badge-error gap-2 shadow-sm">
+                                                    <i class="fa-solid fa-xmark"></i> Faux
+                                                </div>
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="font-bold text-2xl p-4 text-center">
+                                            {% if quizAttempt.mode == 'mode_kanji' %}
+                                                {{ answer.askedKanji }}
+                                            {% elseif quizAttempt.mode == 'mode_reading' %}
+                                                {{ answer.askedReading }}
+                                            {% elseif quizAttempt.mode == 'mode_translation' %}
+                                                {{ answer.askedTranslation }}
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="p-4">
+                                            {% if quizAttempt.mode == 'mode_kanji' %}
+                                                {% if answer.givenReading == answer.askedReading %}
+                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
+                                                {% else %}
+                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
+                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedReading }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if answer.givenKanji == answer.askedKanji %}
+                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenKanji }}</span>
+                                                {% else %}
+                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
+                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenKanji ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedKanji }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="p-4">
+                                            {% if quizAttempt.mode == 'mode_translation' %}
+                                                {% if answer.givenReading == answer.askedReading %}
+                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
+                                                {% else %}
+                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
+                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedReading }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if answer.givenTranslation == answer.askedTranslation %}
+                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenTranslation }}</span>
+                                                {% else %}
+                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
+                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenTranslation ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedTranslation }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 {% endblock %}
