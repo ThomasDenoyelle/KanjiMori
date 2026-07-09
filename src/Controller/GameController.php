@@ -224,4 +224,23 @@ final class GameController extends AbstractController
 
         return $this->redirectToRoute('quiz_list');
     }
+
+    #[Route('/quiz/game/correction/{answerAttempt}', name: 'game_correction')]
+    public function correction(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?AnswerAttempt $answerAttempt): Response
+    {
+        if (!$answerAttempt) {
+            $this->addFlash('error', 'Réponse introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($answerAttempt->getQuizAttempt()->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+
+        return $this->render('game/correction.html.twig', [
+            'answerAttempt' => $answerAttempt,
+        ]);
+    }
 }
