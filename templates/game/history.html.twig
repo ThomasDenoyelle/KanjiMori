@@ -37,10 +37,14 @@
                                 <span>{{ quizAttempt.score }} / {{ quizAttempt.maxScore }}</span>
                             </div>
                         </td>
-                        <td>{{ quizAttempt.createdAt|date('d/m/y H:i') }}</td>
+                        <td>{{ quizAttempt.createdAt|date('d/m/y H:i', 'Europe/Paris') }}</td>
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
                                 <a href="{{ path('game_results', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                                <form method="post" action="{{ path('game_delete', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
+                                    <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
+                                </form>
                             </div>
 
                             <div class="justify-end dropdown dropdown-left sm:hidden flex">
@@ -48,6 +52,12 @@
                                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
                                     <li>
                                         <a href="{{ path('game_results', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                                    </li>
+                                    <li>
+                                        <form method="post" action="{{ path('game_delete', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
+                                            <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
