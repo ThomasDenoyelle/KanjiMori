@@ -156,7 +156,13 @@ final class GameController extends AbstractController
 
             $entityManager->persist($answerAttempt);
             $entityManager->flush();
-            return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
+
+            if ($isCorrect) {
+                return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
+
+            } else {
+                return $this->redirectToRoute('game_correction', ['answerAttempt' => $answerAttempt->getId()]);
+            }
         }
 
         return $this->render('game/play.html.twig', [
