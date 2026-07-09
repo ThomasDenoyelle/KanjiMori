@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des tentatives{% endblock %}
+
+{% block body %}
+    {% if quizAttemptsList is empty %}
+        <div role="alert" class="alert alert-info mt-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Vous n'avez pas encore participé à un quiz pour le moment ! <a href="{{ path('quiz_list') }}" class="link link-primary hover:link-info">Découvrir les quiz ?</a></span>
+        </div>
+    {% else %}
+        <div class="overflow-x-auto rounded-box border-4 border-base-content/5 bg-base-300 mt-5" data-controller="datatable" data-datatable-title-value="Historique des tentatives">
+            <table class="table" id="attempts-history">
+
+                <thead>
+                    <tr>
+                        <th>Titre du quiz</th>
+                        <th>Mode</th>
+                        <th>Résultats</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for quizAttempt in quizAttemptsList %}
+                    {% set modeLabel = quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') %}
+                    <tr>
+                        <td>{{ quizAttempt.quiz.title|capitalize }}</td>
+                        <td>
+                            <div class="badge badge-ghost">{{ modeLabel }}</div>
+                        </td>
+                        <td>
+                            <div class="flex gap-2">
+                                <span>{{ quizAttempt.score }} / {{ quizAttempt.maxScore }}</span>
+                            </div>
+                        </td>
+                        <td>{{ quizAttempt.createdAt|date('d/m/y H:i') }}</td>
+                        <td class="px-0">
+                            <div class="gap-2 justify-end sm:flex hidden pe-4">
+                                <a href="{{ path('game_results', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                            </div>
+
+                            <div class="justify-end dropdown dropdown-left sm:hidden flex">
+                                <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
+                                <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
+                                    <li>
+                                        <a href="{{ path('game_results', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    {% endif %}
+
+{% endblock %}
