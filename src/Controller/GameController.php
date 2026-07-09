@@ -194,4 +194,28 @@ final class GameController extends AbstractController
             'quizAttemptsList' => $quizAttemptsList,
         ]);
     }
+
+    #[Route('/quiz/game/delete/{quizAttempt}', name: 'game_delete', methods: ['POST'])]
+    public function delete(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?QuizAttempt $quizAttempt): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Quiz introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($quizAttempt->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $quizAttempt->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($quizAttempt);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre quiz a bien été supprimé');
+        } else {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+        }
+
+        return $this->redirectToRoute('quiz_list');
+    }
 }
