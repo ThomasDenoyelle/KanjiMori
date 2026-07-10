@@ -222,11 +222,12 @@ final class GameController extends AbstractController
             $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
         }
 
-        return $this->redirectToRoute('quiz_list');
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
     }
 
     #[Route('/quiz/game/correction/{answerAttempt}', name: 'game_correction')]
-    public function correction(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?AnswerAttempt $answerAttempt): Response
+    public function correction(#[CurrentUser] User $user, ?AnswerAttempt $answerAttempt): Response
     {
         if (!$answerAttempt) {
             $this->addFlash('error', 'Réponse introuvable !');
