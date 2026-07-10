@@ -7,8 +7,8 @@
         <div class="w-full max-w-7xl flex flex-col gap-8">
 
             <div class="flex flex-col gap-2">
-                <h1 class="text-4xl font-bold">Bonjour, {{ app.user.firstname|capitalize }} ! 👋</h1>
-                <p class="text-base-content/70 text-lg">Prêt à continuer ton apprentissage du japonais aujourd'hui ?</p>
+                <h1 class="text-4xl font-bold">Bonjour, {{ app.user.firstname|capitalize }} !</h1>
+                <p class="text-base-content/70 text-lg">Prêt à continuer ton apprentissage aujourd'hui ?</p>
             </div>
 
             <div class="divider"></div>
@@ -29,31 +29,37 @@
                     </div>
                 {% else %}
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-                        {% for attempt in inProgressAttempts %}
+                        {% for quizAttempt in inProgressAttempts %}
 
-                            {% set currentProgress = attempt.answerAttempts|length %}
+                            {% set currentProgress = quizAttempt.answerAttempts|length %}
 
                             <div class="card bg-base-300 shadow-xl border border-base-200 hover:border-primary/50 transition-colors">
                                 <div class="card-body">
-                                    <h3 class="card-title text-xl">{{ attempt.quiz.title }}</h3>
+                                    <h3 class="card-title text-xl">
+                                        {{ quizAttempt.quiz.title }}
+                                        <form method="post" action="{{ path('game_delete', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
+                                            <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                    </h3>
 
                                     <div class="flex justify-between text-sm text-base-content/70 mb-2 mt-1">
                                         <span class="badge badge-outline">
-                                            {{ attempt.mode == 'mode_kanji' ? 'Kanji' : (attempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}
+                                            {{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }}
                                         </span>
-                                        <span>Lancé le {{ attempt.createdAt|date('d/m', 'Europe/Paris') }}</span>
+                                        <span>Lancé le {{ quizAttempt.createdAt|date('d/m', 'Europe/Paris') }}</span>
                                     </div>
 
                                     <div class="flex flex-col gap-1 my-4">
                                         <div class="flex justify-between text-xs font-semibold">
                                             <span>Progression</span>
-                                            <span>{{ currentProgress }} / {{ attempt.maxScore }}</span>
+                                            <span>{{ currentProgress }} / {{ quizAttempt.maxScore }}</span>
                                         </div>
-                                        <progress class="progress progress-primary w-full" value="{{ currentProgress }}" max="{{ attempt.maxScore }}"></progress>
+                                        <progress class="progress progress-primary w-full" value="{{ currentProgress }}" max="{{ quizAttempt.maxScore }}"></progress>
                                     </div>
 
                                     <div class="card-actions justify-end mt-2">
-                                        <a href="{{ path('game_play', {'quizAttempt': attempt.id}) }}" class="btn btn-primary w-full">
+                                        <a href="{{ path('game_play', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-primary w-full">
                                             Continuer <i class="fa-solid fa-arrow-right ml-1"></i>
                                         </a>
                                     </div>
