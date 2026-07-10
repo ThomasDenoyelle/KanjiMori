@@ -42,33 +42,31 @@
                 <div class="card bg-base-300 shadow-xl h-full">
                     <div class="card-body p-0 overflow-hidden">
                         <div class="overflow-x-auto h-full" data-controller="datatable">
-                            <table class="table w-full border-hidden">
+                            {# 1. AJOUT DE LA CLASSE table-sm ICI #}
+                            <table class="table table-sm w-full border-hidden">
                                 <thead class="bg-base-200/50">
                                 <tr>
-                                    <th class="p-4">Statut</th>
-                                    <th class="p-4">Question ({{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }})</th>
-
-                                    <th class="p-4">Ta réponse ({{ quizAttempt.mode == 'mode_kanji' ? 'Lecture' : 'Kanji' }})</th>
-
-                                    <th class="p-4">Ta réponse ({{ quizAttempt.mode == 'mode_translation' ? 'Lecture' : 'Traduction' }})</th>
+                                    {# 2. AJUSTEMENT DES PADDINGS VERITCAUX (py-1 sm:py-2) #}
+                                    <th class="py-1 px-2 sm:py-2 sm:px-4 text-xs sm:text-sm text-center">
+                                        Question <br>
+                                        <span class="font-normal text-base-content/60">({{ quizAttempt.mode == 'mode_kanji' ? 'Kanji' : (quizAttempt.mode == 'mode_reading' ? 'Lecture' : 'Traduction') }})</span>
+                                    </th>
+                                    <th class="py-1 px-2 sm:py-2 sm:px-4 text-xs sm:text-sm text-center">
+                                        Ta réponse <br>
+                                        <span class="font-normal text-base-content/60">({{ quizAttempt.mode == 'mode_kanji' ? 'Lecture' : 'Kanji' }})</span>
+                                    </th>
+                                    <th class="py-1 px-2 sm:py-2 sm:px-4 text-xs sm:text-sm text-center">
+                                        Ta réponse <br>
+                                        <span class="font-normal text-base-content/60">({{ quizAttempt.mode == 'mode_translation' ? 'Lecture' : 'Traduction' }})</span>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for answer in quizAttempt.answerAttempts %}
-                                    <tr class="hover border-b border-base-200 last:border-0">
-                                        <td class="p-4">
-                                            {% if answer.isCorrect %}
-                                                <div class="badge badge-success gap-2 shadow-sm">
-                                                    <i class="fa-solid fa-check"></i> Correct
-                                                </div>
-                                            {% else %}
-                                                <div class="badge badge-error gap-2 shadow-sm">
-                                                    <i class="fa-solid fa-xmark"></i> Faux
-                                                </div>
-                                            {% endif %}
-                                        </td>
+                                    <tr class="hover border-b border-base-200 last:border-0 {{ answer.isCorrect ? 'bg-success/5' : 'bg-error/5' }}">
 
-                                        <td class="font-bold text-2xl p-4 text-center">
+                                        {# Ajustement ici aussi #}
+                                        <td class="font-bold text-lg sm:text-xl py-1 px-2 sm:py-2 sm:px-4 text-center align-middle">
                                             {% if quizAttempt.mode == 'mode_kanji' %}
                                                 {{ answer.askedKanji }}
                                             {% elseif quizAttempt.mode == 'mode_reading' %}
@@ -78,45 +76,48 @@
                                             {% endif %}
                                         </td>
 
-                                        <td class="p-4">
+                                        {# Ajustement ici aussi #}
+                                        <td class="py-1 px-2 sm:py-2 sm:px-4 align-middle text-center">
                                             {% if quizAttempt.mode == 'mode_kanji' %}
                                                 {% if answer.givenReading == answer.askedReading %}
-                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
+                                                    <span class="text-success font-bold text-sm sm:text-base"><i class="fa-solid fa-check text-[10px] sm:text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
                                                 {% else %}
-                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
-                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
-                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedReading }}</span>
+                                                    {# J'ai aussi réduit le padding interne de la bulle d'erreur (p-1 au lieu de sm:p-2) #}
+                                                    <div class="flex flex-col gap-1 bg-base-100/50 p-1 rounded-lg border border-error/20 inline-flex w-full">
+                                                        <span class="text-error line-through text-xs font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold text-sm"><i class="fa-solid fa-arrow-right mr-1 text-[10px]"></i> {{ answer.askedReading }}</span>
                                                     </div>
                                                 {% endif %}
                                             {% else %}
                                                 {% if answer.givenKanji == answer.askedKanji %}
-                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenKanji }}</span>
+                                                    <span class="text-success font-bold text-sm sm:text-base"><i class="fa-solid fa-check text-[10px] sm:text-xs mr-1 opacity-70"></i> {{ answer.givenKanji }}</span>
                                                 {% else %}
-                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
-                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenKanji ?: 'Vide' }}</span>
-                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedKanji }}</span>
+                                                    <div class="flex flex-col gap-1 bg-base-100/50 p-1 rounded-lg border border-error/20 inline-flex w-full">
+                                                        <span class="text-error line-through text-xs font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenKanji ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold text-sm"><i class="fa-solid fa-arrow-right mr-1 text-[10px]"></i> {{ answer.askedKanji }}</span>
                                                     </div>
                                                 {% endif %}
                                             {% endif %}
                                         </td>
 
-                                        <td class="p-4">
+                                        {# Ajustement ici aussi #}
+                                        <td class="py-1 px-2 sm:py-2 sm:px-4 align-middle text-center">
                                             {% if quizAttempt.mode == 'mode_translation' %}
                                                 {% if answer.givenReading == answer.askedReading %}
-                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
+                                                    <span class="text-success font-bold text-sm sm:text-base"><i class="fa-solid fa-check text-[10px] sm:text-xs mr-1 opacity-70"></i> {{ answer.givenReading }}</span>
                                                 {% else %}
-                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
-                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
-                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedReading }}</span>
+                                                    <div class="flex flex-col gap-1 bg-base-100/50 p-1 rounded-lg border border-error/20 inline-flex w-full">
+                                                        <span class="text-error line-through text-xs font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenReading ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold text-sm"><i class="fa-solid fa-arrow-right mr-1 text-[10px]"></i> {{ answer.askedReading }}</span>
                                                     </div>
                                                 {% endif %}
                                             {% else %}
                                                 {% if answer.givenTranslation == answer.askedTranslation %}
-                                                    <span class="text-success font-bold text-lg"><i class="fa-solid fa-check text-xs mr-1 opacity-70"></i> {{ answer.givenTranslation }}</span>
+                                                    <span class="text-success font-bold text-sm sm:text-base"><i class="fa-solid fa-check text-[10px] sm:text-xs mr-1 opacity-70"></i> {{ answer.givenTranslation }}</span>
                                                 {% else %}
-                                                    <div class="flex flex-col gap-1 bg-error/10 p-2 rounded-lg border border-error/20">
-                                                        <span class="text-error line-through text-sm font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenTranslation ?: 'Vide' }}</span>
-                                                        <span class="text-success font-bold"><i class="fa-solid fa-arrow-right mr-1 text-xs"></i> {{ answer.askedTranslation }}</span>
+                                                    <div class="flex flex-col gap-1 bg-base-100/50 p-1 rounded-lg border border-error/20 inline-flex w-full">
+                                                        <span class="text-error line-through text-xs font-medium"><i class="fa-solid fa-xmark mr-1"></i> {{ answer.givenTranslation ?: 'Vide' }}</span>
+                                                        <span class="text-success font-bold text-sm"><i class="fa-solid fa-arrow-right mr-1 text-[10px]"></i> {{ answer.askedTranslation }}</span>
                                                     </div>
                                                 {% endif %}
                                             {% endif %}
