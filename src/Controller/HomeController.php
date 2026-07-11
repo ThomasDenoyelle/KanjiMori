@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
+    public function home(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
     {
         $allAttempts = $quizAttemptRepository->findBy(
             ['author' => $user],
@@ -22,7 +22,7 @@ final class HomeController extends AbstractController
 
         $inProgressAttempts = array_filter($allAttempts, function($attempt) {
             $currentAnswers = count($attempt->getAnswerAttempts());
-            return $currentAnswers > 0 && $currentAnswers < $attempt->getMaxScore();
+            return $currentAnswers < $attempt->getMaxScore();
         });
 
         return $this->render('home/index.html.twig', [
