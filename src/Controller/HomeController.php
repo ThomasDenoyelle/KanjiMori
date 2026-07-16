@@ -15,10 +15,7 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
     {
-        $allAttempts = $quizAttemptRepository->findBy(
-            ['author' => $user],
-            ['createdAt' => 'DESC']
-        );
+        $allAttempts = $quizAttemptRepository->findAllQuizAttemptByUser($user);
 
         $inProgressAttempts = array_filter($allAttempts, function($attempt) {
             $currentAnswers = count($attempt->getAnswerAttempts());
