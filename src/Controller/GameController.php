@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class GameController extends AbstractController
 {
     #[Route('/quiz/{quiz}/setup', name: 'game_setup', requirements: ['quiz' => '\d+'])]
-    public function setup(?Quiz $quiz, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    public function setup(?Quiz $quiz, QuizAttemptRepository $quizAttemptRepository, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quiz) {
             $this->addFlash('error', 'Quiz introuvable !');
@@ -38,10 +38,6 @@ final class GameController extends AbstractController
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('quiz_list');
         }
-
-        $quizAttempt = new QuizAttempt();
-        $quizAttempt->setQuiz($quiz);
-        $quizAttempt->setAuthor($user);
 
         $form = $this->createFormBuilder()
             ->add('mode', ChoiceType::class, [
@@ -62,6 +58,19 @@ final class GameController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $mode = $form->getData()['mode'];
+            $existingQuizAttempts = $quizAttemptRepository->findBy(['quiz' => $quiz, 'author' => $user, 'mode' => $mode]);
+            foreach ($existingQuizAttempts as $existingQuizAttempt) {
+                $currentAnswerAttempt = count($existingQuizAttempt->getAnswerAttempts());
+                if ($currentAnswerAttempt < $existingQuizAttempt->getMaxScore()) {
+                    $this->addFlash('info', 'Reprise de votre quiz en cours !');
+                    return $this->redirectToRoute('game_play', ['quizAttempt' => $existingQuizAttempt->getId()]);
+                }
+            }
+
+            $quizAttempt = new QuizAttempt();
+            $quizAttempt->setQuiz($quiz);
+            $quizAttempt->setAuthor($user);
             $quizAttempt->setMode($form->getData()['mode']);
             $quizAttempt->setScore(0);
             $quizAttempt->setMaxScore(count($quiz->getQuestions()));
