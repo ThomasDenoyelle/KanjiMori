@@ -16,6 +16,24 @@
                     {% endif%}
                 </h2>
 
+                <div class="flex flex-col items-center justify-center my-6 relative">
+                    <div class="avatar">
+                        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                            {% if user.avatar %}
+                                <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if app.user == user %}
+                        <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 ml-24" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                    {% endif %}
+                </div>
+
                 {% if app.user == user %}
                     {% if not user.verified %}
                         <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2">
@@ -39,24 +57,6 @@
                     {% endif %}
                 {% endif %}
 
-                <div class="flex flex-col items-center justify-center my-6 relative">
-                    <div class="avatar">
-                        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                            {% if user.avatar %}
-                                <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
-                            {% else %}
-                                <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    {% if app.user == user %}
-                        <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 ml-24" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
-                            <i class="fa-solid fa-camera"></i>
-                        </button>
-                    {% endif %}
-                </div>
-
                 <div class="flex flex-col items-center justify-center gap-2">
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Prénom</legend>
@@ -79,17 +79,47 @@
     {% if app.user == user %}
         <dialog id="avatar_modal" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
-                <h3 class="font-bold text-xl mb-4">Modifier mon avatar</h3>
+                <h3 class="font-bold text-2xl mb-6 text-center">Modifier mon avatar</h3>
 
                 {{ form_start(avatarForm) }}
-                <div class="form-control w-full">
-                    {{ form_widget(avatarForm.avatarFile, {'attr': {'class': 'file-input file-input-bordered file-input-primary w-full'}}) }}
-                    <div class="text-error text-sm mt-1">{{ form_errors(avatarForm.avatarFile) }}</div>
+                <div class="flex flex-col items-center gap-4">
+
+                    <div class="avatar">
+                        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
+                            {% if user.avatar %}
+                                <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar actuel" />
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if user.avatar and avatarForm.avatarFile.delete is defined %}
+                        <div class="form-control mt-2">
+                            <label class="btn btn-error btn-sm btn-outline cursor-pointer rounded-full px-6">
+                                <i class="fa-solid fa-trash-can"></i> Supprimer l'avatar actuel
+                                <div class="hidden">
+                                    {{ form_widget(avatarForm.avatarFile.delete) }}
+                                </div>
+                            </label>
+                        </div>
+                    {% endif %}
+
+                    <div class="divider my-0">Ou</div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-semibold">Uploader une nouvelle image</span>
+                        </label>
+                        {{ form_widget(avatarForm.avatarFile.file, {'attr': {'class': 'file-input file-input-bordered file-input-primary w-full shadow-sm'}}) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(avatarForm.avatarFile.file) }}</div>
+                    </div>
+
                 </div>
 
-                <div class="modal-action mt-6">
-                    <button type="button" class="btn" onclick="avatar_modal.close()">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <div class="modal-action mt-8 border-t border-base-200 pt-6">
+                    <button type="button" class="btn btn-ghost" onclick="avatar_modal.close()">Annuler</button>
+                    <button type="submit" class="btn btn-primary px-8">Enregistrer</button>
                 </div>
                 {{ form_end(avatarForm) }}
             </div>
