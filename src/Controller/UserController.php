@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\AvatarType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,14 +17,29 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/user/{user}/profil', name: 'user_profil')]
-    public function profil(?User $user): Response
+    public function profil(?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$user) {
             $this->addFlash('warning', 'L\'utilisateur n\'existe pas');
             return $this->redirectToRoute('home');
         }
+
+        $avatarForm = $this->createForm(AvatarType::class, $user);
+        $avatarForm->handleRequest($request);
+        if ($avatarForm->isSubmitted() && $avatarForm->isValid()) {
+            if ($this->getUser() !== $user) {
+                $this->addFlash('error', 'Vous ne pouvez pas modifier cet avatar.');
+                return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre avatar a bien été mis à jour !');
+            return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
+        }
+
         return $this->render('user/profil.html.twig', [
             'user' => $user,
+            'avatarForm' => $avatarForm,
         ]);
     }
 
