@@ -4,102 +4,103 @@
 
 {% block body %}
     <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
-        <div class="w-full max-w-2xl flex flex-col items-center gap-6">
+        <turbo-frame id="quiz-area">
+            <div class="w-full max-w-2xl flex flex-col items-center gap-6">
 
-            <div class="w-full text-center flex flex-col gap-2">
-                <h1 class="text-4xl font-bold text-error flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-circle-xmark"></i> Mauvaise réponse
-                </h1>
-                <p class="text-base-content/70 font-medium">Ne te décourage pas, voici la correction !</p>
-            </div>
+                <div class="w-full text-center flex flex-col gap-2">
+                    <h1 class="text-4xl font-bold text-error flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-circle-xmark"></i> Mauvaise réponse
+                    </h1>
+                    <p class="text-base-content/70 font-medium">Ne te décourage pas, voici la correction !</p>
+                </div>
 
-            <div class="card w-full bg-base-100 shadow-xl border-4 border-error/30">
-                <div class="card-body p-8">
+                <div class="card w-full bg-base-100 shadow-xl border-4 border-error/30">
+                    <div class="card-body p-8">
 
-                    <div class="text-center mb-6">
-                        <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-2">
-                            {% if answerAttempt.quizAttempt.mode == 'mode_kanji' %}
-                                Kanji
-                            {% elseif answerAttempt.quizAttempt.mode == 'mode_reading' %}
-                                Lecture
-                            {% else %}
-                                Traduction
-                            {% endif %}
-                        </p>
-                        <div class="text-7xl font-bold text-base-content">
-                            {% if answerAttempt.quizAttempt.mode == 'mode_kanji' %}
-                                {{ answerAttempt.askedKanji }}
-                            {% elseif answerAttempt.quizAttempt.mode == 'mode_reading' %}
-                                {{ answerAttempt.askedReading }}
-                            {% else %}
-                                {{ answerAttempt.askedTranslation }}
-                            {% endif %}
+                        <div class="text-center mb-6">
+                            <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-2">
+                                {% if answerAttempt.quizAttempt.mode == 'mode_kanji' %}
+                                    Kanji
+                                {% elseif answerAttempt.quizAttempt.mode == 'mode_reading' %}
+                                    Lecture
+                                {% else %}
+                                    Traduction
+                                {% endif %}
+                            </p>
+                            <div class="text-7xl font-bold text-base-content">
+                                {% if answerAttempt.quizAttempt.mode == 'mode_kanji' %}
+                                    {{ answerAttempt.askedKanji }}
+                                {% elseif answerAttempt.quizAttempt.mode == 'mode_reading' %}
+                                    {{ answerAttempt.askedReading }}
+                                {% else %}
+                                    {{ answerAttempt.askedTranslation }}
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="divider my-2">Correction</div>
+                        <div class="divider my-2">Correction</div>
 
-                    <div class="flex flex-col gap-4 mt-4">
+                        <div class="flex flex-col gap-4 mt-4">
 
-                        {% if answerAttempt.quizAttempt.mode != 'mode_reading' %}
-                            <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
-                                <span class="font-bold text-lg text-base-content/70">Lecture :</span>
-                                <div class="text-right">
-                                    {% if answerAttempt.givenReading == answerAttempt.askedReading %}
-                                        <span class="text-success font-bold text-2xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenReading }}</span>
-                                    {% else %}
-                                        <div class="flex flex-col items-end gap-1">
-                                            <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenReading ?: 'Rien tapé' }}</span>
-                                            <span class="text-success font-bold text-2xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedReading }}</span>
-                                        </div>
-                                    {% endif %}
+                            {% if answerAttempt.quizAttempt.mode != 'mode_reading' %}
+                                <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
+                                    <span class="font-bold text-lg text-base-content/70">Lecture :</span>
+                                    <div class="text-right">
+                                        {% if answerAttempt.givenReading == answerAttempt.askedReading %}
+                                            <span class="text-success font-bold text-2xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenReading }}</span>
+                                        {% else %}
+                                            <div class="flex flex-col items-end gap-1">
+                                                <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenReading ?: 'Rien tapé' }}</span>
+                                                <span class="text-success font-bold text-2xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedReading }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
+                            {% endif %}
 
-                        {% if answerAttempt.quizAttempt.mode != 'mode_translation' %}
-                            <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
-                                <span class="font-bold text-lg text-base-content/70">Traduction :</span>
-                                <div class="text-right">
-                                    {% if answerAttempt.givenTranslation == answerAttempt.askedTranslation %}
-                                        <span class="text-success font-bold text-2xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenTranslation }}</span>
-                                    {% else %}
-                                        <div class="flex flex-col items-end gap-1">
-                                            <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenTranslation ?: 'Rien tapé' }}</span>
-                                            <span class="text-success font-bold text-2xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedTranslation }}</span>
-                                        </div>
-                                    {% endif %}
+                            {% if answerAttempt.quizAttempt.mode != 'mode_translation' %}
+                                <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
+                                    <span class="font-bold text-lg text-base-content/70">Traduction :</span>
+                                    <div class="text-right">
+                                        {% if answerAttempt.givenTranslation == answerAttempt.askedTranslation %}
+                                            <span class="text-success font-bold text-2xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenTranslation }}</span>
+                                        {% else %}
+                                            <div class="flex flex-col items-end gap-1">
+                                                <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenTranslation ?: 'Rien tapé' }}</span>
+                                                <span class="text-success font-bold text-2xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedTranslation }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
+                            {% endif %}
 
-                        {% if answerAttempt.quizAttempt.mode != 'mode_kanji' %}
-                            <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
-                                <span class="font-bold text-lg text-base-content/70">Kanji :</span>
-                                <div class="text-right">
-                                    {% if answerAttempt.givenKanji == answerAttempt.askedKanji %}
-                                        <span class="text-success font-bold text-3xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenKanji }}</span>
-                                    {% else %}
-                                        <div class="flex flex-col items-end gap-1">
-                                            <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenKanji ?: 'Rien tapé' }}</span>
-                                            <span class="text-success font-bold text-3xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedKanji }}</span>
-                                        </div>
-                                    {% endif %}
+                            {% if answerAttempt.quizAttempt.mode != 'mode_kanji' %}
+                                <div class="bg-base-200/50 p-4 rounded-2xl flex justify-between items-center border border-base-300">
+                                    <span class="font-bold text-lg text-base-content/70">Kanji :</span>
+                                    <div class="text-right">
+                                        {% if answerAttempt.givenKanji == answerAttempt.askedKanji %}
+                                            <span class="text-success font-bold text-3xl"><i class="fa-solid fa-check text-sm mr-2"></i>{{ answerAttempt.givenKanji }}</span>
+                                        {% else %}
+                                            <div class="flex flex-col items-end gap-1">
+                                                <span class="text-error line-through text-sm font-semibold bg-error/10 px-2 rounded">{{ answerAttempt.givenKanji ?: 'Rien tapé' }}</span>
+                                                <span class="text-success font-bold text-3xl"><i class="fa-solid fa-arrow-right text-sm mr-2"></i>{{ answerAttempt.askedKanji }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="mt-8 pt-4">
+                            <a href="{{ path('game_play', {'quizAttempt': answerAttempt.quizAttempt.id}) }}" class="btn btn-primary btn-lg w-full text-lg">
+                                Question suivante <i class="fa-solid fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
 
                     </div>
-
-                    <div class="mt-8 pt-4">
-                        <a href="{{ path('game_play', {'quizAttempt': answerAttempt.quizAttempt.id}) }}" class="btn btn-primary btn-lg w-full text-lg">
-                            Question suivante <i class="fa-solid fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-
                 </div>
             </div>
-
-        </div>
+        </turbo-frame>
     </div>
 {% endblock %}
