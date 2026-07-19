@@ -13,7 +13,7 @@
                         <a href="{{ path('user_update') }}">
                             <i class="fa-solid fa-pen-to-square text-info hover:text-primary duration-200 transition-colors"></i>
                         </a>
-                   {% endif%}
+                    {% endif%}
                 </h2>
 
                 {% if app.user == user %}
@@ -39,29 +39,65 @@
                     {% endif %}
                 {% endif %}
 
-                <div class="flex flex-col items-center justify-center">
+                <div class="flex flex-col items-center justify-center my-6 relative">
+                    <div class="avatar">
+                        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                            {% if user.avatar %}
+                                <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if app.user == user %}
+                        <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 ml-24" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="flex flex-col items-center justify-center gap-2">
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Prénom</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.firstname }}" disabled/>
-                        </label>
+                        <input type="text" class="input w-full" value="{{ user.firstname }}" disabled/>
                     </fieldset>
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Nom</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.lastname }}" disabled/>
-                        </label>
+                        <input type="text" class="input w-full" value="{{ user.lastname }}" disabled/>
                     </fieldset>
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend">Email</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.email }}" disabled/>
-                        </label>
+                        <input type="text" class="input w-full" value="{{ user.email }}" disabled/>
                     </fieldset>
                 </div>
 
             </div>
         </div>
     </div>
-{% endblock %}
 
+    {% if app.user == user %}
+        <dialog id="avatar_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-xl mb-4">Modifier mon avatar</h3>
+
+                {{ form_start(avatarForm) }}
+                <div class="form-control w-full">
+                    {{ form_widget(avatarForm.avatarFile, {'attr': {'class': 'file-input file-input-bordered file-input-primary w-full'}}) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(avatarForm.avatarFile) }}</div>
+                </div>
+
+                <div class="modal-action mt-6">
+                    <button type="button" class="btn" onclick="avatar_modal.close()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+                {{ form_end(avatarForm) }}
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+                <button>fermer</button>
+            </form>
+        </dialog>
+    {% endif %}
+
+{% endblock %}
