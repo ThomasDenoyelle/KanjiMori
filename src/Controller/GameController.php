@@ -28,6 +28,11 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('quiz_list');
         }
 
+        if ($quiz->getQuestions()->isEmpty()) {
+            $this->addFlash('error', 'Le quiz ne contient aucune question, veuillez en ajouter pour pouvoir le lancer !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
         # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
         if ($user !== $quiz->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');

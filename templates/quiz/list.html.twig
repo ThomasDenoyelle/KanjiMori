@@ -31,7 +31,9 @@
                         <td>{{ quiz.questions|length }}</td>
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
-                                <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                {% if quiz.questions|length > 0 %}
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                {% endif %}
 
                                 <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
 
@@ -45,7 +47,9 @@
                                 <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
                                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
                                     <li>
-                                        <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                        {% if quiz.questions|length > 0 %}
+                                            <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                        {% endif %}
                                     </li>
                                     <li>
                                         <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
