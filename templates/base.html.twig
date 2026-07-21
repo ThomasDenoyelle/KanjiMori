@@ -61,20 +61,20 @@
                     {% else %}
                         <div class="dropdown dropdown-end">
                             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
-                                <div class="bg-primary text-primary-content rounded-full w-10">
-                                        <span class="font-bold">
-                                            {% if app.user.firstname is defined and app.user.firstname %}
-                                                {{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}
-                                            {% else %}
-                                                U
-                                            {% endif %}
-                                        </span>
+                                <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                    {% if app.user.avatar %}
+                                        <img src="{{ vich_uploader_asset(app.user, 'avatarFile') }}" alt="Avatar de {{ app.user.firstname }}" />
+                                    {% else %}
+                                        <img src="https://ui-avatars.com/api/?name={{ app.user.firstname }}+{{ app.user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                                    {% endif %}
                                 </div>
                             </div>
 
-                            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-300 rounded-box w-52">
                                 <li class="px-4 py-2 opacity-50 text-xs uppercase font-bold">
-                                    {{ app.user.firstname }} {{ app.user.lastname }}
+                                    {{ app.user.firstname }}
+                                    <br>
+                                    {{ app.user.lastname }}
                                 </li>
                                 <li>
                                     <a href="{{ path('user_profil', {user: app.user.id}) }}" class="justify-between">
