@@ -11,12 +11,12 @@
                 <div class="w-full text-center flex flex-col gap-2">
                     <h1 class="text-3xl font-bold">
                         {{ quizAttempt.quiz.title }}
-                        <button onclick="settings.showModal()" class="btn btn-ghost rounded-full">
+                        <button onclick="settings.showModal()" class="btn btn-outline btn-soft btn-primary btn-circle">
                             <i class="fa-solid fa-cog text-xl"></i>
                         </button>
                     </h1>
                     <p class="text-base-content/70 font-medium">
-                        Question {{ currentIndexQuestion + 1 }} / {{ quizAttempt.maxScore }}
+                        Question {{ currentIndexQuestion }} / {{ quizAttempt.maxScore }}
                     </p>
 
                     <progress class="progress progress-primary w-full h-3" value="{{ currentIndexQuestion }}" max="{{ quizAttempt.maxScore }}"></progress>
