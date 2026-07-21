@@ -9,7 +9,12 @@
             <div class="w-full max-w-2xl flex flex-col items-center gap-6">
 
                 <div class="w-full text-center flex flex-col gap-2">
-                    <h1 class="text-3xl font-bold">{{ quizAttempt.quiz.title }}</h1>
+                    <h1 class="text-3xl font-bold">
+                        {{ quizAttempt.quiz.title }}
+                        <button onclick="settings.showModal()" class="btn btn-ghost rounded-full">
+                            <i class="fa-solid fa-cog text-xl"></i>
+                        </button>
+                    </h1>
                     <p class="text-base-content/70 font-medium">
                         Question {{ currentIndexQuestion + 1 }} / {{ quizAttempt.maxScore }}
                     </p>
@@ -138,6 +143,18 @@
                     <form method="dialog"><button class="btn btn-ghost">Terminer</button></form>
                 </div>
             </div>
+        </dialog>
+
+        <dialog id="settings" class="modal">
+            <div class="modal-box">
+                <h3 class="text-2xl font-bold text-center">Paramètres du quiz</h3>
+                <div class="flex gap-4 mt-6">
+                    <a class="btn btn-error" href="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onclick="return confirm('Etes-vous sur de vouloir recommencer ce quiz ? Cette action est irréversible !')"><i class="fa-solid fa-rotate-left"></i> Recommencer le quiz</a>
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
         </dialog>
 
     </div>

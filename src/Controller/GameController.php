@@ -258,4 +258,32 @@ final class GameController extends AbstractController
             'answerAttempt' => $answerAttempt,
         ]);
     }
+
+    #[Route('/quiz/reset/{quizAttempt}', name: 'game_reset')]
+    public function reset(#[CurrentUser] User $user, ?QuizAttempt $quizAttempt, EntityManagerInterface $entityManager): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Quiz introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($quizAttempt->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('quiz_list');
+        }
+
+        $newQuizAttempt = new QuizAttempt();
+        $newQuizAttempt->setAuthor($user);
+        $newQuizAttempt->setMode($quizAttempt->getMode());
+        $newQuizAttempt->setQuiz($quizAttempt->getQuiz());
+        $newQuizAttempt->setMaxScore($quizAttempt->getMaxScore());
+        $newQuizAttempt->setScore(0);
+        $entityManager->persist($newQuizAttempt);
+
+        $entityManager->remove($quizAttempt);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('game_play', ['quizAttempt' => $newQuizAttempt->getId()]);
+    }
 }
