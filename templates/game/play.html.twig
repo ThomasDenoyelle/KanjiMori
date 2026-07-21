@@ -150,6 +150,7 @@
                 <h3 class="text-2xl font-bold text-center">Paramètres du quiz</h3>
                 <div class="flex gap-4 mt-6">
                     <a class="btn btn-error" href="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onclick="return confirm('Etes-vous sur de vouloir recommencer ce quiz ? Cette action est irréversible !')"><i class="fa-solid fa-rotate-left"></i> Recommencer le quiz</a>
+                    <a class="btn" href="{{ path('home') }}"><i class="fa-solid fa-sign-out-alt"></i> Quitter et revenir plus tard</a>
                 </div>
             </div>
             <form method="dialog" class="modal-backdrop">
