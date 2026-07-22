@@ -19,7 +19,7 @@ final class HomeController extends AbstractController
 
         $inProgressAttempts = array_filter($allAttempts, function($attempt) {
             $currentAnswers = count($attempt->getAnswerAttempts());
-            return $currentAnswers > 0 && $currentAnswers < $attempt->getMaxScore();
+            return $currentAnswers < $attempt->getMaxScore();
         });
 
         return $this->render('home/index.html.twig', [
