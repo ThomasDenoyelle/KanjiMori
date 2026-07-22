@@ -286,8 +286,8 @@ final class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/quiz/reset/{quizAttempt}', name: 'game_reset')]
-    public function reset(#[CurrentUser] User $user, ?QuizAttempt $quizAttempt, EntityManagerInterface $entityManager): Response
+    #[Route('/quiz/reset/{quizAttempt}', name: 'game_reset', methods: ['POST'])]
+    public function reset(#[CurrentUser] User $user, ?QuizAttempt $quizAttempt, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
@@ -298,8 +298,17 @@ final class GameController extends AbstractController
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('quiz_list');
         }
+
+        if (!$this->isCsrfTokenValid('reset' . $quizAttempt->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
         $order = $quizAttempt->getQuestionOrder();
-        shuffle($order);
+
+        if ($request->request->get('shuffle') == "1") {
+            shuffle($order);
+        }
 
         $newQuizAttempt = new QuizAttempt();
         $newQuizAttempt->setAuthor($user);
@@ -311,7 +320,6 @@ final class GameController extends AbstractController
         $entityManager->persist($newQuizAttempt);
 
         $entityManager->remove($quizAttempt);
-
         $entityManager->flush();
 
         return $this->redirectToRoute('game_play', ['quizAttempt' => $newQuizAttempt->getId()]);
