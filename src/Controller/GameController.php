@@ -304,7 +304,11 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
-        $order = $quizAttempt->getQuestionOrder();
+        $questions = $quizAttempt->getQuiz()->getQuestions();
+        $order = [];
+        foreach ($questions as $question) {
+            $order[] = $question->getId();
+        }
 
         if ($request->request->get('shuffle') == "1") {
             shuffle($order);
@@ -314,7 +318,9 @@ final class GameController extends AbstractController
         $newQuizAttempt->setAuthor($user);
         $newQuizAttempt->setMode($quizAttempt->getMode());
         $newQuizAttempt->setQuiz($quizAttempt->getQuiz());
+
         $newQuizAttempt->setQuestionOrder($order);
+
         $newQuizAttempt->setMaxScore($quizAttempt->getMaxScore());
         $newQuizAttempt->setScore(0);
         $entityManager->persist($newQuizAttempt);

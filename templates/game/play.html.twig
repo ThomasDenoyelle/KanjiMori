@@ -151,16 +151,14 @@
 
                 <div class="flex flex-col gap-3">
 
-                    {# Formulaire pour RECOMMENCER NORMALEMENT #}
                     <form method="post" action="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer ? Ton score actuel sera perdu.')" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
                         <input type="hidden" name="shuffle" value="0">
                         <button type="submit" class="btn btn-outline btn-primary w-full">
-                            <i class="fa-solid fa-rotate-left"></i> Recommencer (Même ordre)
+                            <i class="fa-solid fa-rotate-left"></i> Recommencer
                         </button>
                     </form>
 
-                    {# Formulaire pour RECOMMENCER EN MÉLANGEANT #}
                     <form method="post" action="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer en mélangeant les questions ?')" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
                         <input type="hidden" name="shuffle" value="1">
