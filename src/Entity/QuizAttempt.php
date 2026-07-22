@@ -42,6 +42,9 @@ class QuizAttempt
     #[ORM\OneToMany(targetEntity: AnswerAttempt::class, mappedBy: 'quizAttempt', orphanRemoval: true)]
     private Collection $answerAttempts;
 
+    #[ORM\Column]
+    private array $questionOrder = [];
+
     public function __construct()
     {
         $this->answerAttempts = new ArrayCollection();
@@ -156,6 +159,18 @@ class QuizAttempt
                 $answerAttempt->setQuizAttempt(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuestionOrder(): array
+    {
+        return $this->questionOrder;
+    }
+
+    public function setQuestionOrder(array $questionOrder): static
+    {
+        $this->questionOrder = $questionOrder;
 
         return $this;
     }
