@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\AnswerAttempt;
+use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Entity\QuizAttempt;
 use App\Entity\User;
 use App\Repository\QuizAttemptRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +56,10 @@ final class GameController extends AbstractController
                     'class' => 'label',
                 ]
             ])
+            ->add('isShuffled', CheckboxType::class, [
+                'label'    => 'Mélanger les questions',
+                'required' => false,
+            ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -68,10 +74,21 @@ final class GameController extends AbstractController
                 }
             }
 
+            $questions = $quiz->getQuestions();
+            $order = [];
+            foreach ($questions as $question) {
+                $order[] = $question->getId();
+            }
+            $isShuffled = $form->getData()['isShuffled'];
+            if ($isShuffled) {
+                shuffle($order);
+            }
+
             $quizAttempt = new QuizAttempt();
             $quizAttempt->setQuiz($quiz);
             $quizAttempt->setAuthor($user);
             $quizAttempt->setMode($form->getData()['mode']);
+            $quizAttempt->setQuestionOrder($order);
             $quizAttempt->setScore(0);
             $quizAttempt->setMaxScore(count($quiz->getQuestions()));
 
@@ -107,8 +124,18 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
-        $questions = $quizAttempt->getQuiz()->getQuestions()->getValues();
-        $currentQuestion = $questions[$currentIndexQuestion];
+        $questionOrder = $quizAttempt->getQuestionOrder();
+
+        $currentQuestionId = $questionOrder[$currentIndexQuestion];
+
+        $currentQuestion = $quizAttempt->getQuiz()->getQuestions()->filter(function(Question $question) use ($currentQuestionId) {
+            return $question->getId() === $currentQuestionId;
+        })->first();
+
+        if (!$currentQuestion) {
+            $this->addFlash('error', 'Une question de ce quiz a disparu.');
+            return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
+        }
 
         $formBuilder = $this->createFormBuilder();
         $mode = $quizAttempt->getMode();
@@ -271,11 +298,14 @@ final class GameController extends AbstractController
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('quiz_list');
         }
+        $order = $quizAttempt->getQuestionOrder();
+        shuffle($order);
 
         $newQuizAttempt = new QuizAttempt();
         $newQuizAttempt->setAuthor($user);
         $newQuizAttempt->setMode($quizAttempt->getMode());
         $newQuizAttempt->setQuiz($quizAttempt->getQuiz());
+        $newQuizAttempt->setQuestionOrder($order);
         $newQuizAttempt->setMaxScore($quizAttempt->getMaxScore());
         $newQuizAttempt->setScore(0);
         $entityManager->persist($newQuizAttempt);
