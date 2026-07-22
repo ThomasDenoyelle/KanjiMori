@@ -41,6 +41,9 @@ class Quiz
     #[ORM\OneToMany(targetEntity: QuizAttempt::class, mappedBy: 'quiz', orphanRemoval: true)]
     private Collection $quizAttempts;
 
+    #[ORM\Column]
+    private ?bool $isPublic = false;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -168,6 +171,18 @@ class Quiz
                 $quizAttempt->setQuiz(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(?bool $isPublic): static
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }
