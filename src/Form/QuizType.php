@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Quiz;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,6 +30,12 @@ class QuizType extends AbstractType
                 'prototype' => true,
                 'entry_options' => [
                     'label' => false,
+                ]
+            ])
+            ->add('isPublic', CheckboxType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'toggle toggle-primary',
                 ]
             ])
         ;
