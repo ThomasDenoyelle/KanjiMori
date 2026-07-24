@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 final class QuizController extends AbstractController
 {
-    #[Route('/my-library/quiz', name: 'quiz_list')]
+    #[Route('/my-library/quiz', name: 'library_quiz_list')]
     public function myQuiz(#[CurrentUser] User $user, QuizRepository $quizRepository): Response
     {
         $quizList = $quizRepository->findAllQuizByUser($user);
@@ -27,7 +27,17 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/my-library/quiz/new', name: 'quiz_new')]
+    #[Route('/explore/quiz', name: 'explore_quiz_list')]
+    public function exploreQuiz(#[CurrentUser] User $user, QuizRepository $quizRepository): Response
+    {
+        $quizList = $quizRepository->findAllPublicQuiz($user);
+
+        return $this->render('quiz/explore_list.html.twig', [
+            'quizList' => $quizList,
+        ]);
+    }
+
+    #[Route('/my-library/quiz/new', name: 'library_quiz_new')]
     public function new(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         $quiz = new Quiz();
@@ -40,7 +50,7 @@ final class QuizController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre quiz a bien été créé avec ses questions');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         return $this->render('quiz/new.html.twig', [
@@ -48,12 +58,12 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/my-library/quiz/{quiz}/update', name: 'quiz_update')]
+    #[Route('/my-library/quiz/{quiz}/update', name: 'library_quiz_update')]
     public function update(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?Quiz $quiz): Response
     {
         if (!$quiz || $quiz->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée ou quiz introuvable !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         $form = $this->createForm(QuizType::class, $quiz);
@@ -62,7 +72,7 @@ final class QuizController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre quiz a bien été modifié');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         return $this->render('quiz/update.html.twig', [
@@ -70,12 +80,12 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/my-library/quiz/{quiz}/delete', name: 'quiz_delete', methods: ['POST'])]
+    #[Route('/my-library/quiz/{quiz}/delete', name: 'library_quiz_delete', methods: ['POST'])]
     public function delete(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?Quiz $quiz): Response
     {
         if (!$quiz || $quiz->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée ou quiz introuvable !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
@@ -86,7 +96,7 @@ final class QuizController extends AbstractController
             $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
         }
 
-        return $this->redirectToRoute('quiz_list');
+        return $this->redirectToRoute('library_quiz_list');
     }
 
 
