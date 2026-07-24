@@ -8,7 +8,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <span>Vous n'avez créé aucun quiz pour le moment ! <a href="{{ path('quiz_new') }}" class="link link-primary hover:link-info">Créer un quiz ?</a></span>
+            <span>Vous n'avez créé aucun quiz pour le moment ! <a href="{{ path('library_quiz_new') }}" class="link link-primary hover:link-info">Créer un quiz ?</a></span>
         </div>
     {% else %}
         <div class="overflow-x-auto rounded-box border-4 border-base-content/5 bg-base-300 mt-5" data-controller="datatable" data-datatable-title-value="Liste des quiz">
@@ -35,9 +35,9 @@
                                     <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
                                 {% endif %}
 
-                                <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                                <a href="{{ path('library_quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
 
-                                <form method="post" action="{{ path('quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                <form method="post" action="{{ path('library_quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
                                     <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
                                 </form>
@@ -52,10 +52,10 @@
                                         {% endif %}
                                     </li>
                                     <li>
-                                        <a href="{{ path('quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                                        <a href="{{ path('library_quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
                                     </li>
                                     <li>
-                                        <form method="post" action="{{ path('quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
+                                        <form method="post" action="{{ path('library_quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
                                             <button class="btn btn-sm btn-error w-full"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
                                         </form>

@@ -37,7 +37,7 @@
                     <button popovertarget="menu-explorer">Explorer</button>
                     <div id="menu-explorer" popover>
                         <ul class="menu">
-                            <li><a href="{{ path('quiz_list') }}"><i class="fa-solid fa-globe"></i> Quiz publics</a></li>
+                            <li><a href="{{ path('explore_quiz_list') }}"><i class="fa-solid fa-globe"></i> Quiz publics</a></li>
                             <li><a href="#"><i class="fa-solid fa-users"></i> Classes</a></li>
                             <li><a href="#"><i class="fa-solid fa-user-group"></i> Utilisateurs</a></li>
                         </ul>
@@ -46,13 +46,13 @@
                     <button popovertarget="menu-espace">Ma Bibliothèque</button>
                     <div id="menu-espace" popover>
                         <ul class="menu">
-                            <li><a href="{{ path('quiz_list') }}"><i class="fa-solid fa-book"></i> Mes Quiz</a></li>
+                            <li><a href="{{ path('library_quiz_list') }}"><i class="fa-solid fa-book"></i> Mes Quiz</a></li>
                             <li><a href="#"><i class="fa-solid fa-folder"></i> Mes Dossiers</a></li>
                             <li><a href="{{ path('game_history') }}"><i class="fa-solid fa-clock-rotate-left"></i> Historique</a></li>
                         </ul>
                     </div>
 
-                    <a href="{{ path('quiz_new') }}" class="btn btn-primary btn-sm ml-2 mr-2 font-bold shadow-sm">
+                    <a href="{{ path('library_quiz_new') }}" class="btn btn-primary btn-sm ml-2 mr-2 font-bold shadow-sm">
                         <i class="fa-solid fa-plus"></i> Créer
                     </a>
                 {% endif %}
