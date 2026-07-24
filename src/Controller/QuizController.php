@@ -17,8 +17,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 final class QuizController extends AbstractController
 {
-    #[Route('/quiz', name: 'quiz_list')]
-    public function list(#[CurrentUser] User $user, QuizRepository $quizRepository): Response
+    #[Route('/my-library/quiz', name: 'quiz_list')]
+    public function myQuiz(#[CurrentUser] User $user, QuizRepository $quizRepository): Response
     {
         $quizList = $quizRepository->findAllQuizByUser($user);
 
@@ -27,7 +27,7 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/quiz/new', name: 'quiz_new')]
+    #[Route('/my-library/quiz/new', name: 'quiz_new')]
     public function new(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         $quiz = new Quiz();
@@ -48,7 +48,7 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/quiz/{quiz}/update', name: 'quiz_update')]
+    #[Route('/my-library/quiz/{quiz}/update', name: 'quiz_update')]
     public function update(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?Quiz $quiz): Response
     {
         if (!$quiz || $quiz->getAuthor() !== $user) {
@@ -70,7 +70,7 @@ final class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/quiz/{quiz}/delete', name: 'quiz_delete', methods: ['POST'])]
+    #[Route('/my-library/quiz/{quiz}/delete', name: 'quiz_delete', methods: ['POST'])]
     public function delete(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?Quiz $quiz): Response
     {
         if (!$quiz || $quiz->getAuthor() !== $user) {
