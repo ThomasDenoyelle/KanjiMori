@@ -27,18 +27,18 @@ final class GameController extends AbstractController
     {
         if (!$quiz) {
             $this->addFlash('error', 'Quiz introuvable !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('home');
         }
 
         if ($quiz->getQuestions()->isEmpty()) {
             $this->addFlash('error', 'Le quiz ne contient aucune question, veuillez en ajouter pour pouvoir le lancer !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('home');
         }
 
         # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
         if ($user !== $quiz->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('home');
         }
 
         $form = $this->createFormBuilder()
@@ -108,13 +108,13 @@ final class GameController extends AbstractController
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('home');
         }
 
         # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('home');
         }
 
         $currentIndexQuestion = count($quizAttempt->getAnswerAttempts());
@@ -252,7 +252,7 @@ final class GameController extends AbstractController
 
         if ($quizAttempt->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         if ($this->isCsrfTokenValid('delete' . $quizAttempt->getId(), $request->request->get('_token'))) {
@@ -277,7 +277,7 @@ final class GameController extends AbstractController
 
         if ($answerAttempt->getQuizAttempt()->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
 
@@ -296,7 +296,7 @@ final class GameController extends AbstractController
 
         if ($quizAttempt->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
-            return $this->redirectToRoute('quiz_list');
+            return $this->redirectToRoute('library_quiz_list');
         }
 
         if (!$this->isCsrfTokenValid('reset' . $quizAttempt->getId(), $request->request->get('_token'))) {
