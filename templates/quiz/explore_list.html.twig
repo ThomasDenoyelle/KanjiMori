@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Explorer les quiz - {{ app_name|default('Kanji App') }}{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-8">
+
+            <div class="flex flex-col gap-2 text-center sm:text-left">
+                <h1 class="text-4xl font-bold flex items-center gap-3 justify-center sm:justify-start">
+                    <i class="fa-solid fa-globe text-primary"></i> Quiz de la communauté
+                </h1>
+                <p class="text-base-content/70 text-lg">Découvre et joue aux quiz créés par la communauté !</p>
+            </div>
+
+            <div class="divider mt-0"></div>
+
+            {% if quizList is empty %}
+                <div class="alert alert-info shadow-sm max-w-2xl mx-auto mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Il n'y a aucun quiz public pour le moment. Reviens un peu plus tard !</span>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    {% for quiz in quizList %}
+                        <div class="card bg-base-300 shadow-xl border border-base-200 hover:border-primary/50 transition-colors flex flex-col">
+                            <div class="card-body p-6 flex flex-col grow">
+
+                                <h2 class="card-title text-2xl mb-1">{{ quiz.title|capitalize }}</h2>
+
+                                <div class="flex items-center gap-3 mt-2 mb-4">
+                                    <div class="avatar">
+                                        <div class="w-8 h-8 rounded-full ring ring-primary/30 ring-offset-base-300 ring-offset-2">
+                                            {% if quiz.author.avatar %}
+                                                <img src="{{ vich_uploader_asset(quiz.author, 'avatarFile') }}" alt="Avatar de {{ quiz.author.firstname }}" />
+                                            {% else %}
+                                                <img src="https://ui-avatars.com/api/?name={{ quiz.author.firstname }}+{{ quiz.author.lastname }}&background=random" alt="Avatar par défaut" />
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="text-sm font-medium text-base-content/80">
+                                        {{ quiz.author.firstname }} {{ quiz.author.lastname|first }}.
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-4 border-t border-base-content/10">
+                                    <span class="flex items-center gap-2 font-semibold">
+                                        <i class="fa-solid fa-clipboard-question text-primary"></i>
+                                        {{ quiz.questions|length }} question{{ quiz.questions|length > 1 ? 's' : '' }}
+                                    </span>
+                                    <span>{{ quiz.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
+                                </div>
+
+                                <div class="card-actions justify-end mt-4">
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary w-full">
+                                        <i class="fa-solid fa-play"></i> Jouer
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
