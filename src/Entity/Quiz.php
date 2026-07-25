@@ -44,10 +44,17 @@ class Quiz
     #[ORM\Column]
     private ?bool $isPublic = false;
 
+    /**
+     * @var Collection<int, Folder>
+     */
+    #[ORM\ManyToMany(targetEntity: Folder::class, mappedBy: 'quizzes')]
+    private Collection $folders;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->quizAttempts = new ArrayCollection();
+        $this->folders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +190,33 @@ class Quiz
     public function setIsPublic(?bool $isPublic): static
     {
         $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Folder>
+     */
+    public function getFolders(): Collection
+    {
+        return $this->folders;
+    }
+
+    public function addFolder(Folder $folder): static
+    {
+        if (!$this->folders->contains($folder)) {
+            $this->folders->add($folder);
+            $folder->addQuiz($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFolder(Folder $folder): static
+    {
+        if ($this->folders->removeElement($folder)) {
+            $folder->removeQuiz($this);
+        }
 
         return $this;
     }

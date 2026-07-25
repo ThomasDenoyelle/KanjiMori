@@ -75,9 +75,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, Folder>
+     */
+    #[ORM\OneToMany(targetEntity: Folder::class, mappedBy: 'author', orphanRemoval: true)]
+    private Collection $folders;
+
+    /**
+     * @var Collection<int, Folder>
+     */
+    #[ORM\ManyToMany(targetEntity: Folder::class, mappedBy: 'members')]
+    private Collection $sharedFolders;
+
     public function __construct()
     {
         $this->quizAttempts = new ArrayCollection();
+        $this->folders = new ArrayCollection();
+        $this->sharedFolders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -268,5 +282,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getAvatar(): ?string
     {
         return $this->avatar;
+    }
+
+    /**
+     * @return Collection<int, Folder>
+     */
+    public function getFolders(): Collection
+    {
+        return $this->folders;
+    }
+
+    public function addFolder(Folder $folder): static
+    {
+        if (!$this->folders->contains($folder)) {
+            $this->folders->add($folder);
+            $folder->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFolder(Folder $folder): static
+    {
+        if ($this->folders->removeElement($folder)) {
+            // set the owning side to null (unless already changed)
+            if ($folder->getAuthor() === $this) {
+                $folder->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Folder>
+     */
+    public function getSharedFolders(): Collection
+    {
+        return $this->sharedFolders;
+    }
+
+    public function addSharedFolder(Folder $sharedFolder): static
+    {
+        if (!$this->sharedFolders->contains($sharedFolder)) {
+            $this->sharedFolders->add($sharedFolder);
+            $sharedFolder->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSharedFolder(Folder $sharedFolder): static
+    {
+        if ($this->sharedFolders->removeElement($sharedFolder)) {
+            $sharedFolder->removeMember($this);
+        }
+
+        return $this;
     }
 }

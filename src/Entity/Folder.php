@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FolderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -30,6 +32,28 @@ class Folder
 
     #[ORM\Column]
     private ?bool $isPublic = null;
+
+    #[ORM\ManyToOne(inversedBy: 'folders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    /**
+     * @var Collection<int, Quiz>
+     */
+    #[ORM\ManyToMany(targetEntity: Quiz::class, inversedBy: 'folders')]
+    private Collection $quizzes;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'sharedFolders')]
+    private Collection $members;
+
+    public function __construct()
+    {
+        $this->quizzes = new ArrayCollection();
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,5 +130,65 @@ class Folder
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quiz>
+     */
+    public function getQuizzes(): Collection
+    {
+        return $this->quizzes;
+    }
+
+    public function addQuiz(Quiz $quiz): static
+    {
+        if (!$this->quizzes->contains($quiz)) {
+            $this->quizzes->add($quiz);
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): static
+    {
+        $this->quizzes->removeElement($quiz);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(User $member): static
+    {
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(User $member): static
+    {
+        $this->members->removeElement($member);
+
+        return $this;
     }
 }
