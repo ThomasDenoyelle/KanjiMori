@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\FolderRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[ORM\Entity(repositoryClass: FolderRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Folder
 {
     #[ORM\Id]
@@ -92,5 +94,17 @@ class Folder
         $this->isPublic = $isPublic;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 }
