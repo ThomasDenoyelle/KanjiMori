@@ -35,8 +35,7 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
-        if ($user !== $quiz->getAuthor()) {
+        if ($user !== $quiz->getAuthor() && !$quiz->isPublic()) {
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('home');
         }
@@ -111,7 +110,6 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        # ToDo: Gérer le lancement d'un quiz selon les personnes qui seront autorisés à le faire (ex: uniquement l'auteur du quiz, ou tous les utilisateurs, ou un groupe d'utilisateurs)
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');
             return $this->redirectToRoute('home');
