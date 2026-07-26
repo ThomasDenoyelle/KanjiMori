@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Folder;
+use App\Entity\User;
 use App\Form\FolderType;
 use App\Repository\FolderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 final class FolderController extends AbstractController
 {
     #[Route('/my-library/folder', name: 'library_folder_list')]
-    public function myFolder(#[CurrentUser] $user, FolderRepository $folderRepository): Response
+    public function myFolder(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
     {
         $folderList = $folderRepository->findBy(['author' => $user]);
 
@@ -29,7 +30,7 @@ final class FolderController extends AbstractController
     }
 
     #[Route('/my-library/folder/new', name: 'library_folder_new')]
-    public function new(#[CurrentUser] $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function new(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         $folder = new Folder();
         $folder->setAuthor($user);
@@ -38,6 +39,25 @@ final class FolderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($folder);
             $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('library_folder_list');
+    }
+
+    #[Route('/my-library/folder/{folder}/delete', name: 'library_folder_delete', requirements: ['folder' => '\d+'], methods: ['POST'])]
+    public function delete(#[CurrentUser] User $user, Folder $folder, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($folder->getAuthor() !== $user) {
+            $this->addFlash('error','Action non autorisé ou dossier introuvable !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        if ($this->isCsrfTokenValid('delete_folder_' . $folder->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($folder);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre dossier a bien été supprimé');
+        } else {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
         }
 
         return $this->redirectToRoute('library_folder_list');
