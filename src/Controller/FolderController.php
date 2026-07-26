@@ -6,14 +6,16 @@ use App\Entity\Folder;
 use App\Entity\User;
 use App\Form\FolderType;
 use App\Repository\FolderRepository;
+use App\Repository\QuizRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 final class FolderController extends AbstractController
 {
     #[Route('/my-library/folder', name: 'library_folder_list')]
@@ -61,5 +63,21 @@ final class FolderController extends AbstractController
         }
 
         return $this->redirectToRoute('library_folder_list');
+    }
+
+    #[Route('/my-library/folder/{folder}/show', name: 'library_folder_show')]
+    public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository): Response
+    {
+        if ($folder->getAuthor() !== $user) {
+            $this->addFlash('error','Action non autorisé ou dossier introuvable !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        $quizList = $quizRepository->findAllQuizByUser($user);
+
+        return $this->render('folder/show.html.twig', [
+            'folder' => $folder,
+            'quizList' => $quizList,
+        ]);
     }
 }
