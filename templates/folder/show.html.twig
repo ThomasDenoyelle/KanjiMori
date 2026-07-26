@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ folder.title }} - Dossier{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-8">
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 bg-base-300 p-6 rounded-3xl shadow-sm border border-base-200">
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-4xl font-bold flex items-center gap-3">
+                            <i class="fa-solid fa-folder-open text-primary"></i> {{ folder.title }}
+                        </h1>
+                        {% if folder.isPublic %}
+                            <div class="badge badge-success badge-sm gap-1 py-3 px-2 font-bold shadow-sm">
+                                <i class="fa-solid fa-globe text-xs"></i> Public
+                            </div>
+                        {% else %}
+                            <div class="badge badge-ghost badge-sm gap-1 py-3 px-2 font-bold opacity-70 shadow-sm">
+                                <i class="fa-solid fa-lock text-xs"></i> Privé
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <p class="text-base-content/80 text-lg max-w-3xl">
+                        {{ folder.description ?: 'Aucune description pour ce dossier.' }}
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mt-1">
+                        <div class="badge badge-outline gap-2 font-medium">
+                            <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
+                        </div>
+                        {% if folder.isPublic %}
+                            <div class="badge badge-outline gap-2 font-medium">
+                                <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+                    <button class="btn btn-primary shadow-sm w-full sm:w-auto" onclick="manage_quizzes_modal.showModal()">
+                        <i class="fa-solid fa-pen-to-square"></i> Gérer les quiz
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider mt-0 mb-0">Contenu du dossier</div>
+
+            {% if folder.quizzes is empty %}
+                <div class="alert alert-info shadow-sm mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Ce dossier est vide. Cliquez sur "Gérer les quiz" pour commencer à le remplir !</span>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+                    {% for quiz in folder.quizzes %}
+                        <div class="card bg-base-300 shadow-xl border border-base-200 hover:border-primary/50 transition-colors flex flex-col">
+                            <div class="card-body p-6 flex flex-col grow">
+                                <h2 class="card-title text-2xl truncate mb-2" title="{{ quiz.title }}">
+                                    {{ quiz.title }}
+                                </h2>
+
+                                <div class="flex flex-wrap gap-2 mb-6 grow">
+                                    <div class="badge badge-outline gap-2 font-medium">
+                                        <i class="fa-solid fa-clipboard-question"></i> {{ quiz.questions|length }} questions
+                                    </div>
+                                </div>
+
+                                <div class="card-actions justify-end mt-auto pt-4 border-t border-base-200/50">
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary w-full">
+                                        <i class="fa-solid fa-play"></i> Jouer
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <dialog id="manage_quizzes_modal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-list-check text-primary"></i> Gérer les quiz
+            </h3>
+
+            <div class="flex flex-col gap-2">
+                <p class="text-sm text-base-content/70 mb-4">
+                    La liste de tous vos quiz apparaîtra ici.
+                </p>
+            </div>
+
+            <div class="modal-action mt-8">
+                <form method="dialog">
+                    <button class="btn btn-primary">Terminer</button>
+                </form>
+            </div>
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+            <button>Fermer</button>
+        </form>
+    </dialog>
+{% endblock %}
