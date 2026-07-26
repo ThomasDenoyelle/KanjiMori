@@ -18,31 +18,37 @@ class FolderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $user = $options['user'];
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
                 'required' => true,
+                'label_attr' => [
+                    'class' => 'label font-semibold'
+                ],
+                'attr' => [
+                    'class' => 'input input-bordered w-full',
+                ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'label font-semibold'
+                ],
+                'attr' => [
+                    'class' => 'textarea textarea-bordered w-full',
+                    'rows' => 3
+                ]
             ])
             ->add('isPublic', CheckboxType::class, [
                 'label' => 'Partagé ce dossier avec d\'autres utilisateurs',
                 'required' => false,
-            ])
-            ->add('quizzes', EntityType::class, [
-                'class' => Quiz::class,
-                'choice_label' => 'title',
-                'multiple' => true,
-                'query_builder' => function (QuizRepository $quizRepository) use ($user) {
-                return $quizRepository->createQueryBuilder('q')
-                    ->where('q.author = :user')
-                    ->setParameter('user', $user)
-                    ->orderBy('q.title', 'ASC');
-
-                }
+                'label_attr' => [
+                    'class' => 'label font-semibold'
+                ],
+                'attr' => [
+                    'class' => 'toggle toggle-primary'
+                ]
             ])
         ;
     }
