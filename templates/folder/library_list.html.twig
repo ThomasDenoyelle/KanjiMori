@@ -47,23 +47,31 @@
                                     {% endif %}
                                 </div>
 
-                                <p class="text-base-content/70 text-sm mb-4 line-clamp-2 grow">
+                                <p class="text-base-content/70 text-sm line-clamp-2 grow">
                                     {{ folder.description ?: 'Aucune description fournie.' }}
                                 </p>
 
-                                <div class="flex flex-wrap gap-2 mb-6">
+                                <div class="flex flex-wrap gap-2">
                                     <div class="badge badge-outline gap-2 font-medium">
                                         <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
                                     </div>
+
+                                    {% if folder.isPublic %}
                                     <div class="badge badge-outline gap-2 font-medium">
                                         <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
                                     </div>
+                                    {% endif %}
                                 </div>
 
                                 <div class="card-actions justify-end mt-auto pt-4 border-t border-base-200/50 flex-nowrap">
 
 
-
+                                    <form method="post" action="{{ path('library_folder_delete', {'folder': folder.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ? Les quiz qu\'il contient ne seront pas supprimés de votre compte.');" class="inline-block">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_folder_' ~ folder.id) }}">
+                                        <button class="btn btn-sm btn-ghost btn-circle text-error bg-error/10" title="Supprimer le dossier">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
