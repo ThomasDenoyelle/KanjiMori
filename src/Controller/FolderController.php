@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Folder;
+use App\Entity\Quiz;
 use App\Entity\User;
 use App\Form\FolderType;
 use App\Repository\FolderRepository;
@@ -78,6 +79,32 @@ final class FolderController extends AbstractController
         return $this->render('folder/show.html.twig', [
             'folder' => $folder,
             'quizList' => $quizList,
+        ]);
+    }
+
+    #[Route('/my-library/folder/{folder}/toggle-quiz/{quiz}', name: 'library_folder_toggle_quiz', methods: ['POST'])]
+    public function toggleQuiz(Folder $folder, Quiz $quiz, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($folder->getAuthor() !== $user || $quiz->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        if (!$this->isCsrfTokenValid('toggle' . $folder->getId() . $quiz->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
+        }
+
+        if ($folder->getQuizzes()->contains($quiz)) {
+            $folder->removeQuiz($quiz);
+        } else {
+            $folder->addQuiz($quiz);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('library_folder_show', [
+            'folder' => $folder->getId(),
         ]);
     }
 }
