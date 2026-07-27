@@ -8,12 +8,13 @@
 
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 bg-base-300 p-6 rounded-3xl shadow-sm border border-base-200">
                 <div class="flex flex-col gap-3">
-                    <div class="flex items-center gap-3">
-                        <h1 class="text-4xl font-bold flex items-center gap-3">
-                            <i class="fa-solid fa-folder-open text-primary"></i> {{ folder.title }}
+                    <div class="flex items-center gap-1">
+                        <h1 class="text-4xl font-bold flex items-center gap-1">
+                            {{ folder.title }}
                         </h1>
-                        <button class="btn btn-circle btn-primary btn-soft" onclick="update_folder_modal.showModal()">
-                            <i class="fa-solid fa-pen-to-square text-3xl"></i>
+                        <button class="btn btn-ghost" onclick="update_folder_modal.showModal()">
+                            <i class="fa-solid fa-folder-open text-primary text-2xl"></i>
+                            <i class="fa-solid fa-pen-to-square text-primary text-2xl"></i>
                         </button>
                     </div>
 
@@ -31,13 +32,17 @@
                                 <i class="fa-solid fa-lock text-xs"></i> Privé
                             </div>
                         {% endif %}
-                        <div class="badge badge-outline gap-2 font-medium">
+
+                        <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_quizzes_modal.showModal()">
                             <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
-                        </div>
+                            <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
+                        </button>
+
                         {% if folder.isPublic %}
-                            <div class="badge badge-outline gap-2 font-medium">
+                            <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_members_modal.showModal()">
                                 <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
-                            </div>
+                                <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
+                            </button>
                         {% endif %}
                     </div>
                 </div>
@@ -134,7 +139,7 @@
     <dialog id="update_folder_modal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
-                <i class="fa-solid fa-folder-plus text-primary"></i> Créer aun dossier
+                <i class="fa-solid fa-folder-plus text-primary"></i> Modifier un dossier
             </h3>
 
             {{ form_start(updateFolderForm, {'action': path('library_folder_update', {'folder': folder.id})}) }}
