@@ -76,9 +76,12 @@ final class FolderController extends AbstractController
 
         $quizList = $quizRepository->findAllQuizByUser($user);
 
+        $updateFolderForm = $this->createForm(FolderType::class, $folder, ['user' => $user]);
+
         return $this->render('folder/show.html.twig', [
             'folder' => $folder,
             'quizList' => $quizList,
+            'updateFolderForm' => $updateFolderForm,
         ]);
     }
 
@@ -106,5 +109,24 @@ final class FolderController extends AbstractController
         return $this->redirectToRoute('library_folder_show', [
             'folder' => $folder->getId(),
         ]);
+    }
+
+    #[Route('/my-library/folder/{folder}/update', name: 'library_folder_update', requirements: ['folder' => '\d+'], methods: ['POST'])]
+    public function update(Folder $folder, #[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($folder->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        $form = $this->createForm(FolderType::class, $folder, ['user' => $user]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre dossier a bien été mis à jour');
+        }
+
+        return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
     }
 }
