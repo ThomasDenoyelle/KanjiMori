@@ -32,6 +32,16 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    #[Route('/explore/class', name: 'explore_class_list')]
+    public function exploreClass(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
+    {
+        $classList = $folderRepository->findAllJoindedClassByUser($user);
+
+        return $this->render('folder/explore_list.html.twig', [
+            'classList' => $classList,
+        ]);
+    }
+
     #[Route('/my-library/folder/new', name: 'library_folder_new')]
     public function new(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -69,7 +79,7 @@ final class FolderController extends AbstractController
     #[Route('/my-library/folder/{folder}/show', name: 'library_folder_show')]
     public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository): Response
     {
-        if ($folder->getAuthor() !== $user) {
+        if ($folder->getAuthor() !== $user && !$folder->getMembers()->contains($user)) {
             $this->addFlash('error','Action non autorisé ou dossier introuvable !');
             return $this->redirectToRoute('library_folder_list');
         }
