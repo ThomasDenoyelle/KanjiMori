@@ -143,4 +143,30 @@ final class FolderController extends AbstractController
 
         return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
     }
+
+    #[Route('/my-library/folder/{folder}/toggle-member/{member}', name: 'library_folder_toggle_member', methods: ['POST'])]
+    public function toggleMember(Folder $folder, User $member, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($folder->getAuthor() !== $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        if (!$this->isCsrfTokenValid('toggle_member' . $folder->getId() . $member->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
+        }
+
+        if ($folder->getMembers()->contains($member)) {
+            $folder->removeMember($member);
+        } else {
+            $folder->addMember($member);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('library_folder_show', [
+            'folder' => $folder->getId(),
+        ]);
+    }
 }
