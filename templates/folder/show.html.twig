@@ -12,10 +12,12 @@
                         <h1 class="text-4xl font-bold flex items-center gap-1">
                             {{ folder.title }}
                         </h1>
-                        <button class="btn btn-ghost" onclick="update_folder_modal.showModal()">
+                        {% if folder.author == app.user %}
+                        <button class="btn btn-ghost px-1" onclick="update_folder_modal.showModal()">
                             <i class="fa-solid fa-folder-open text-primary text-2xl"></i>
                             <i class="fa-solid fa-pen-to-square text-primary text-2xl"></i>
                         </button>
+                        {% endif %}
                     </div>
 
                     <p class="text-base-content/80 text-lg max-w-3xl">
@@ -33,24 +35,24 @@
                             </div>
                         {% endif %}
 
-                        <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_quizzes_modal.showModal()">
-                            <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
-                            <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
-                        </button>
-
-                        {% if folder.isPublic %}
-                            <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_members_modal.showModal()">
-                                <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
+                        {% if folder.author == app.user %}
+                            <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_quizzes_modal.showModal()">
+                                <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
                                 <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
                             </button>
+                            {% if folder.isPublic %}
+                                <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_members_modal.showModal()">
+                                    <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
+                                    <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
+                                </button>
+                            {% endif %}
                         {% endif %}
-                    </div>
-                </div>
 
-                <div class="flex gap-2 w-full sm:w-auto mt-4 sm:mt-0">
-                    <button class="btn btn-primary shadow-sm w-full sm:w-auto" onclick="manage_quizzes_modal.showModal()">
-                        <i class="fa-solid fa-pen-to-square"></i> Gérer les quiz
-                    </button>
+                        <span class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer">
+                            <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
+                        </span>
+
+                    </div>
                 </div>
             </div>
 
@@ -92,6 +94,7 @@
         </div>
     </div>
 
+    {% if folder.author == app.user %}
     <dialog id="manage_quizzes_modal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
@@ -180,4 +183,5 @@
             <button>Fermer</button>
         </form>
     </dialog>
+    {% endif %}
 {% endblock %}
