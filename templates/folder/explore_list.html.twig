@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes classes{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-8">
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                <div class="flex flex-col gap-2">
+                    <h1 class="text-4xl font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-folder-open text-primary"></i> Mes Classes
+                    </h1>
+                    <p class="text-base-content/70 text-lg">Accéder a vos classes dont vous êtes membre.</p>
+                </div>
+            </div>
+
+            <div class="divider mt-0 mb-0"></div>
+
+            {% if classList is empty %}
+                <div class="alert alert-info shadow-sm mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Vous n'êtes pas encore membre d'une classe.</span>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+                    {% for folder in classList %}
+                        <div class="card bg-base-300 shadow-xl border border-base-200 hover:border-primary/50 transition-colors flex flex-col">
+                            <div class="card-body p-6 flex flex-col grow">
+
+                                <div class="flex justify-between items-start gap-2 mb-2">
+                                    <h2 class="card-title text-2xl truncate" title="{{ folder.title }}">
+                                        {{ folder.title }}
+                                    </h2>
+                                </div>
+
+                                <p class="text-base-content/70 text-sm line-clamp-2 grow">
+                                    {{ folder.description ?: 'Aucune description fournie.' }}
+                                </p>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <div class="badge badge-outline gap-2 font-medium">
+                                        <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
+                                    </div>
+                                     <div class="badge badge-outline gap-2 font-medium">
+                                         <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
+                                     </div>
+                                </div>
+
+                                <div class="card-actions justify-end mt-auto pt-4 border-t border-base-200/50 flex-nowrap">
+
+                                    <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-sm btn-primary grow sm:grow-0">
+                                        <i class="fa-solid fa-folder-open"></i> Ouvrir
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}
