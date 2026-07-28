@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Folder;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,15 @@ class FolderRepository extends ServiceEntityRepository
         parent::__construct($registry, Folder::class);
     }
 
-    //    /**
-    //     * @return Folder[] Returns an array of Folder objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('f')
-    //            ->andWhere('f.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('f.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Folder
-    //    {
-    //        return $this->createQueryBuilder('f')
-    //            ->andWhere('f.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findAllJoindedClassByUser(User $user)
+    {
+        return $this->createQueryBuilder('f')
+            ->innerJoin('f.members', 'm')
+            ->andWhere('m.id = :user')
+            ->andWhere('f.isPublic = true')
+            ->setParameter('user', $user->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
