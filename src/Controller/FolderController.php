@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\FolderType;
 use App\Repository\FolderRepository;
 use App\Repository\QuizRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +78,7 @@ final class FolderController extends AbstractController
     }
 
     #[Route('/my-library/folder/{folder}/show', name: 'library_folder_show')]
-    public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository): Response
+    public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository, UserRepository $userRepository): Response
     {
         if ($folder->getAuthor() !== $user && !$folder->getMembers()->contains($user)) {
             $this->addFlash('error','Action non autorisé ou dossier introuvable !');
@@ -86,12 +87,15 @@ final class FolderController extends AbstractController
 
         $quizList = $quizRepository->findAllQuizByUser($user);
 
+        $allUsers = $userRepository->findAllUserExceptCurrent($user);
+
         $updateFolderForm = $this->createForm(FolderType::class, $folder, ['user' => $user]);
 
         return $this->render('folder/show.html.twig', [
             'folder' => $folder,
             'quizList' => $quizList,
             'updateFolderForm' => $updateFolderForm,
+            'allUsers' => $allUsers,
         ]);
     }
 
