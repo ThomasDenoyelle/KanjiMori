@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\AvatarType;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,5 +61,15 @@ final class UserController extends AbstractController
         ]);
     }
 
+
+    #[Route('/user/list', name: 'user_list')]
+    public function list(#[CurrentUser] User $user, UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAllUserExceptCurrent($user);
+
+        return $this->render('user/list.html.twig', [
+            'users' => $users,
+        ]);
+    }
 
 }
