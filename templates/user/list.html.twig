@@ -17,7 +17,7 @@
                 <div class="card-body p-4 sm:p-6">
 
                     <div class="overflow-x-auto w-full" data-controller="datatable">
-                        <table class="table table-zebra w-full">
+                        <table class="table w-full">
 
                             <thead>
                             <tr>
@@ -34,7 +34,7 @@
                                     <td>
                                         <div class="flex items-center gap-4">
                                             <div class="avatar">
-                                                <div class="mask mask-squircle w-12 h-12 ring ring-primary ring-offset-base-100 ring-offset-1">
+                                                <div class="mask mask-squircle w-8 h-8 ring ring-primary ring-offset-base-100 ring-offset-1">
                                                     {% if listedUser.avatar %}
                                                         <img src="{{ vich_uploader_asset(listedUser, 'avatarFile') }}" alt="Avatar de {{ listedUser.firstname }}" />
                                                     {% else %}
@@ -44,7 +44,6 @@
                                             </div>
                                             <div>
                                                 <div class="font-bold text-lg">{{ listedUser.firstname }} {{ listedUser.lastname }}</div>
-                                                {# L'email s'affiche en dessous du nom uniquement sur mobile pour gagner de la place #}
                                                 <div class="text-sm opacity-50 md:hidden">{{ listedUser.email }}</div>
                                             </div>
                                         </div>
@@ -59,7 +58,7 @@
                                     </td>
 
                                     <td class="text-right align-middle">
-                                        <a href="{{ path('user_profil', {'user': listedUser.id}) }}" class="btn btn-primary btn-sm sm:btn-md">
+                                        <a href="{{ path('user_profil', {'user': listedUser.id}) }}" class="btn btn-primary btn-sm">
                                             <i class="fa-solid fa-user"></i> <span class="hidden sm:inline">Voir profil</span>
                                         </a>
                                     </td>
