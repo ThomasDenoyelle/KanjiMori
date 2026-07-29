@@ -46,11 +46,13 @@
                                     <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
                                 </button>
                             {% endif %}
-                        {% endif %}
+                        {% else %}
 
                         <span class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer">
                             <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
                         </span>
+
+                        {% endif %}
 
                     </div>
                 </div>
@@ -183,5 +185,60 @@
             <button>Fermer</button>
         </form>
     </dialog>
+    {% endif %}
+
+    {% if folder.author == app.user and folder.isPublic %}
+        <dialog id="manage_members_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-users text-primary"></i> Gérer les membres de la classe
+                </h3>
+
+                <div class="flex flex-col gap-2 max-h-96 overflow-y-auto pr-2">
+                    {% for targetUser in allUsers %}
+                        {% if targetUser != app.user %}
+
+                            <turbo-frame id="member-toggle-{{ targetUser.id }}">
+                                <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
+
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar placeholder">
+                                            <div class="w-8 rounded-full bg-base-300 text-neutral-content">
+                                                <span>{{ targetUser.firstname|first|upper }}</span>
+                                            </div>
+                                        </div>
+                                        <span class="font-bold truncate mr-2">{{ targetUser.firstname }} {{ targetUser.lastname }}</span>
+                                    </div>
+
+                                    <form method="post" action="{{ path('library_folder_toggle_member', {'folder': folder.id, 'member': targetUser.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle_member' ~ folder.id ~ targetUser.id) }}">
+
+                                        {% if folder.members.contains(targetUser) %}
+                                            <button type="submit" class="btn btn-sm btn-error btn-soft w-24">
+                                                <i class="fa-solid fa-minus"></i> Retirer
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-success btn-soft w-24">
+                                                <i class="fa-solid fa-plus"></i> Inviter
+                                            </button>
+                                        {% endif %}
+                                    </form>
+
+                                </div>
+                            </turbo-frame>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="modal-action mt-8">
+                    <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
+                </div>
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+                <button>Fermer</button>
+            </form>
+        </dialog>
     {% endif %}
 {% endblock %}
