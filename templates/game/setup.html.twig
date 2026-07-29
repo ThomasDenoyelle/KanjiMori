@@ -16,6 +16,12 @@
                         <div class="text-error text-sm mt-1">{{ form_errors(form.mode) }}</div>
                     </div>
 
+                    <div class="form-control w-full mb-6">
+                        {{ form_label(form.isShuffled) }}
+                        {{ form_widget(form.isShuffled) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(form.isShuffled) }}</div>
+                    </div>
+
                     <div class="card-actions justify-end mt-2">
                         <button type="submit" class="btn btn-primary w-full">Commencer le Quiz</button>
                     </div>

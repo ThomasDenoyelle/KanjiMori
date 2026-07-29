@@ -58,6 +58,12 @@ final class GameController extends AbstractController
             ->add('isShuffled', CheckboxType::class, [
                 'label'    => 'Mélanger les questions',
                 'required' => false,
+                'attr' => [
+                    'class' => 'checkbox checkbox-primary',
+                ],
+                'label_attr' => [
+                    'class' => 'label',
+                ]
             ])
             ->getForm();
 
