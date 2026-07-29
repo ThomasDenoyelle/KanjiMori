@@ -3,82 +3,192 @@
 {% block title %}Profil de {{ user.firstname }}{% endblock %}
 
 {% block body %}
-    <div class="flex items-center justify-center w-full min-h-[70vh] p-4">
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <div class="card w-full max-w-md bg-base-300 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title text-2xl font-bold justify-center">
-                    Profil
-                    {% if app.user == user and user.verified %}
-                        <a href="{{ path('user_update') }}">
-                            <i class="fa-solid fa-pen-to-square text-info hover:text-primary duration-200 transition-colors"></i>
-                        </a>
-                    {% endif%}
-                </h2>
+            <div class="lg:col-span-1 flex flex-col gap-4">
+                <div class="card w-full bg-base-300 shadow-xl border border-base-200 sticky top-4">
+                    <div class="card-body items-center text-center">
 
-                <div class="flex flex-col items-center justify-center my-2 relative">
-                    <div class="avatar">
-                        <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                            {% if user.avatar %}
-                                <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
-                            {% else %}
-                                <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                        <div class="flex flex-col items-center justify-center my-2 relative">
+                            <div class="avatar">
+                                <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
+                                    {% if user.avatar %}
+                                        <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
+                                    {% else %}
+                                        <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if app.user == user %}
+                                <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 right-0" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
+                                    <i class="fa-solid fa-camera"></i>
+                                </button>
                             {% endif %}
                         </div>
-                    </div>
 
-                    {% if app.user == user %}
-                        <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 ml-24" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
-                            <i class="fa-solid fa-camera"></i>
-                        </button>
-                    {% endif %}
-                </div>
+                        <h2 class="card-title text-2xl font-bold mt-2">
+                            {{ user.firstname }} {{ user.lastname }}
+                        </h2>
 
-                {% if app.user == user %}
-                    {% if not user.verified %}
-                        <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2">
-                            <div class="flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                                <span class="font-bold">Attention ! Votre compte n'est pas vérifié !</span>
+                        <div class="text-sm text-base-content/60 mb-4">
+                            Membre depuis {{ user.createdAt|date('M Y') }}
+                        </div>
+
+                        <div class="flex justify-center gap-6 mb-6 w-full px-4">
+                            <div class="text-center flex flex-col items-center">
+                                <span class="font-bold text-xl">{{ user.followers|length }}</span>
+                                <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnés</span>
                             </div>
-                            <a href="{{ path('app_resend_verify_email') }}" class="btn btn-active w-full">
-                                Renvoyer l'email de vérification
+                            <div class="divider divider-horizontal mx-0"></div>
+                            <div class="text-center flex flex-col items-center">
+                                <span class="font-bold text-xl">{{ user.following|length }}</span>
+                                <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnements</span>
+                            </div>
+                        </div>
+
+                        {% if app.user == user %}
+
+                            {% if not user.verified %}
+                                <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2 text-left mb-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <span class="font-bold text-sm">Compte non vérifié !</span>
+                                    </div>
+                                    <a href="{{ path('app_resend_verify_email') }}" class="btn btn-xs btn-active w-full">
+                                        Renvoyer l'email
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="badge badge-success badge-soft font-bold mb-4 gap-2 py-3 px-4">
+                                    <i class="fa-solid fa-check"></i> Compte vérifié
+                                </div>
+                            {% endif %}
+
+                            <div class="w-full text-left bg-base-200 p-4 rounded-xl mb-4">
+                                <p class="text-xs text-base-content/70 font-bold uppercase tracking-wider mb-1">Email</p>
+                                <p class="font-medium truncate">{{ user.email }}</p>
+                            </div>
+
+                            <a href="{{ path('user_update') }}" class="btn btn-outline btn-primary w-full">
+                                <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
                             </a>
-                        </div>
-                    {% else %}
-                        <div role="alert" class="alert alert-info alert-soft flex flex-col items-start gap-2">
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-check"></i>
-                                <span class="font-bold">Compte vérifié !</span>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
 
-                <div class="flex flex-col items-center justify-center gap-2">
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Prénom</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.firstname }}" disabled/>
-                        </label>
-                    </fieldset>
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Nom</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.lastname }}" disabled/>
-                        </label>
-                    </fieldset>
-                    <fieldset class="fieldset w-full">
-                        <legend class="fieldset-legend">Email</legend>
-                        <label>
-                            <input type="text" class="input w-full" value="{{ user.email }}" disabled/>
-                        </label>
-                    </fieldset>
+                        {% else %}
+
+                            {% set isFollowing = user in app.user.following %}
+
+                            <form method="post" action="{{ path('user_toggle_follow', {'targetUser': user.id}) }}" class="w-full mt-2">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_follow_' ~ user.id) }}">
+
+                                {% if isFollowing %}
+                                    <button type="submit" class="btn btn-neutral w-full shadow-sm">
+                                        <i class="fa-solid fa-user-check"></i> Ne plus suivre
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-primary w-full shadow-sm">
+                                        <i class="fa-solid fa-user-plus"></i> Suivre
+                                    </button>
+                                {% endif %}
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <div class="flex items-center gap-3 bg-base-300 p-6 rounded-3xl shadow-sm border border-base-200">
+                    <i class="fa-solid fa-globe text-primary text-3xl"></i>
+                    <div>
+                        <h2 class="text-2xl font-bold">Quiz publics</h2>
+                        <p class="text-base-content/70">Les créations partagées par {{ user.firstname }}</p>
+                    </div>
                 </div>
 
+
+                {% if publicQuizzes is empty %}
+                    <div class="alert alert-info shadow-sm">
+                        <i class="fa-solid fa-circle-info text-xl"></i>
+                        <span>{{ user.firstname }} n'a pas encore publié de quiz public.</span>
+                    </div>
+                {% else %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {% for quiz in publicQuizzes %}
+                            <div class="card bg-base-300 shadow-sm border border-base-200 hover:border-primary/50 transition-colors">
+                                <div class="card-body p-5 flex flex-col gap-3">
+                                    <h3 class="card-title text-xl truncate" title="{{ quiz.title }}">
+                                        {{ quiz.title }}
+                                    </h3>
+
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="document.getElementById('questions_modal_{{ quiz.id }}').showModal()" class="badge badge-outline badge-sm font-medium gap-1 hover:bg-base-200 hover:border-primary transition-colors cursor-pointer">
+                                            <i class="fa-solid fa-clipboard-question text-primary"></i>
+                                            {{ quiz.questions|length }} question{{ quiz.questions|length > 1 ? 's' : '' }}
+                                            <i class="fa-solid fa-eye ml-1 opacity-50 text-xs"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="card-actions justify-end mt-2 pt-2 border-t border-base-200/50">
+                                        <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary btn-sm w-full">
+                                            <i class="fa-solid fa-play"></i> Jouer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <dialog id="questions_modal_{{ quiz.id }}" class="modal modal-bottom sm:modal-middle">
+                                <div class="modal-box w-11/12 max-w-2xl">
+                                    <h3 class="font-bold text-2xl mb-4 flex items-center gap-3">
+                                        <i class="fa-solid fa-list text-primary"></i> Contenu du quiz
+                                    </h3>
+
+                                    <p class="text-base-content/70 mb-4 font-semibold">{{ quiz.title }}</p>
+
+                                    <div class="overflow-x-auto border border-base-200 rounded-xl">
+                                        <table class="table table-pin-rows w-full shadow-2xl bg-base-200">
+                                            <thead class="bg-base-200">
+                                            <tr>
+                                                <th class="w-12">#</th>
+                                                <th class="text-center">Kanji</th>
+                                                <th class="text-center">Lecture</th>
+                                                <th class="text-center">Traduction</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for question in quiz.questions %}
+                                                <tr>
+                                                    <th class="text-base-content/50">{{ loop.index }}</th>
+                                                    <td class="text-center">{{ question.kanji }}</td>
+                                                    <td class="text-center">{{ question.reading }}</td>
+                                                    <td class="text-center">{{ question.translation }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="modal-action mt-6">
+                                        <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary">
+                                            <i class="fa-solid fa-play"></i> Jouer à ce quiz
+                                        </a>
+                                        <form method="dialog">
+                                            <button class="btn btn-ghost">Fermer</button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <form method="dialog" class="modal-backdrop">
+                                    <button>Fermer</button>
+                                </form>
+                            </dialog>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
+
         </div>
     </div>
 
