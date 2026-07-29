@@ -87,11 +87,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Folder::class, mappedBy: 'members')]
     private Collection $sharedFolders;
 
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'followers')]
+    private Collection $following;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'following')]
+    private Collection $followers;
+
     public function __construct()
     {
         $this->quizAttempts = new ArrayCollection();
         $this->folders = new ArrayCollection();
         $this->sharedFolders = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -336,6 +350,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->sharedFolders->removeElement($sharedFolder)) {
             $sharedFolder->removeMember($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
+    public function addFollowing(self $following): static
+    {
+        if (!$this->following->contains($following)) {
+            $this->following->add($following);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowing(self $following): static
+    {
+        $this->following->removeElement($following);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(self $follower): static
+    {
+        if (!$this->followers->contains($follower)) {
+            $this->followers->add($follower);
+            $follower->addFollowing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(self $follower): static
+    {
+        if ($this->followers->removeElement($follower)) {
+            $follower->removeFollowing($this);
         }
 
         return $this;
