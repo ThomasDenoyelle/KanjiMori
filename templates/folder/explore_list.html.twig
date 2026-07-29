@@ -42,9 +42,11 @@
                                     <div class="badge badge-outline gap-2 font-medium">
                                         <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
                                     </div>
+                                    {% if app.user == folder.author %}
                                      <div class="badge badge-outline gap-2 font-medium">
                                          <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
                                      </div>
+                                    {% endif %}
                                 </div>
 
                                 <div class="card-actions justify-end mt-auto pt-4 border-t border-base-200/50 flex-nowrap">
@@ -52,6 +54,16 @@
                                     <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-sm btn-primary grow sm:grow-0">
                                         <i class="fa-solid fa-folder-open"></i> Ouvrir
                                     </a>
+
+                                    {% if app.user != folder.author and app.user in folder.members %}
+                                        <form method="post" action="{{ path('library_folder_quit', {'folder': folder.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir quitter cette classe ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('quit_folder_' ~ folder.id) }}">
+
+                                            <button type="submit" class="btn btn-sm btn-error btn-soft">
+                                                <i class="fa-solid fa-arrow-right-from-bracket"></i> Quitter
+                                            </button>
+                                        </form>
+                                    {% endif %}
 
                                 </div>
                             </div>
