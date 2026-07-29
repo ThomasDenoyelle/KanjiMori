@@ -169,4 +169,29 @@ final class FolderController extends AbstractController
             'folder' => $folder->getId(),
         ]);
     }
+
+    #[Route('/my-library/folder/{folder}/quit', name: 'library_folder_quit', methods: ['POST'])]
+    public function quitFolder(Folder $folder, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($folder->getAuthor() === $user) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('library_folder_list');
+        }
+
+        if (!$this->isCsrfTokenValid('quit_folder_' . $folder->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
+        }
+
+        if ($folder->getMembers()->contains($user)) {
+            $folder->removeMember($user);
+            $this->addFlash('success', 'Vous avez quitté la classe ' . $folder->getTitle());
+        } else {
+            return $this->redirectToRoute('explore_class_list');
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('explore_class_list');
+    }
 }
