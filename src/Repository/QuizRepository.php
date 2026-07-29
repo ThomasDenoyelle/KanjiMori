@@ -41,4 +41,17 @@ class QuizRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findPublicQuizzesWithQuestionsByUser(User $user): array
+    {
+        return $this->createQueryBuilder('q')
+            ->leftJoin('q.questions', 'quest')
+            ->addSelect('quest')
+            ->andWhere('q.author = :user')
+            ->andWhere('q.isPublic = true')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 }

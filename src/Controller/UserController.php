@@ -39,10 +39,7 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
         }
 
-        $publicQuizzes = $quizRepository->findBy([
-            'author' => $user,
-            'isPublic' => true
-        ]);
+        $publicQuizzes = $quizRepository->findPublicQuizzesWithQuestionsByUser($user);
 
         return $this->render('user/profil.html.twig', [
             'user' => $user,
