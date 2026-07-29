@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\AvatarType;
 use App\Form\UserType;
+use App\Repository\QuizRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/user/{user}/profil', name: 'user_profil')]
-    public function profil(?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function profil(?User $user, Request $request, EntityManagerInterface $entityManager, QuizRepository $quizRepository): Response
     {
         if (!$user) {
             $this->addFlash('warning', 'L\'utilisateur n\'existe pas');
@@ -38,9 +39,15 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
         }
 
+        $publicQuizzes = $quizRepository->findBy([
+            'author' => $user,
+            'isPublic' => true
+        ]);
+
         return $this->render('user/profil.html.twig', [
             'user' => $user,
             'avatarForm' => $avatarForm,
+            'publicQuizzes' => $publicQuizzes,
         ]);
     }
 
@@ -70,6 +77,33 @@ final class UserController extends AbstractController
         return $this->render('user/list.html.twig', [
             'users' => $users,
         ]);
+    }
+
+
+    #[Route('/user/{targetUser}/toggle-follow', name: 'user_toggle_follow', methods: ['POST'])]
+    public function toggleFollow(#[CurrentUser] User $user, User $targetUser, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if ($user === $targetUser) {
+            $this->addFlash('error', 'Vous ne pouvez pas suivre vous-même.');
+            return $this->redirectToRoute('user_list');
+        }
+
+        if (!$this->isCsrfTokenValid('toggle_follow_' . $targetUser->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirect($request->headers->get('referer') ?? $this->generateUrl('user_list'));
+        }
+
+        if ($user->getFollowing()->contains($targetUser)) {
+            $user->removeFollowing($targetUser);
+            $this->addFlash('success', 'Vous ne suivez plus ' . $targetUser->getFirstname());
+        } else {
+            $user->addFollowing($targetUser);
+            $this->addFlash('success', 'Vous suivez maintenant ' . $targetUser->getFirstname());
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($request->headers->get('referer') ?? $this->generateUrl('user_list'));
     }
 
 }
