@@ -42,4 +42,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+
+    public function findMutualFollowers(User $user): array
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.followers', 'f1')
+            ->join('u.following', 'f2')
+            ->andWhere('f1 = :user')
+            ->andWhere('f2 = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

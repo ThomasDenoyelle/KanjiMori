@@ -87,7 +87,7 @@ final class FolderController extends AbstractController
 
         $quizList = $quizRepository->findAllQuizByUser($user);
 
-        $allUsers = $userRepository->findAllUserExceptCurrent($user);
+        $mutualFriends = $userRepository->findMutualFollowers($user);
 
         $updateFolderForm = $this->createForm(FolderType::class, $folder, ['user' => $user]);
 
@@ -95,7 +95,7 @@ final class FolderController extends AbstractController
             'folder' => $folder,
             'quizList' => $quizList,
             'updateFolderForm' => $updateFolderForm,
-            'allUsers' => $allUsers,
+            'mutualFriends' => $mutualFriends,
         ]);
     }
 
