@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Folder;
 use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Entity\User;
@@ -24,14 +25,27 @@ class UserFixtures extends Fixture
         $user->setLastName('Prédine Kraljic');
         $user->setRoles(['ROLE_ADMIN']);
         $user->setIsVerified(true);
-
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            'caca'
-        );
-
-        $user->setPassword($hashedPassword);
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'caca'));
         $manager->persist($user);
+
+        $prof = new User();
+        $prof->setEmail('professeur@nihongo.com');
+        $prof->setFirstName('Akira');
+        $prof->setLastName('Sensei');
+        $prof->setRoles(['ROLE_USER']);
+        $prof->setIsVerified(true);
+        $prof->setPassword($this->passwordHasher->hashPassword($prof, 'password123'));
+        $manager->persist($prof);
+
+        $student = new User();
+        $student->setEmail('eleve@nihongo.com');
+        $student->setFirstName('Thomas');
+        $student->setLastName('Dupont');
+        $student->setRoles(['ROLE_USER']);
+        $student->setIsVerified(true);
+        $student->setPassword($this->passwordHasher->hashPassword($student, 'password123'));
+        $manager->persist($student);
+
 
         $quizElements = new Quiz();
         $quizElements->setTitle('Les éléments de base (N5)');
@@ -52,7 +66,6 @@ class UserFixtures extends Fixture
             $question->setReading($data['reading']);
             $question->setTranslation($data['translation']);
             $question->setQuiz($quizElements);
-
             $manager->persist($question);
         }
 
@@ -73,23 +86,15 @@ class UserFixtures extends Fixture
             $question->setReading($data['reading']);
             $question->setTranslation($data['translation']);
             $question->setQuiz($quizTime);
-
             $manager->persist($question);
         }
 
-        $prof = new User();
-        $prof->setEmail('professeur@nihongo.com');
-        $prof->setFirstName('Akira');
-        $prof->setLastName('Sensei');
-        $prof->setRoles(['ROLE_USER']);
-        $prof->setIsVerified(true);
-        $prof->setPassword($this->passwordHasher->hashPassword($prof, 'password123'));
-        $manager->persist($prof);
+
 
         $quizPublic1 = new Quiz();
         $quizPublic1->setTitle('Salutations de tous les jours');
         $quizPublic1->setAuthor($prof);
-        $quizPublic1->setIsPublic(true);
+        $quizPublic1->setIsPublic(true); // Quiz public
         $manager->persist($quizPublic1);
 
         $questionsGreetings = [
@@ -128,6 +133,36 @@ class UserFixtures extends Fixture
             $question->setQuiz($quizPublic2);
             $manager->persist($question);
         }
+
+        $folderPrivate = new Folder();
+        $folderPrivate->setTitle('Mes révisions N5');
+        $folderPrivate->setDescription('Dossier personnel pour organiser mes propres quiz.');
+        $folderPrivate->setAuthor($user);
+        $folderPrivate->setIsPublic(false);
+        $folderPrivate->addQuiz($quizElements);
+        $folderPrivate->addQuiz($quizTime);
+        $manager->persist($folderPrivate);
+
+        $folderClass = new Folder();
+        $folderClass->setTitle('Classe Japonais Débutant A1');
+        $folderClass->setDescription('Dossier contenant les exercices hebdomadaires.');
+        $folderClass->setAuthor($prof);
+        $folderClass->setIsPublic(true);
+        $folderClass->addQuiz($quizPublic1);
+        $folderClass->addQuiz($quizPublic2);
+        $folderClass->addMember($user);
+        $folderClass->addMember($student);
+        $manager->persist($folderClass);
+
+        $folderStudy = new Folder();
+        $folderStudy->setTitle('Groupe d\'étude Kanji');
+        $folderStudy->setDescription('Dossier partagé avec Thomas pour réviser ensemble.');
+        $folderStudy->setAuthor($user);
+        $folderStudy->setIsPublic(true);
+        $folderStudy->addQuiz($quizElements);
+        $folderStudy->addMember($student);
+        $manager->persist($folderStudy);
+
 
         $manager->flush();
     }
