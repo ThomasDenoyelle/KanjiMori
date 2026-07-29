@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuaire des utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-8">
+
+            <div class="flex flex-col gap-2">
+                <h1 class="text-4xl font-bold flex items-center gap-3">
+                    <i class="fa-solid fa-users text-primary"></i> Annuaire
+                </h1>
+                <p class="text-base-content/70 text-lg">Retrouvez les autres membres de la plateforme et visitez leurs profils.</p>
+            </div>
+
+            <div class="card bg-base-300 shadow-xl border border-base-200">
+                <div class="card-body p-4 sm:p-6">
+
+                    <div class="overflow-x-auto w-full" data-controller="datatable">
+                        <table class="table table-zebra w-full">
+
+                            <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th class="hidden md:table-cell">Email</th>
+                                <th class="hidden sm:table-cell">Membre depuis le</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for listedUser in users %}
+                                <tr class="hover">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12 ring ring-primary ring-offset-base-100 ring-offset-1">
+                                                    {% if listedUser.avatar %}
+                                                        <img src="{{ vich_uploader_asset(listedUser, 'avatarFile') }}" alt="Avatar de {{ listedUser.firstname }}" />
+                                                    {% else %}
+                                                        <img src="https://ui-avatars.com/api/?name={{ listedUser.firstname }}+{{ listedUser.lastname }}&background=random" alt="Avatar par défaut" />
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-lg">{{ listedUser.firstname }} {{ listedUser.lastname }}</div>
+                                                {# L'email s'affiche en dessous du nom uniquement sur mobile pour gagner de la place #}
+                                                <div class="text-sm opacity-50 md:hidden">{{ listedUser.email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="hidden md:table-cell align-middle">
+                                        <span class="font-medium opacity-80">{{ listedUser.email }}</span>
+                                    </td>
+
+                                    <td class="hidden sm:table-cell align-middle">
+                                        <span class="badge badge-ghost">{{ listedUser.createdAt|date('d/m/Y') }}</span>
+                                    </td>
+
+                                    <td class="text-right align-middle">
+                                        <a href="{{ path('user_profil', {'user': listedUser.id}) }}" class="btn btn-primary btn-sm sm:btn-md">
+                                            <i class="fa-solid fa-user"></i> <span class="hidden sm:inline">Voir profil</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center italic opacity-50 py-8">
+                                        Aucun autre utilisateur n'est inscrit pour le moment.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
