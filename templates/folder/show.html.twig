@@ -243,40 +243,48 @@
                 </h3>
 
                 <div class="flex flex-col gap-2 max-h-96 overflow-y-auto pr-2">
-                    {% for targetUser in allUsers %}
-                        {% if targetUser != app.user %}
+                    {% if mutualFriends is not empty %}
+                        {% for targetUser in mutualFriends %}
+                            {% if targetUser != app.user %}
 
-                            <turbo-frame id="member-toggle-{{ targetUser.id }}">
-                                <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
+                                <turbo-frame id="member-toggle-{{ targetUser.id }}">
+                                    <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
 
-                                    <div class="flex items-center gap-3">
-                                        <div class="avatar placeholder">
-                                            <div class="w-8 rounded-full bg-base-300 text-neutral-content">
-                                                <span>{{ targetUser.firstname|first|upper }}</span>
+                                        <div class="flex items-center gap-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-8 h-8 ring ring-primary ring-offset-base-100 ring-offset-1">
+                                                    {% if targetUser.avatar %}
+                                                        <img src="{{ vich_uploader_asset(targetUser, 'avatarFile') }}" alt="Avatar de {{ targetUser.firstname }}" />
+                                                    {% else %}
+                                                        <img src="https://ui-avatars.com/api/?name={{ targetUser.firstname }}+{{ targetUser.lastname }}&background=random" alt="Avatar par défaut" />
+                                                    {% endif %}
+                                                </div>
                                             </div>
+                                            <span class="font-bold truncate mr-2">{{ targetUser.firstname }} {{ targetUser.lastname }}</span>
                                         </div>
-                                        <span class="font-bold truncate mr-2">{{ targetUser.firstname }} {{ targetUser.lastname }}</span>
+
+                                        <form method="post" action="{{ path('library_folder_toggle_member', {'folder': folder.id, 'member': targetUser.id}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('toggle_member' ~ folder.id ~ targetUser.id) }}">
+
+                                            {% if folder.members.contains(targetUser) %}
+                                                <button type="submit" class="btn btn-sm btn-error btn-soft w-24">
+                                                    <i class="fa-solid fa-minus"></i> Retirer
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-sm btn-success btn-soft w-24">
+                                                    <i class="fa-solid fa-plus"></i> Inviter
+                                                </button>
+                                            {% endif %}
+                                        </form>
+
                                     </div>
+                                </turbo-frame>
 
-                                    <form method="post" action="{{ path('library_folder_toggle_member', {'folder': folder.id, 'member': targetUser.id}) }}">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle_member' ~ folder.id ~ targetUser.id) }}">
-
-                                        {% if folder.members.contains(targetUser) %}
-                                            <button type="submit" class="btn btn-sm btn-error btn-soft w-24">
-                                                <i class="fa-solid fa-minus"></i> Retirer
-                                            </button>
-                                        {% else %}
-                                            <button type="submit" class="btn btn-sm btn-success btn-soft w-24">
-                                                <i class="fa-solid fa-plus"></i> Inviter
-                                            </button>
-                                        {% endif %}
-                                    </form>
-
-                                </div>
-                            </turbo-frame>
-
-                        {% endif %}
-                    {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-sm text-base-content/70 italic">Vous n'avez aucun ami en commun pour partagé ce dossier.</p>
+                    {% endif %}
                 </div>
 
                 <div class="modal-action mt-8">
