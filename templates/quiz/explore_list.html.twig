@@ -29,7 +29,7 @@
 
                                 <h2 class="card-title text-2xl mb-1">{{ quiz.title|capitalize }}</h2>
 
-                                <div class="flex items-center gap-3 mt-2 mb-4">
+                                <div class="flex items-center gap-3">
                                     <div class="avatar">
                                         <div class="w-8 h-8 rounded-full ring ring-primary/30 ring-offset-base-300 ring-offset-2">
                                             {% if quiz.author.avatar %}
@@ -44,12 +44,13 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-4 border-t border-base-content/10">
-                                    <span class="flex items-center gap-2 font-semibold">
+                                <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-2 border-t border-base-content/10">
+                                    <button type="button" onclick="document.getElementById('questions_modal_{{ quiz.id }}').showModal()" class="badge badge-outline badge-sm font-medium gap-1 hover:bg-base-200 hover:border-primary transition-colors cursor-pointer">
                                         <i class="fa-solid fa-clipboard-question text-primary"></i>
                                         {{ quiz.questions|length }} question{{ quiz.questions|length > 1 ? 's' : '' }}
-                                    </span>
-                                    <span>{{ quiz.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
+                                        <i class="fa-solid fa-eye ml-1 opacity-50 text-xs"></i>
+                                    </button>
+                                    <span class="text-sm">{{ quiz.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
                                 </div>
 
                                 <div class="card-actions justify-end mt-4">
@@ -60,6 +61,53 @@
 
                             </div>
                         </div>
+
+                        <dialog id="questions_modal_{{ quiz.id }}" class="modal modal-bottom sm:modal-middle">
+                            <div class="modal-box w-11/12 max-w-2xl">
+                                <h3 class="font-bold text-2xl mb-4 flex items-center gap-3">
+                                    <i class="fa-solid fa-list text-primary"></i> Contenu du quiz
+                                </h3>
+
+                                <p class="text-base-content/70 mb-4 font-semibold">{{ quiz.title }}</p>
+
+                                <div class="overflow-x-auto border border-base-200 rounded-xl">
+                                    <table class="table table-pin-rows w-full shadow-2xl bg-base-200">
+                                        <thead class="bg-base-200">
+                                        <tr>
+                                            <th class="w-12">#</th>
+                                            <th class="text-center">Kanji</th>
+                                            <th class="text-center">Lecture</th>
+                                            <th class="text-center">Traduction</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for question in quiz.questions %}
+                                            <tr>
+                                                <th class="text-base-content/50">{{ loop.index }}</th>
+                                                <td class="text-center">{{ question.kanji }}</td>
+                                                <td class="text-center">{{ question.reading }}</td>
+                                                <td class="text-center">{{ question.translation }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="modal-action mt-6">
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary">
+                                        <i class="fa-solid fa-play"></i> Jouer à ce quiz
+                                    </a>
+                                    <form method="dialog">
+                                        <button class="btn btn-ghost">Fermer</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <form method="dialog" class="modal-backdrop">
+                                <button>Fermer</button>
+                            </form>
+                        </dialog>
+
                     {% endfor %}
 
                 </div>
