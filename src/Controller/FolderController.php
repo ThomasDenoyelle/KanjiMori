@@ -137,6 +137,7 @@ final class FolderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$folder->isPublic()) { $folder->getMembers()->clear(); }
             $entityManager->flush();
             $this->addFlash('success', 'Votre dossier a bien été mis à jour');
         }
