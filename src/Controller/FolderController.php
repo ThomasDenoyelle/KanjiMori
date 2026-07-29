@@ -23,7 +23,7 @@ final class FolderController extends AbstractController
     #[Route('/my-library/folder', name: 'library_folder_list')]
     public function myFolder(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
     {
-        $folderList = $folderRepository->findBy(['author' => $user]);
+        $folderList = $folderRepository->findAllFolderByUser($user);
 
         $newFolderForm = $this->createForm(FolderType::class, null, ['user' => $user]);
 

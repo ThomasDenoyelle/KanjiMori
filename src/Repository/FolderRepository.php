@@ -28,4 +28,17 @@ class FolderRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findAllFolderByUser(User $user)
+    {
+        return $this->createQueryBuilder('f')
+            ->select('f, q, m')
+            ->leftJoin('f.quizzes', 'q')
+            ->leftJoin('f.members', 'm')
+            ->andWhere('f.author = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }
