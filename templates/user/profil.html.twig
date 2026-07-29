@@ -7,96 +7,98 @@
         <div class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <div class="lg:col-span-1 flex flex-col gap-4">
-                <div class="card w-full bg-base-300 shadow-xl border border-base-200 sticky top-4">
-                    <div class="card-body items-center text-center">
+                <turbo-frame id="profile-sidebar-{{ user.id }}">
+                    <div class="card w-full bg-base-300 shadow-xl border border-base-200 sticky top-4">
+                        <div class="card-body items-center text-center">
 
-                        <div class="flex flex-col items-center justify-center my-2 relative">
-                            <div class="avatar">
-                                <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
-                                    {% if user.avatar %}
-                                        <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
-                                    {% else %}
-                                        <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
-                                    {% endif %}
+                            <div class="flex flex-col items-center justify-center my-2 relative">
+                                <div class="avatar">
+                                    <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
+                                        {% if user.avatar %}
+                                            <img src="{{ vich_uploader_asset(user, 'avatarFile') }}" alt="Avatar de {{ user.firstname }}" />
+                                        {% else %}
+                                            <img src="https://ui-avatars.com/api/?name={{ user.firstname }}+{{ user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if app.user == user %}
+                                    <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 right-0" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
+                                        <i class="fa-solid fa-camera"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <h2 class="card-title text-2xl font-bold mt-2">
+                                {{ user.firstname }} {{ user.lastname }}
+                            </h2>
+
+                            <div class="text-sm text-base-content/60 mb-4">
+                                Membre depuis {{ user.createdAt|date('M Y') }}
+                            </div>
+
+                            <div class="flex justify-center gap-6 mb-6 w-full px-4">
+                                <div class="text-center flex flex-col items-center">
+                                    <span class="font-bold text-xl">{{ user.followers|length }}</span>
+                                    <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnés</span>
+                                </div>
+                                <div class="divider divider-horizontal mx-0"></div>
+                                <div class="text-center flex flex-col items-center">
+                                    <span class="font-bold text-xl">{{ user.following|length }}</span>
+                                    <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnements</span>
                                 </div>
                             </div>
 
                             {% if app.user == user %}
-                                <button class="btn btn-circle btn-sm btn-primary absolute bottom-0 right-0" onclick="avatar_modal.showModal()" title="Modifier l'avatar">
-                                    <i class="fa-solid fa-camera"></i>
-                                </button>
-                            {% endif %}
-                        </div>
 
-                        <h2 class="card-title text-2xl font-bold mt-2">
-                            {{ user.firstname }} {{ user.lastname }}
-                        </h2>
-
-                        <div class="text-sm text-base-content/60 mb-4">
-                            Membre depuis {{ user.createdAt|date('M Y') }}
-                        </div>
-
-                        <div class="flex justify-center gap-6 mb-6 w-full px-4">
-                            <div class="text-center flex flex-col items-center">
-                                <span class="font-bold text-xl">{{ user.followers|length }}</span>
-                                <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnés</span>
-                            </div>
-                            <div class="divider divider-horizontal mx-0"></div>
-                            <div class="text-center flex flex-col items-center">
-                                <span class="font-bold text-xl">{{ user.following|length }}</span>
-                                <span class="text-xs text-base-content/70 uppercase tracking-widest font-semibold mt-1">Abonnements</span>
-                            </div>
-                        </div>
-
-                        {% if app.user == user %}
-
-                            {% if not user.verified %}
-                                <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2 text-left mb-4">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                        <span class="font-bold text-sm">Compte non vérifié !</span>
+                                {% if not user.verified %}
+                                    <div role="alert" class="alert alert-warning alert-soft flex flex-col items-start gap-2 text-left mb-4">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <span class="font-bold text-sm">Compte non vérifié !</span>
+                                        </div>
+                                        <a href="{{ path('app_resend_verify_email') }}" class="btn btn-xs btn-active w-full">
+                                            Renvoyer l'email
+                                        </a>
                                     </div>
-                                    <a href="{{ path('app_resend_verify_email') }}" class="btn btn-xs btn-active w-full">
-                                        Renvoyer l'email
-                                    </a>
+                                {% else %}
+                                    <div class="badge badge-success badge-soft font-bold mb-4 gap-2 py-3 px-4">
+                                        <i class="fa-solid fa-check"></i> Compte vérifié
+                                    </div>
+                                {% endif %}
+
+                                <div class="w-full text-left bg-base-200 p-4 rounded-xl mb-4">
+                                    <p class="text-xs text-base-content/70 font-bold uppercase tracking-wider mb-1">Email</p>
+                                    <p class="font-medium truncate">{{ user.email }}</p>
                                 </div>
+
+                                <a href="{{ path('user_update') }}" class="btn btn-outline btn-primary w-full">
+                                    <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
+                                </a>
+
                             {% else %}
-                                <div class="badge badge-success badge-soft font-bold mb-4 gap-2 py-3 px-4">
-                                    <i class="fa-solid fa-check"></i> Compte vérifié
-                                </div>
+
+                                {% set isFollowing = user in app.user.following %}
+
+                                <form method="post" action="{{ path('user_toggle_follow', {'targetUser': user.id}) }}" class="w-full mt-2">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle_follow_' ~ user.id) }}">
+
+                                    {% if isFollowing %}
+                                        <button type="submit" class="btn btn-neutral w-full shadow-sm">
+                                            <i class="fa-solid fa-user-check"></i> Ne plus suivre
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary w-full shadow-sm">
+                                            <i class="fa-solid fa-user-plus"></i> Suivre
+                                        </button>
+                                    {% endif %}
+                                </form>
+
                             {% endif %}
 
-                            <div class="w-full text-left bg-base-200 p-4 rounded-xl mb-4">
-                                <p class="text-xs text-base-content/70 font-bold uppercase tracking-wider mb-1">Email</p>
-                                <p class="font-medium truncate">{{ user.email }}</p>
-                            </div>
-
-                            <a href="{{ path('user_update') }}" class="btn btn-outline btn-primary w-full">
-                                <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
-                            </a>
-
-                        {% else %}
-
-                            {% set isFollowing = user in app.user.following %}
-
-                            <form method="post" action="{{ path('user_toggle_follow', {'targetUser': user.id}) }}" class="w-full mt-2">
-                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_follow_' ~ user.id) }}">
-
-                                {% if isFollowing %}
-                                    <button type="submit" class="btn btn-neutral w-full shadow-sm">
-                                        <i class="fa-solid fa-user-check"></i> Ne plus suivre
-                                    </button>
-                                {% else %}
-                                    <button type="submit" class="btn btn-primary w-full shadow-sm">
-                                        <i class="fa-solid fa-user-plus"></i> Suivre
-                                    </button>
-                                {% endif %}
-                            </form>
-
-                        {% endif %}
-
+                        </div>
                     </div>
-                </div>
+                </turbo-frame>
             </div>
 
             <div class="lg:col-span-2 flex flex-col gap-6">

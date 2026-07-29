@@ -95,10 +95,8 @@ final class UserController extends AbstractController
 
         if ($user->getFollowing()->contains($targetUser)) {
             $user->removeFollowing($targetUser);
-            $this->addFlash('success', 'Vous ne suivez plus ' . $targetUser->getFirstname());
         } else {
             $user->addFollowing($targetUser);
-            $this->addFlash('success', 'Vous suivez maintenant ' . $targetUser->getFirstname());
         }
 
         $entityManager->flush();
