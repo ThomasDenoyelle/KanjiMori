@@ -58,9 +58,27 @@
                                     </td>
 
                                     <td class="text-right align-middle">
-                                        <a href="{{ path('user_profil', {'user': listedUser.id}) }}" class="btn btn-primary btn-sm">
-                                            <i class="fa-solid fa-user"></i> <span class="hidden sm:inline">Voir profil</span>
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            {% set isFollowing = listedUser in app.user.following %}
+
+                                            <form method="post" action="{{ path('user_toggle_follow', {'targetUser': listedUser.id}) }}" class="m-0">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_follow_' ~ listedUser.id) }}">
+
+                                                {% if isFollowing %}
+                                                    <button type="submit" class="btn btn-warning btn-soft btn-sm">
+                                                        <i class="fa-solid fa-user-xmark"></i> <span class="hidden xl:inline">Ne plus suivre</span>
+                                                    </button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-info btn-soft btn-sm">
+                                                        <i class="fa-solid fa-user-plus"></i> <span class="hidden xl:inline">Suivre</span>
+                                                    </button>
+                                                {% endif %}
+                                            </form>
+
+                                            <a href="{{ path('user_profil', {'user': listedUser.id}) }}" class="btn btn-primary btn-sm">
+                                                <i class="fa-solid fa-user"></i> <span class="hidden sm:inline">Profil</span>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             {% else %}
