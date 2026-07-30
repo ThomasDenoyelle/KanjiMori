@@ -24,6 +24,14 @@ class FolderRepository extends ServiceEntityRepository
             ->andWhere('m.id = :user')
             ->andWhere('f.isPublic = true')
             ->setParameter('user', $user->getId())
+            ->leftJoin('f.quizzes', 'q')
+            ->addSelect('q')
+
+            ->leftJoin('f.members', 'all_members')
+            ->addSelect('all_members')
+
+            ->leftJoin('f.author', 'a')
+            ->addSelect('a')
             ->getQuery()
             ->getResult()
         ;
