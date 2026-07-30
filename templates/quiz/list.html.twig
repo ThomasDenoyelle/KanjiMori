@@ -32,6 +32,7 @@
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
                                 {% if quiz.questions|length > 0 %}
+                                    <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
                                     <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
                                 {% endif %}
 
@@ -46,11 +47,14 @@
                             <div class="justify-end dropdown dropdown-left sm:hidden flex">
                                 <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
                                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
-                                    <li>
-                                        {% if quiz.questions|length > 0 %}
+                                    {% if quiz.questions|length > 0 %}
+                                        <li>
+                                            <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
+                                        </li>
+                                        <li>
                                             <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
-                                        {% endif %}
-                                    </li>
+                                        </li>
+                                    {% endif %}
                                     <li>
                                         <a href="{{ path('library_quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
                                     </li>

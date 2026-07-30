@@ -85,7 +85,11 @@
                             </div>
 
                             <div class="flex-none w-full sm:w-auto">
-                                <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary sm:btn-sm w-full">
+                                <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                    Étudier
+                                </a>
+                                <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-success btn-sm">
                                     <i class="fa-solid fa-play"></i> Jouer
                                 </a>
                             </div>
@@ -124,7 +128,11 @@
                                 </div>
 
                                 <div class="modal-action mt-6">
-                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary">
+                                    <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                        Étudier
+                                    </a>
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-success btn-sm">
                                         <i class="fa-solid fa-play"></i> Jouer à ce quiz
                                     </a>
                                     <form method="dialog">

@@ -54,7 +54,11 @@
                                 </div>
 
                                 <div class="card-actions justify-end mt-4">
-                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary w-full">
+                                    <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary w-full">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                        Étudier
+                                    </a>
+                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-success btn-sm w-full">
                                         <i class="fa-solid fa-play"></i> Jouer
                                     </a>
                                 </div>
