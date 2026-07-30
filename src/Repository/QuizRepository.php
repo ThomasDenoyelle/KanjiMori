@@ -33,7 +33,8 @@ class QuizRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('quiz')
             ->leftJoin('quiz.questions', 'questions')
-            ->select('quiz, questions')
+            ->innerJoin('quiz.author', 'author')
+            ->select('quiz, questions, author')
             ->where('quiz.author != :user')
             ->andWhere('quiz.isPublic = true')
             ->setParameter('user', $user->getId())
