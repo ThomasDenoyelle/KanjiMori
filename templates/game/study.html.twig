@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Révision - {{ quiz.title }}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center w-full min-h-[70vh] p-4"
+         data-controller="study"
+         data-study-questions-value="{{ questionsJson }}">
+
+        <div class="w-full max-w-2xl flex flex-col items-center gap-6">
+
+            <div class="w-full text-center flex flex-col gap-2">
+                <h1 class="text-3xl font-bold">{{ quiz.title }}</h1>
+                <p class="text-base-content/70 font-medium tracking-widest uppercase text-sm">Mode Révision</p>
+
+                <progress data-study-target="progress" class="progress progress-primary w-full h-3 transition-all duration-300"></progress>
+                <div data-study-target="counter" class="font-bold text-lg mt-1"></div>
+            </div>
+
+            <div data-study-target="flashcard" class="swap swap-flip w-full h-96">
+
+                <div class="swap-off flex flex-col items-center justify-center rounded-3xl bg-base-100 shadow-xl border-4 border-base-200 p-8 w-full h-full cursor-pointer hover:border-primary/50 transition-colors"
+                     data-action="click->study#flip">
+                    <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Kanji</p>
+                    <div data-study-target="kanji" class="text-9xl font-bold text-center mb-8"></div>
+
+                    <div class="mt-auto animate-pulse flex flex-col items-center text-primary">
+                        <i class="fa-solid fa-arrows-rotate text-2xl mb-2"></i>
+                        <span class="font-semibold">Cliquez pour voir la réponse</span>
+                    </div>
+                </div>
+
+                <div class="swap-on flex flex-col items-center justify-center rounded-3xl bg-base-200 shadow-inner border-4 border-primary/20 p-8 w-full h-full cursor-pointer"
+                     data-action="click->study#flip">
+
+                    <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-2">Lecture</p>
+                    <div data-study-target="reading" class="text-5xl font-bold text-center text-primary mb-6"></div>
+
+                    <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-2">Traduction</p>
+                    <div data-study-target="translation" class="text-4xl font-bold text-center mb-8"></div>
+
+                    <div class="mt-auto flex flex-col items-center text-base-content/50">
+                        <span class="font-semibold text-sm">Cliquez pour retourner</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex justify-between w-full mt-4 gap-4">
+                <button class="btn btn-lg btn-outline flex-1" data-action="click->study#prev">
+                    <i class="fa-solid fa-chevron-left"></i> Précédent
+                </button>
+
+                <a href="{{ path('home') }}" class="btn btn-lg btn-ghost btn-circle" title="Quitter la révision">
+                    <i class="fa-solid fa-sign-out-alt text-xl text-error"></i>
+                </a>
+
+                <button class="btn btn-lg btn-primary flex-1" data-action="click->study#next">
+                    Suivant <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
