@@ -334,4 +334,38 @@ final class GameController extends AbstractController
 
         return $this->redirectToRoute('game_play', ['quizAttempt' => $newQuizAttempt->getId()]);
     }
+
+    #[Route('/quiz/{quiz}/study', name: 'game_study', requirements: ['quiz' => '\d+'])]
+    public function study(Quiz $quiz, #[CurrentUser] User $user): Response
+    {
+        $hasAccess = false;
+        if ($quiz->isPublic() || $quiz->getAuthor() === $user) {
+            $hasAccess = true;
+        } else {
+            foreach ($quiz->getFolders() as $folder) {
+                if ($folder->getAuthor() === $user || $folder->getMembers()->contains($user)) {
+                    $hasAccess = true;
+                    break;
+                }
+            }
+        }
+        if (!$hasAccess) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce quiz.');
+            return $this->redirectToRoute('home');
+        }
+
+        $questionsData = [];
+        foreach ($quiz->getQuestions() as $question) {
+            $questionsData[] = [
+                'kanji' => $question->getKanji(),
+                'reading' => $question->getReading(),
+                'translation' => $question->getTranslation(),
+            ];
+        }
+
+        return $this->render('game/study.html.twig', [
+            'quiz' => $quiz,
+            'questionsJson' => json_encode($questionsData),
+        ]);
+    }
 }
