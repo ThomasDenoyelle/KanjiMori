@@ -29,22 +29,31 @@ class UserFixtures extends Fixture
         $manager->persist($user);
 
         $prof = new User();
-        $prof->setEmail('professeur@nihongo.com');
-        $prof->setFirstName('Akira');
+        $prof->setEmail('nishio@gmail.com');
+        $prof->setFirstName('Nishio');
         $prof->setLastName('Sensei');
         $prof->setRoles(['ROLE_USER']);
         $prof->setIsVerified(true);
-        $prof->setPassword($this->passwordHasher->hashPassword($prof, 'password123'));
+        $prof->setPassword($this->passwordHasher->hashPassword($prof, 'nishio123'));
         $manager->persist($prof);
 
-        $student = new User();
-        $student->setEmail('eleve@nihongo.com');
-        $student->setFirstName('Thomas');
-        $student->setLastName('Dupont');
-        $student->setRoles(['ROLE_USER']);
-        $student->setIsVerified(true);
-        $student->setPassword($this->passwordHasher->hashPassword($student, 'password123'));
-        $manager->persist($student);
+        $aelis = new User();
+        $aelis->setEmail('aelis@gmail.com');
+        $aelis->setFirstName('Aélis');
+        $aelis->setLastName('Kanji');
+        $aelis->setRoles(['ROLE_USER']);
+        $aelis->setIsVerified(true);
+        $aelis->setPassword($this->passwordHasher->hashPassword($aelis, 'password123'));
+        $manager->persist($aelis);
+
+        $magenta = new User();
+        $magenta->setEmail('magenta@gmail.com');
+        $magenta->setFirstName('Magenta');
+        $magenta->setLastName('Hiragana');
+        $magenta->setRoles(['ROLE_USER']);
+        $magenta->setIsVerified(true);
+        $magenta->setPassword($this->passwordHasher->hashPassword($magenta, 'password123'));
+        $manager->persist($magenta);
 
 
         $quizElements = new Quiz();
@@ -151,7 +160,7 @@ class UserFixtures extends Fixture
         $folderClass->addQuiz($quizPublic1);
         $folderClass->addQuiz($quizPublic2);
         $folderClass->addMember($user);
-        $folderClass->addMember($student);
+        $folderClass->addMember($magenta);
         $manager->persist($folderClass);
 
         $folderStudy = new Folder();
@@ -160,7 +169,7 @@ class UserFixtures extends Fixture
         $folderStudy->setAuthor($user);
         $folderStudy->setIsPublic(true);
         $folderStudy->addQuiz($quizElements);
-        $folderStudy->addMember($student);
+        $folderStudy->addMember($aelis);
         $manager->persist($folderStudy);
 
 
