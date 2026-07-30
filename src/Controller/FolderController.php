@@ -78,9 +78,11 @@ final class FolderController extends AbstractController
     }
 
     #[Route('/my-library/folder/{folder}/show', name: 'library_folder_show')]
-    public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository, UserRepository $userRepository): Response
+    public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository, UserRepository $userRepository, FolderRepository $folderRepository): Response
     {
-        if ($folder->getAuthor() !== $user && !$folder->getMembers()->contains($user)) {
+        $currentFolder = $folderRepository->findFolderWithEverything($folder);
+
+        if ($currentFolder->getAuthor() !== $user && !$currentFolder->getMembers()->contains($user)) {
             $this->addFlash('error','Action non autorisé ou dossier introuvable !');
             return $this->redirectToRoute('library_folder_list');
         }
@@ -89,10 +91,10 @@ final class FolderController extends AbstractController
 
         $mutualFriends = $userRepository->findMutualFollowers($user);
 
-        $updateFolderForm = $this->createForm(FolderType::class, $folder, ['user' => $user]);
+        $updateFolderForm = $this->createForm(FolderType::class, $currentFolder, ['user' => $user]);
 
         return $this->render('folder/show.html.twig', [
-            'folder' => $folder,
+            'folder' => $currentFolder,
             'quizList' => $quizList,
             'updateFolderForm' => $updateFolderForm,
             'mutualFriends' => $mutualFriends,

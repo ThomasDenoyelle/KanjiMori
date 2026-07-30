@@ -49,4 +49,21 @@ class FolderRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    public function findFolderWithEverything(Folder $folder): ?Folder
+    {
+        return $this->createQueryBuilder('f')
+            ->leftJoin('f.author', 'a')
+            ->addSelect('a')
+            ->leftJoin('f.members', 'm')
+            ->addSelect('m')
+            ->leftJoin('f.quizzes', 'q')
+            ->addSelect('q')
+            ->leftJoin('q.questions', 'quest')
+            ->addSelect('quest')
+            ->where('f.id = :id')
+            ->setParameter('id', $folder->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
