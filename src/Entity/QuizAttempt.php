@@ -2,30 +2,41 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuizAttemptRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: QuizAttemptRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    normalizationContext: ['groups' => ['attempt:read']],
+    denormalizationContext: ['groups' => ['attempt:write']],
+)]
 class QuizAttempt
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['attempt:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?int $score = null;
 
     #[ORM\Column]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?int $maxScore = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $mode = null;
 
     #[ORM\Column]
+    #[Groups(['attempt:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'quizAttempts')]
@@ -34,12 +45,14 @@ class QuizAttempt
 
     #[ORM\ManyToOne(inversedBy: 'quizAttempts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?Quiz $quiz = null;
 
     /**
      * @var Collection<int, AnswerAttempt>
      */
-    #[ORM\OneToMany(targetEntity: AnswerAttempt::class, mappedBy: 'quizAttempt', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AnswerAttempt::class, mappedBy: 'quizAttempt', cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private Collection $answerAttempts;
 
     #[ORM\Column]
