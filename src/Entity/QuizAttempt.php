@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuizAttemptRepository;
+use App\State\CurrentUserProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,6 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['attempt:read']],
     denormalizationContext: ['groups' => ['attempt:write']],
+    processor: CurrentUserProcessor::class
 )]
 class QuizAttempt
 {
