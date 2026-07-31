@@ -21,10 +21,11 @@ class CurrentUserProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($data instanceof Quiz || $data instanceof Folder || $data instanceof QuizAttempt) {
-            $data->setAuthor($this->security->getUser());
+        if ($operation->getMethod() === 'POST') {
+            if ($data instanceof Quiz || $data instanceof Folder || $data instanceof QuizAttempt) {
+                $data->setAuthor($this->security->getUser());
+            }
         }
-
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 }
