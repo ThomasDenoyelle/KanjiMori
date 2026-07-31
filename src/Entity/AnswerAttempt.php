@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnswerAttemptRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AnswerAttemptRepository::class)]
 class AnswerAttempt
@@ -11,18 +12,23 @@ class AnswerAttempt
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['attempt:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?bool $isCorrect = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $givenKanji = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $givenReading = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $givenTranslation = null;
 
     #[ORM\ManyToOne(inversedBy: 'answerAttempts')]
@@ -31,15 +37,19 @@ class AnswerAttempt
 
     #[ORM\ManyToOne(inversedBy: 'answerAttempts')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?Question $question = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $askedKanji = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $askedReading = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['attempt:read', 'attempt:write'])]
     private ?string $askedTranslation = null;
 
     public function getId(): ?int
