@@ -56,6 +56,7 @@ class Quiz
     private Collection $quizAttempts;
 
     #[ORM\Column]
+    #[Groups(['quiz:read'])]
     private ?bool $isPublic = false;
 
     /**
