@@ -22,11 +22,11 @@ class Quiz
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['quiz:read', 'folder:read'])]
+    #[Groups(['quiz:read', 'folder:read', 'attempt:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['quiz:read', 'folder:read', 'quiz:write'])]
+    #[Groups(['quiz:read', 'folder:read', 'quiz:write', 'attempt:read'])]
     private ?string $title = null;
 
     #[ORM\ManyToOne]
