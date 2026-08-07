@@ -134,19 +134,47 @@
         {# -- flashbag end -- #}
 
         {# -- content -- #}
-        <div class="container mx-auto p-2 bg-base grow">
+        <div class="container mx-auto p-2 flex-1 min-h-screen">
             {% block body %}{% endblock %}
         </div>
         {# -- content end -- #}
 
         {# -- footer -- #}
-        <footer class="bg-base-300 text-white flex justify-around items-center">
-            <div>
-                <p>{{ app_name }}</p>
-            </div>
-            <div>
-
-            </div>
+        <footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
+            <aside>
+                <p class="font-bold text-4xl">
+                    {{ app_name }}
+                </p>
+                <p class="font-bold text-4xl">
+                    漢字森
+                </p>
+                <p class="text-base-content/70">
+                    Copyright © 2026 Thomas Denoyelle
+                    <br />
+                    Tous droits réservés
+                </p>
+            </aside>
+            <nav>
+                {% if app.user %}
+                    <h6 class="footer-title">Explorer</h6>
+                    <a href="{{ path('explore_quiz_list') }}" class="link link-hover">Quiz publics</a>
+                    <a href="{{ path('explore_class_list') }}" class="link link-hover">Classes</a>
+                    <a href="{{ path('library_quiz_new') }}" class="link link-hover">Créer un quiz</a>
+                {% else %}
+                    <a href="{{ path('app_register') }}" class="link link-hover">Créer un compte</a>
+                {% endif %}
+            </nav>
+            <nav>
+                <h6 class="footer-title">Aide & Communauté</h6>
+                <a href="#" class="link link-hover">Signaler un bug</a>
+                <a href="#" class="link link-hover">Suggérer une idée</a>
+                <a href="#" class="link link-hover">Guide d'utilisation</a>
+            </nav>
+            <nav>
+                <h6 class="footer-title">Legal</h6>
+                <a href="#" class="link link-hover">Mentions légales</a>
+                <a href="#" class="link link-hover">Confidentialité & Données</a>
+            </nav>
         </footer>
         {# -- footer end -- #}
 
