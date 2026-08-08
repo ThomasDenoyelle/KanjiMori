@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     processor: CurrentUserProcessor::class
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['isPublic'])]
-#[ApiFilter(SearchFilter::class, properties: ['author' => 'exact', 'title' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['author' => 'exact', 'title' => 'ipartial'])]
 class Quiz
 {
     #[ORM\Id]
