@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if form.vars.value.type == 'bug' %}
+        Signaler un bug
+    {% else %}
+        Suggérer une idée
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto mt-10">
+        <div class="card w-full max-w-4xl bg-base-300 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-2">
+                    {% if form.vars.value.type == 'bug' %}
+                        <i class="fa-solid fa-bug text-error"></i> Signaler un bug
+                    {% else %}
+                        <i class="fa-solid fa-lightbulb text-warning"></i> Suggérer une idée
+                    {% endif %}
+                </h2>
+
+                <p class="text-base-content/70 mb-6">
+                    Merci de nous aider à améliorer l'application ! Remplissez ce formulaire avec le plus de détails possible.
+                </p>
+
+                {{ form_start(form) }}
+
+                <div class="form-control w-full mb-4">
+                    {{ form_label(form.type) }}
+                    {{ form_widget(form.type) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(form.type) }}</div>
+                </div>
+
+                <div class="form-control w-full mb-4">
+                    {{ form_label(form.title) }}
+                    {{ form_widget(form.title) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(form.title) }}</div>
+                </div>
+
+                <div class="form-control w-full mb-6">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                    <div class="text-error text-sm mt-1">{{ form_errors(form.description) }}</div>
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a href="{{ path('home') }}" class="btn btn-ghost">Annuler</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Envoyer
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
