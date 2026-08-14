@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Feedback;
 use App\Form\FeedbackType;
+use App\Repository\FeedbackRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +14,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class HelpController extends AbstractController
 {
-    #[Route('/feedback/{type}/new', name: 'feedback_new')]
+    #[Route('/feedbacks/{type}/new', name: 'feedback_new')]
     #[IsGranted('ROLE_USER')]
-    public function feedback(EntityManagerInterface $entityManager, Request $request, string $type): Response
+    public function feedbackNew(EntityManagerInterface $entityManager, Request $request, string $type): Response
     {
         if ($type != 'idea' && $type != 'bug') {
             return $this->redirectToRoute('home');
@@ -33,6 +34,17 @@ final class HelpController extends AbstractController
 
         return $this->render('help/feedback_new.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/admin/feedbacks', name: 'feedback_list')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function feedbackList(FeedbackRepository $feedbackRepository): Response
+    {
+        $feedbacksList = $feedbackRepository->findAll();
+
+        return $this->render('help/feedback_list.html.twig', [
+            'feedbacksList' => $feedbacksList,
         ]);
     }
 }
