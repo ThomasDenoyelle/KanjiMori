@@ -166,8 +166,8 @@
             </nav>
             <nav>
                 <h6 class="footer-title">Aide & Communauté</h6>
-                <a href="#" class="link link-hover">Signaler un bug</a>
-                <a href="#" class="link link-hover">Suggérer une idée</a>
+                <a href="{{ path('feedback_new', { type: 'bug' }) }}" class="link link-hover">Signaler un bug</a>
+                <a href="{{ path('feedback_new', { type: 'idea' }) }}" class="link link-hover">Suggérer une idée</a>
                 <a href="#" class="link link-hover">Guide d'utilisation</a>
             </nav>
             <nav>
