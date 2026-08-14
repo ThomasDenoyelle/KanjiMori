@@ -12,17 +12,13 @@
     <div class="max-w-2xl mx-auto mt-10">
         <div class="card w-full max-w-4xl bg-base-300 shadow-xl">
             <div class="card-body">
-                <h2 class="card-title text-2xl mb-2">
+                <h2 class="card-title text-2xl mb-6">
                     {% if form.vars.value.type == 'bug' %}
                         <i class="fa-solid fa-bug text-error"></i> Signaler un bug
                     {% else %}
                         <i class="fa-solid fa-lightbulb text-warning"></i> Suggérer une idée
                     {% endif %}
                 </h2>
-
-                <p class="text-base-content/70 mb-6">
-                    Merci de nous aider à améliorer l'application ! Remplissez ce formulaire avec le plus de détails possible.
-                </p>
 
                 {{ form_start(form) }}
 
