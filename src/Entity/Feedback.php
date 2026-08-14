@@ -31,6 +31,9 @@ class Feedback
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column]
+    private ?bool $isValid = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,5 +103,17 @@ class Feedback
     public function setCreatedAtValue(): void
     {
         $this->createdAt = new \DateTimeImmutable();
+    }
+
+    public function isValid(): ?bool
+    {
+        return $this->isValid;
+    }
+
+    public function setIsValid(bool $isValid): static
+    {
+        $this->isValid = $isValid;
+
+        return $this;
     }
 }
