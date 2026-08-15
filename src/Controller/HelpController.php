@@ -58,4 +58,17 @@ final class HelpController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/feedbacks/{feedback}/validate', name: 'feedback_validate', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function feedbackValidate(Feedback $feedback, EntityManagerInterface $entityManager): Response
+    {
+        if ($feedback->isValid()){
+            $feedback->setIsValid(false);
+        } else{
+            $feedback->setIsValid(true);
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('feedback_show', ['feedback' => $feedback->getId()]);
+    }
+
 }
