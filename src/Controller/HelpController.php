@@ -49,6 +49,13 @@ final class HelpController extends AbstractController
         ]);
     }
 
-
+    #[Route('/admin/feedbacks/{feedback}', name: 'feedback_show')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function feedbackShow(Feedback $feedback): Response
+    {
+        return $this->render('help/feedback_show.html.twig', [
+            'feedback' => $feedback,
+        ]);
+    }
 
 }
