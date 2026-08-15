@@ -76,4 +76,10 @@ final class HelpController extends AbstractController
     {
         return $this->render('help/guide.html.twig');
     }
+
+    #[Route('/legal-mentions', name: 'legal_mentions')]
+    public function legalMentions(): Response
+    {
+        return $this->render('help/legal_mentions.html.twig');
+    }
 }
