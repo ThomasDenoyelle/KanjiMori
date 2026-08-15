@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de Confidentialité - {{ app_name }}{% endblock %}
+
+{% block body %}
+    <div class="max-w-4xl mx-auto mt-10 mb-20 px-4">
+
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4"><i class="fa-solid fa-user-shield text-primary"></i> Politique de Confidentialité</h1>
+            <p class="text-lg text-base-content/70">
+                Transparence totale : découvrez comment nous protégeons vos données.
+            </p>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body prose max-w-none text-base-content">
+
+                <p>
+                    La protection de votre vie privée est une priorité. Cette application a été créée dans un but éducatif et communautaire, et non pour faire du profit avec vos données personnelles. Voici exactement ce que nous collectons, pourquoi nous le faisons, et quels sont vos droits.
+                </p>
+
+                <div class="divider"></div>
+
+                <h2 class="text-2xl text-primary mt-6 mb-4"><i class="fa-solid fa-database"></i> 1. Données collectées</h2>
+                <p>
+                    Pour utiliser les fonctionnalités de l'application, nous collectons les données suivantes lors de votre inscription et de votre utilisation :
+                </p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Informations d'identité :</strong> Votre prénom et votre nom.</li>
+                    <li><strong>Informations de contact :</strong> Votre adresse e-mail.</li>
+                    <li><strong>Sécurité :</strong> Votre mot de passe (qui est chiffré et illisible, même par l'administrateur du site).</li>
+                    <li><strong>Données de jeu :</strong> L'historique des quiz joués, vos scores, et les quiz ou dossiers que vous créez.</li>
+                </ul>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-bullseye"></i> 2. Pourquoi collectons-nous ces données ?</h2>
+                <p>
+                    Vos données sont utilisées <strong>uniquement</strong> pour faire fonctionner l'application :
+                </p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>Vous permettre de vous connecter à votre compte.</li>
+                    <li>Sauvegarder votre progression et vos scores dans les quiz.</li>
+                    <li>Vous permettre de rejoindre des "Classes" et de partager vos listes de révision.</li>
+                    <li>Vous identifier en tant qu'auteur si vous publiez un quiz public ou envoyez un retour (feedback).</li>
+                </ul>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-lock"></i> 3. Stockage et Sécurité</h2>
+                <p>
+                    L'application est auto-hébergée sur un serveur personnel (Raspberry Pi) situé en France.
+                    Vos données ne quittent pas ce serveur. <strong>Elles ne seront jamais vendues, louées, ou partagées à des tiers à des fins commerciales ou publicitaires.</strong>
+                </p>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-scale-unbalanced"></i> 4. Vos droits (RGPD)</h2>
+                <p>
+                    Conformément au Règlement Général sur la Protection des Données (RGPD), vous êtes maître de vos données. Vous disposez des droits suivants :
+                </p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Droit d'accès :</strong> Savoir quelles données nous possédons sur vous.</li>
+                    <li><strong>Droit de rectification :</strong> Modifier vos informations depuis votre profil.</li>
+                    <li><strong>Droit à l'effacement (Droit à l'oubli) :</strong> Demander la suppression totale de votre compte et de toutes les données associées.</li>
+                </ul>
+                <p class="mt-4">
+                    Pour exercer ces droits, vous pouvez soit utiliser les options disponibles dans les paramètres de votre compte (si applicable), soit contacter directement le responsable du traitement, Thomas Denoyelle, à l'adresse suivante : <strong><a href="mailto:thom84.1206@gmail.com" class="link link-primary">thom84.1206@gmail.com</a></strong>.
+                </p>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-cookie"></i> 5. Cookies</h2>
+                <p>
+                    L'application utilise uniquement des cookies <strong>strictement nécessaires</strong> à son fonctionnement technique (cookies de session). Ils servent uniquement à vous maintenir connecté pendant votre navigation. Nous n'utilisons aucun cookie de pistage publicitaire ou d'analyse comportementale (pas de Google Analytics, etc.). Par conséquent, aucun bandeau de consentement aux cookies n'est requis.
+                </p>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
