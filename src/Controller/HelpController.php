@@ -82,4 +82,10 @@ final class HelpController extends AbstractController
     {
         return $this->render('help/legal_mentions.html.twig');
     }
+
+    #[Route('/privacy', name: 'privacy')]
+    public function privacy(): Response
+    {
+        return $this->render('help/privacy.html.twig');
+    }
 }
