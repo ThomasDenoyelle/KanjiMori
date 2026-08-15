@@ -30,7 +30,7 @@
                         <td>{{ feedback.title|capitalize }}</td>
                         <td>{{ feedback.author.firstname }} {{ feedback.author.lastname }}</td>
                         <td>{{ feedback.createdAt|date('d/m/y H:i', 'Europe/Paris') }}</td>
-                        <td>{{ feedback.valid ? 'En cours' : 'Traité'}}</td>
+                        <td>{{ feedback.valid ? 'Traité' : 'En cours' }}</td>
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
                                 <a href="{{ path('feedback_show', {'feedback': feedback.id}) }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
