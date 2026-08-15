@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions Légales - {{ app_name }}{% endblock %}
+
+{% block body %}
+    <div class="max-w-4xl mx-auto mt-10 mb-20 px-4">
+
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4"><i class="fa-solid fa-scale-balanced text-primary"></i> Mentions Légales</h1>
+            <p class="text-lg text-base-content/70">
+                Les informations légales concernant l'édition et l'hébergement de l'application.
+            </p>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body prose max-w-none text-base-content">
+
+                <p>
+                    Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique, dite L.C.E.N., je porte à la connaissance des utilisateurs et visiteurs du site les informations suivantes :
+                </p>
+
+                <div class="divider"></div>
+
+                <h2 class="text-2xl text-primary mt-6 mb-4"><i class="fa-solid fa-user-tie"></i> 1. Éditeur du site</h2>
+                <p>
+                    Le présent site (ainsi que l'application qui y est rattachée) est édité à titre personnel par :
+                </p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Nom et Prénom :</strong> Thomas Denoyelle</li>
+                    <li><strong>Adresse :</strong> 5 Rue Principale, 02210 Grand-Rozoy</li>
+                    <li><strong>Email de contact :</strong> <a href="mailto:thom84.1206@gmail.com" class="link link-primary">thom84.1206@gmail.com</a></li>
+                    <li><strong>Directeur de la publication :</strong> Thomas Denoyelle</li>
+                </ul>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-server"></i> 2. Hébergement</h2>
+                <p>
+                    Ce site est auto-hébergé sur un serveur personnel (Raspberry Pi).
+                </p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Hébergeur :</strong> Thomas Denoyelle</li>
+                    <li><strong>Adresse de l'hébergeur :</strong> 5 Rue Principale, 02210 Grand-Rozoy</li>
+                    <li><strong>Contact de l'hébergeur :</strong> thom84.1206@gmail.com</li>
+                </ul>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-copyright"></i> 3. Propriété intellectuelle</h2>
+                <p>
+                    Sauf mention contraire, tous les éléments accessibles sur le site (textes, images, graphismes, logo, icônes, etc.) restent la propriété intellectuelle exclusive de leurs auteurs, en ce qui concerne les droits d'auteur et la propriété intellectuelle.
+                </p>
+                <p>
+                    Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de l'auteur.
+                </p>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-shield-halved"></i> 4. Données personnelles et Confidentialité</h2>
+                <p>
+                    L'utilisation de cette application nécessite la création d'un compte utilisateur, ce qui implique la collecte de certaines données personnelles (Nom, Prénom, adresse email, mot de passe chiffré, et historique des quiz).
+                </p>
+                <p>
+                    Ces données sont collectées dans le but exclusif de faire fonctionner l'application (sauvegarde de la progression, gestion des classes et des quiz). Elles ne sont <strong>en aucun cas vendues, cédées ou partagées</strong> à des tiers.
+                </p>
+                <p>
+                    Conformément à la réglementation européenne (RGPD) et à la loi "Informatique et Libertés", vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition aux données personnelles vous concernant. Pour exercer ce droit, veuillez envoyer un email à l'adresse suivante : <strong>thom84.1206@gmail.com</strong>.
+                </p>
+
+                <h2 class="text-2xl text-primary mt-8 mb-4"><i class="fa-solid fa-cookie-bite"></i> 5. Cookies</h2>
+                <p>
+                    Le site utilise uniquement des cookies techniques strictement nécessaires à son fonctionnement (maintien de la session utilisateur, connexion au compte, sécurité). Ces cookies ne requièrent pas le consentement préalable de l'utilisateur et ne sont pas utilisés à des fins de pistage ou de publicité.
+                </p>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
