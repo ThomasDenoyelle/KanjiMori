@@ -40,7 +40,9 @@
                                         </div>
                                     </div>
                                     <div class="text-sm font-medium text-base-content/80">
-                                        {{ quiz.author.firstname }} {{ quiz.author.lastname|first }}.
+                                        <a href="{{ path('user_profil', {'user': quiz.author.id}) }}" class="link link-hover">
+                                            {{ quiz.author.firstname }} {{ quiz.author.lastname|first }}.
+                                        </a>
                                     </div>
                                 </div>
 
