@@ -29,6 +29,7 @@ final class HelpController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($feedback);
             $entityManager->flush();
+            $this->addFlash('success', 'Votre retour à bien été sauvegardé !');
             return $this->redirectToRoute('home');
         }
 
@@ -47,4 +48,7 @@ final class HelpController extends AbstractController
             'feedbacksList' => $feedbacksList,
         ]);
     }
+
+
+
 }
