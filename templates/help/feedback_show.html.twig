@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feedback - {{ feedback.title }}{% endblock %}
+
+{% block body %}
+    <div class="max-w-4xl mx-auto mt-10">
+        <div class="card bg-base-100 shadow-xl border border-base-200">
+            <div class="card-body">
+
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-2">
+                    <h1 class="card-title text-3xl">{{ feedback.title }}</h1>
+                    <div class="flex gap-2 shrink-0">
+                        {% if feedback.type == 'bug' %}
+                            <span class="badge badge-error gap-1"><i class="fa-solid fa-bug"></i> Bug</span>
+                        {% else %}
+                            <span class="badge badge-warning gap-1"><i class="fa-solid fa-lightbulb"></i> Idée</span>
+                        {% endif %}
+
+                        {% if feedback.isValid %}
+                            <span class="badge badge-success gap-1"><i class="fa-solid fa-check"></i> Traité</span>
+                        {% else %}
+                            <span class="badge badge-neutral gap-1"><i class="fa-solid fa-hourglass-half"></i> En attente</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-base-content/70 mt-2">
+                    <div>
+                        <i class="fa-solid fa-user"></i> <strong>Auteur :</strong> {{ feedback.author.firstname }} {{ feedback.author.lastname }}
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-calendar"></i> <strong>Soumis le :</strong> {{ feedback.createdAt|date('d/m/Y à H:i') }}
+                    </div>
+                </div>
+
+                <div class="divider mt-2 mb-4"></div>
+
+                <div class="bg-base-200 p-6 rounded-box whitespace-pre-wrap text-base-content mb-6">
+                    {{- feedback.description -}}
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a href="{{ path('feedback_list') }}" class="btn btn-ghost">
+                        <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+                    </a>
+                    <form action="{{ path('feedback_validate', {'feedback': feedback.id}) }}" method="post">
+                        {% if not feedback.isValid %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-check-circle"></i> Marquer comme traité
+                        </button>
+                        {% else %}
+                            <button class="btn">
+                                <i class="fa-solid fa-hourglass-half"></i> Marquer comme en cours
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
