@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Guide d'utilisation - {{ app_name }}{% endblock %}
+
+{% block body %}
+    <div class="max-w-5xl mx-auto mt-10 mb-20 px-4">
+
+        <div class="text-center mb-16">
+            <div class="inline-block p-4 rounded-full bg-primary/10 mb-4">
+                <i class="fa-solid fa-book-open text-4xl text-primary"></i>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">Comment ça marche ?</h1>
+            <p class="text-lg text-base-content/70 max-w-2xl mx-auto">
+                Bienvenue sur le guide ! Vous trouverez ici toutes les astuces pour réviser vos Kanji efficacement, créer vos propres listes et tirer le meilleur parti de l'application.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
+
+            <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-primary/50 transition-colors duration-300">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-2 text-primary">
+                        <i class="fa-solid fa-gamepad"></i> S'entraîner et réviser
+                    </h2>
+                    <p class="text-base-content/80 mb-4">
+                        L'idée, c'est de vous faire mémoriser le japonais sans prise de tête. Explorez les <strong><a href="{{ path('explore_quiz_list') }}" class="link link-primary font-bold">Quiz publics</a></strong> pour trouver des listes partagées par la communauté.
+                    </p>
+                    <div class="space-y-3 mt-2">
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-primary"><i class="fa-solid fa-comment-dots"></i></div>
+                            <div>
+                                <strong class="block">Lecture</strong>
+                                <span class="text-sm text-base-content/70">On vous donne un Kanji, à vous de trouver comment il se prononce (Hiragana ou Romaji).</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-primary"><i class="fa-solid fa-language"></i></div>
+                            <div>
+                                <strong class="block">Traduction</strong>
+                                <span class="text-sm text-base-content/70">Quel est le sens de ce mot en français ? Un classique.</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-primary"><i class="fa-solid fa-pen"></i></div>
+                            <div>
+                                <strong class="block">Écriture</strong>
+                                <span class="text-sm text-base-content/70">Le chemin inverse : retrouvez le bon Kanji à partir du français ou de sa prononciation.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow-xl border border-base-200 hover:border-secondary/50 transition-colors duration-300">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-2 text-secondary">
+                        <i class="fa-solid fa-pen-to-square"></i> Créer du sur-mesure
+                    </h2>
+                    <p class="text-base-content/80 mb-4">
+                        Besoin d'une liste spécifique pour le prochain examen ? Créez la vôtre en quelques clics depuis votre <strong>Bibliothèque</strong>.
+                    </p>
+
+                    <ul class="steps steps-vertical text-sm font-medium text-base-content/80 mt-2">
+                        <li class="step step-secondary">Nommez votre quiz (ex: "Leçon 4 - Minna no Nihongo")</li>
+                        <li class="step step-secondary">Ajoutez vos mots (Kanji, Lecture, Traduction)</li>
+                        <li class="step step-secondary">Choisissez la visibilité (Public ou Privé)</li>
+                        <li class="step step-secondary">Révisez et partagez à vos amis !</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                <i class="fa-solid fa-circle-question text-info"></i> FAQ
+            </h2>
+
+            <div class="join join-vertical w-full shadow-lg rounded-box">
+
+                <div class="collapse collapse-arrow join-item border border-base-300 bg-base-100">
+                    <input type="radio" name="faq-accordion" checked="checked" />
+                    <div class="collapse-title text-lg font-bold">
+                        Comment je tape en Hiragana ou Kanji ?
+                    </div>
+                    <div class="collapse-content text-base-content/80">
+                        <p>Sur ordinateur (PC/Mac), le plus simple est d'installer le clavier japonais natif de votre système. Il vous permettra de taper en Romaji (lettres classiques) et convertira automatiquement votre texte en Kana ou Kanji. Sur smartphone, ajoutez simplement le clavier Japonais dans les paramètres de votre téléphone, et le tour est joué !</p>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-arrow join-item border border-base-300 bg-base-100">
+                    <input type="radio" name="faq-accordion" />
+                    <div class="collapse-title text-lg font-bold">
+                        À quoi servent les "Classes" ?
+                    </div>
+                    <div class="collapse-content text-base-content/80">
+                        <p>C'est un espace privé parfait pour votre promo ou votre groupe d'amis. Si vous créez une classe, vous pourrez y rassembler des dossiers et des quiz que seuls les membres du groupe pourront voir. Idéal pour s'entraider sans polluer les quiz publics !</p>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-arrow join-item border border-base-300 bg-base-100">
+                    <input type="radio" name="faq-accordion" />
+                    <div class="collapse-title text-lg font-bold">
+                        Où sont passés les quiz que j'ai terminés ?
+                    </div>
+                    <div class="collapse-content text-base-content/80">
+                        <p>Rendez-vous dans <strong>Ma Bibliothèque > Historique</strong>. Vous y retrouverez tous les quiz que vous avez commencés ou terminés. C'est l'endroit parfait pour suivre vos progrès et essayer de battre vos anciens scores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-16 bg-base-200/50 border border-base-300 rounded-3xl p-8 text-center max-w-3xl mx-auto shadow-sm">
+            <h3 class="text-2xl font-bold mb-3">Un truc cloche ou une idée de génie ?</h3>
+            <p class="text-base-content/70 mb-6">
+                Cette application est faite pour vous, et elle évolue grâce à vos retours. Si vous croisez un bug ou si vous avez une idée de fonctionnalité sympa, je suis preneurs !
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{{ path('feedback_new', {'type': 'bug'}) }}" class="btn btn-error btn-outline hover:!text-white">
+                    <i class="fa-solid fa-bug"></i> Signaler un bug
+                </a>
+                <a href="{{ path('feedback_new', {'type': 'idea'}) }}" class="btn btn-warning btn-outline hover:!text-white">
+                    <i class="fa-solid fa-lightbulb"></i> Suggérer une idée
+                </a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
