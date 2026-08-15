@@ -71,4 +71,9 @@ final class HelpController extends AbstractController
         return $this->redirectToRoute('feedback_show', ['feedback' => $feedback->getId()]);
     }
 
+    #[Route('/guide', name: 'guide')]
+    public function guide(): Response
+    {
+        return $this->render('help/guide.html.twig');
+    }
 }
