@@ -27,30 +27,30 @@
         <div class="navbar-end gap-2">
 
             {% if app.user %}
-            <div class="dropdown dropdown-end sm:hidden">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
-                    <div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                        {% if app.user.avatar %}
-                            <img src="{{ vich_uploader_asset(app.user, 'avatarFile') }}" alt="Avatar de {{ app.user.firstname }}" />
-                        {% else %}
-                            <img src="https://ui-avatars.com/api/?name={{ app.user.firstname }}+{{ app.user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
-                        {% endif %}
+                <div class="dropdown dropdown-end sm:hidden">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
+                        <div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                            {% if app.user.avatar %}
+                                <img src="{{ vich_uploader_asset(app.user, 'avatarFile') }}" alt="Avatar de {{ app.user.firstname }}" />
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ app.user.firstname }}+{{ app.user.lastname }}&background=random&size=256" alt="Avatar par défaut" />
+                            {% endif %}
+                        </div>
                     </div>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow bg-base-300 rounded-box w-52">
+                        <li class="px-4 py-2 opacity-50 text-sm uppercase font-bold">
+                            {{ app.user.firstname }}
+                            <br>
+                            {{ app.user.lastname }}
+                        </li>
+                        <li>
+                            <a href="{{ path('user_profil', {user: app.user.id}) }}" class="justify-between text-md font-bold">
+                                Mon Profil
+                            </a>
+                        </li>
+                        <li><a href="{{ path('app_logout') }}" class="text-error text-md font-bold">Déconnexion</a></li>
+                    </ul>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow bg-base-300 rounded-box w-52">
-                    <li class="px-4 py-2 opacity-50 text-sm uppercase font-bold">
-                        {{ app.user.firstname }}
-                        <br>
-                        {{ app.user.lastname }}
-                    </li>
-                    <li>
-                        <a href="{{ path('user_profil', {user: app.user.id}) }}" class="justify-between text-md font-bold">
-                            Mon Profil
-                        </a>
-                    </li>
-                    <li><a href="{{ path('app_logout') }}" class="text-error text-md font-bold">Déconnexion</a></li>
-                </ul>
-            </div>
             {% endif %}
 
             <button class="btn sm:hidden" popovertarget="my-megamenu-1">
@@ -89,7 +89,7 @@
                     </a>
                 {% endif %}
 
-                <div class="px-2 flex gap-2">
+                <div class="px-2 flex gap-2 items-center">
                     {% if not app.user %}
 
                         {% set current_route = app.request.attributes.get('_route') %}
