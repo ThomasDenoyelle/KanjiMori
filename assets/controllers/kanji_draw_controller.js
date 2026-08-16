@@ -12,13 +12,13 @@ export default class extends Controller {
 
     setupTouchEvents() {
         const canvas = this.canvasTarget;
-        let lastX = null;
-        let lastY = null;
-        const MOVE_THRESHOLD = 3;
 
         const dispatchMouseEvent = (eventName, touchEvent) => {
             const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
             const rect = canvas.getBoundingClientRect();
+
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
 
             const mouseEvent = new MouseEvent(eventName, {
                 clientX: touch.clientX,
@@ -32,30 +32,19 @@ export default class extends Controller {
                 view: window
             });
 
-            Object.defineProperty(mouseEvent, 'offsetX', { get: () => touch.clientX - rect.left });
-            Object.defineProperty(mouseEvent, 'offsetY', { get: () => touch.clientY - rect.top });
+            Object.defineProperty(mouseEvent, 'offsetX', { get: () => (touch.clientX - rect.left) * scaleX });
+            Object.defineProperty(mouseEvent, 'offsetY', { get: () => (touch.clientY - rect.top) * scaleY });
 
             canvas.dispatchEvent(mouseEvent);
         };
 
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            const touch = e.touches[0];
-            lastX = touch.clientX;
-            lastY = touch.clientY;
             dispatchMouseEvent('mousedown', e);
         }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
-            const touch = e.touches[0];
-            const dx = touch.clientX - lastX;
-            const dy = touch.clientY - lastY;
-
-            if (Math.hypot(dx, dy) < MOVE_THRESHOLD) return;
-
-            lastX = touch.clientX;
-            lastY = touch.clientY;
             dispatchMouseEvent('mousemove', e);
         }, { passive: false });
 
