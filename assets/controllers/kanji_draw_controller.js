@@ -35,6 +35,11 @@ export default class extends Controller {
             Object.defineProperty(mouseEvent, 'offsetX', { get: () => (touch.clientX - rect.left) * scaleX });
             Object.defineProperty(mouseEvent, 'offsetY', { get: () => (touch.clientY - rect.top) * scaleY });
 
+            console.log(`[${eventName}]`, {
+                x: Math.round((touch.clientX - rect.left) * scaleX),
+                y: Math.round((touch.clientY - rect.top) * scaleY),
+                time: Date.now()
+            });
             canvas.dispatchEvent(mouseEvent);
         };
 
