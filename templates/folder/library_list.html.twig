@@ -71,7 +71,7 @@
 
                                     <form method="post" action="{{ path('library_folder_delete', {'folder': folder.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ? Les quiz qu\'il contient ne seront pas supprimés de votre compte.');" class="inline-block">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete_folder_' ~ folder.id) }}">
-                                        <button class="btn btn-sm btn-ghost btn-circle text-error bg-error/10" title="Supprimer le dossier">
+                                        <button class="btn btn-sm btn-circle btn-error" title="Supprimer le dossier">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </form>
