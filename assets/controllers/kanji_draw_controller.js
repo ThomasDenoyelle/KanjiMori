@@ -6,6 +6,21 @@ export default class extends Controller {
     isInitialized = false;
 
     connect() {
+        this.tryInitCanvas();
+    }
+
+    tryInitCanvas() {
+        if (this.isInitialized) return;
+
+        if (typeof window.KanjiCanvas !== 'undefined') {
+            window.KanjiCanvas.init(this.canvasTarget.id);
+            this.isInitialized = true;
+            console.log("KanjiCanvas initialisé avec succès !");
+        } else {
+            setTimeout(() => {
+                this.tryInitCanvas();
+            }, 200);
+        }
     }
 
     open(event) {
@@ -19,14 +34,14 @@ export default class extends Controller {
 
         this.dialogTarget.showModal();
 
-        if (typeof window.KanjiCanvas !== 'undefined') {
-            if (!this.isInitialized) {
-                window.KanjiCanvas.init(this.canvasTarget.id);
-                this.isInitialized = true;
-            }
+        if (!this.isInitialized) {
+            this.tryInitCanvas();
+        }
+
+        if (this.isInitialized) {
             window.KanjiCanvas.erase(this.canvasTarget.id);
         } else {
-            console.error("La librairie KanjiCanvas n'est pas chargée.");
+            console.error("KanjiCanvas n'a pas pu s'initialiser à temps.");
         }
     }
 
@@ -71,21 +86,16 @@ export default class extends Controller {
         if (input) {
             input.value += char;
             input.dispatchEvent(new Event('input', { bubbles: true }));
-
             this.previewTarget.textContent = input.value;
         }
-
         this.erase();
     }
 
     backspace() {
         const input = document.getElementById(this.currentInputId);
-
         if (input && input.value.length > 0) {
             input.value = input.value.slice(0, -1);
-
             input.dispatchEvent(new Event('input', { bubbles: true }));
-
             this.previewTarget.textContent = input.value;
         }
     }
