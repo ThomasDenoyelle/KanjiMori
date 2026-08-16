@@ -76,6 +76,11 @@
                                     <i class="fa-solid fa-pen-to-square"></i> Modifier le profil
                                 </a>
 
+                                <form method="post" action="{{ path('user_delete') }}" class="w-full" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ app.user.id) }}">
+                                    <button class="btn btn-error btn-outline w-full" type="submit"><i class="fa-solid fa-trash-can"></i> Supprimer mon profil</button>
+                                </form>
+
                             {% else %}
 
                                 {% set isFollowing = user in app.user.following %}
