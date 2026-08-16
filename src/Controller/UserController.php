@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -63,6 +64,27 @@ final class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/user/delete', name: 'user_delete', methods: ['POST'])]
+    public function delete(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
+    {
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $request->getSession()->invalidate();
+            $tokenStorage->setToken(null);
+
+            $this->addFlash('success', 'Votre compte et toutes vos données ont bien été supprimés.');
+        } else {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+        }
+
+        return $this->redirectToRoute('app_login');
     }
 
 
