@@ -7,6 +7,38 @@ export default class extends Controller {
 
     connect() {
         this.tryInitCanvas();
+        this.setupTouchEvents();
+    }
+
+    setupTouchEvents() {
+        const canvas = this.canvasTarget;
+
+        const dispatchMouseEvent = (eventName, touchEvent) => {
+            const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+            const mouseEvent = new MouseEvent(eventName, {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            canvas.dispatchEvent(mouseEvent);
+        };
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            dispatchMouseEvent('mousedown', e);
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            dispatchMouseEvent('mousemove', e);
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            dispatchMouseEvent('mouseup', e);
+        }, { passive: false });
     }
 
     tryInitCanvas() {
