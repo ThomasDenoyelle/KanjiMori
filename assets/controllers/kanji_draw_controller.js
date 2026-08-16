@@ -17,6 +17,9 @@ export default class extends Controller {
             const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
             const rect = canvas.getBoundingClientRect();
 
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
             const mouseEvent = new MouseEvent(eventName, {
                 clientX: touch.clientX,
                 clientY: touch.clientY,
@@ -29,8 +32,11 @@ export default class extends Controller {
                 view: window
             });
 
-            Object.defineProperty(mouseEvent, 'offsetX', { get: () => touch.clientX - rect.left });
-            Object.defineProperty(mouseEvent, 'offsetY', { get: () => touch.clientY - rect.top });
+            Object.defineProperty(mouseEvent, 'offsetX', { get: () => (touch.clientX - rect.left) * scaleX });
+            Object.defineProperty(mouseEvent, 'offsetY', { get: () => (touch.clientY - rect.top) * scaleY });
+
+            Object.defineProperty(mouseEvent, 'pageX', { get: () => touch.pageX });
+            Object.defineProperty(mouseEvent, 'pageY', { get: () => touch.pageY });
 
             canvas.dispatchEvent(mouseEvent);
         };
