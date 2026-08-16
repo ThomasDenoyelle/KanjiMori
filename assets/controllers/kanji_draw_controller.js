@@ -15,13 +15,23 @@ export default class extends Controller {
 
         const dispatchMouseEvent = (eventName, touchEvent) => {
             const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+            const rect = canvas.getBoundingClientRect();
+
             const mouseEvent = new MouseEvent(eventName, {
                 clientX: touch.clientX,
                 clientY: touch.clientY,
+                screenX: touch.screenX,
+                screenY: touch.screenY,
+                button: 0,
+                buttons: 1,
                 bubbles: true,
                 cancelable: true,
                 view: window
             });
+
+            Object.defineProperty(mouseEvent, 'offsetX', { get: () => touch.clientX - rect.left });
+            Object.defineProperty(mouseEvent, 'offsetY', { get: () => touch.clientY - rect.top });
+
             canvas.dispatchEvent(mouseEvent);
         };
 
@@ -36,6 +46,11 @@ export default class extends Controller {
         }, { passive: false });
 
         canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            dispatchMouseEvent('mouseup', e);
+        }, { passive: false });
+
+        canvas.addEventListener('touchcancel', (e) => {
             e.preventDefault();
             dispatchMouseEvent('mouseup', e);
         }, { passive: false });
