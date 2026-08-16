@@ -12,6 +12,9 @@ export default class extends Controller {
 
     setupTouchEvents() {
         const canvas = this.canvasTarget;
+        let lastX = null;
+        let lastY = null;
+        const MOVE_THRESHOLD = 3;
 
         const dispatchMouseEvent = (eventName, touchEvent) => {
             const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
@@ -23,7 +26,7 @@ export default class extends Controller {
                 screenX: touch.screenX,
                 screenY: touch.screenY,
                 button: 0,
-                buttons: 1,
+                buttons: eventName === 'mouseup' ? 0 : 1,
                 bubbles: true,
                 cancelable: true,
                 view: window
@@ -37,11 +40,22 @@ export default class extends Controller {
 
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            const touch = e.touches[0];
+            lastX = touch.clientX;
+            lastY = touch.clientY;
             dispatchMouseEvent('mousedown', e);
         }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const touch = e.touches[0];
+            const dx = touch.clientX - lastX;
+            const dy = touch.clientY - lastY;
+
+            if (Math.hypot(dx, dy) < MOVE_THRESHOLD) return;
+
+            lastX = touch.clientX;
+            lastY = touch.clientY;
             dispatchMouseEvent('mousemove', e);
         }, { passive: false });
 
