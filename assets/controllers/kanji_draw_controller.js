@@ -20,17 +20,18 @@ export default class extends Controller {
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
 
-            const mouseEvent = new MouseEvent(eventName, {
+            const mouseEvent = new PointerEvent(eventName, {
                 clientX: touch.clientX,
                 clientY: touch.clientY,
-                screenX: touch.screenX,
-                screenY: touch.screenY,
-                button: 0,
-                buttons: eventName === 'mouseup' ? 0 : 1,
                 bubbles: true,
                 cancelable: true,
-                view: window
+                view: window,
+                pointerType: 'touch',
+                isPrimary: true
             });
+
+            mouseEvent.layerX = (touch.clientX - rect.left) * scaleX;
+            mouseEvent.layerY = (touch.clientY - rect.top) * scaleY;
 
             Object.defineProperty(mouseEvent, 'offsetX', { get: () => (touch.clientX - rect.left) * scaleX });
             Object.defineProperty(mouseEvent, 'offsetY', { get: () => (touch.clientY - rect.top) * scaleY });
