@@ -34,13 +34,13 @@
 
                         {% if quizAttempt.mode == 'mode_kanji' %}
                             <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Kanji à traduire</p>
-                            <div class="text-9xl font-bold text-center mb-8">{{ currentQuestion.kanji }}</div>
+                            <div class="text-6xl sm:text-9xl font-bold text-center mb-8 px-4 break-words max-w-full">{{ currentQuestion.kanji }}</div>
                         {% elseif quizAttempt.mode == 'mode_reading' %}
                             <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Lecture</p>
-                            <div class="text-7xl font-bold text-center mb-8">{{ currentQuestion.reading }}</div>
+                            <div class="text-4xl sm:text-7xl font-bold text-center mb-8 px-4 break-words max-w-full">{{ currentQuestion.reading }}</div>
                         {% elseif quizAttempt.mode == 'mode_translation' %}
                             <p class="text-sm uppercase tracking-widest text-base-content/50 font-bold mb-4">Traduction</p>
-                            <div class="text-5xl font-bold text-center mb-8">{{ currentQuestion.translation }}</div>
+                            <div class="text-2xl sm:text-5xl font-bold text-center mb-8 px-4 break-words max-w-full">{{ currentQuestion.translation }}</div>
                         {% endif %}
 
                         <div class="mt-auto animate-pulse flex flex-col items-center text-primary">
