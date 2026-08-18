@@ -6,7 +6,6 @@ export default class extends Controller {
     isInitialized = false;
 
     connect() {
-        this.tryInitCanvas();
         this.setupTouchEvents();
     }
 
@@ -36,11 +35,6 @@ export default class extends Controller {
             Object.defineProperty(mouseEvent, 'offsetX', { get: () => (touch.clientX - rect.left) * scaleX });
             Object.defineProperty(mouseEvent, 'offsetY', { get: () => (touch.clientY - rect.top) * scaleY });
 
-            console.log(`[${eventName}]`, {
-                x: Math.round((touch.clientX - rect.left) * scaleX),
-                y: Math.round((touch.clientY - rect.top) * scaleY),
-                time: Date.now()
-            });
             canvas.dispatchEvent(mouseEvent);
         };
 
@@ -65,20 +59,6 @@ export default class extends Controller {
         }, { passive: false });
     }
 
-    tryInitCanvas() {
-        if (this.isInitialized) return;
-
-        if (typeof window.KanjiCanvas !== 'undefined') {
-            window.KanjiCanvas.init(this.canvasTarget.id);
-            this.isInitialized = true;
-            console.log("KanjiCanvas initialisé avec succès !");
-        } else {
-            setTimeout(() => {
-                this.tryInitCanvas();
-            }, 200);
-        }
-    }
-
     open(event) {
         this.currentInputId = event.params.inputId;
         this.resultsTarget.innerHTML = '';
@@ -90,15 +70,15 @@ export default class extends Controller {
 
         this.dialogTarget.showModal();
 
-        if (!this.isInitialized) {
-            this.tryInitCanvas();
-        }
-
-        if (this.isInitialized) {
-            window.KanjiCanvas.erase(this.canvasTarget.id);
-        } else {
-            console.error("KanjiCanvas n'a pas pu s'initialiser à temps.");
-        }
+        setTimeout(() => {
+            if (typeof window.KanjiCanvas !== 'undefined') {
+                window.KanjiCanvas.init(this.canvasTarget.id);
+                this.isInitialized = true;
+                window.KanjiCanvas.erase(this.canvasTarget.id);
+            } else {
+                console.error("La librairie KanjiCanvas n'est pas chargée.");
+            }
+        }, 50);
     }
 
     erase() {

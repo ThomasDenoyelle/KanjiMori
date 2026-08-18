@@ -10,6 +10,8 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+            <script src="{{ asset('lib/kanji-canvas/kanji-canvas.min.js') }}"></script>
+            <script src="{{ asset('lib/kanji-canvas/ref-patterns.js') }}"></script>
         {% endblock %}
 
         {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
@@ -210,7 +212,5 @@
         </footer>
         {# -- footer end -- #}
 
-    <script src="{{ asset('lib/kanji-canvas/kanji-canvas.min.js') }}"></script>
-    <script src="{{ asset('lib/kanji-canvas/ref-patterns.js') }}"></script>
     </body>
 </html>
