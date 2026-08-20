@@ -1,4 +1,4 @@
-# 🔤 Kanji - Plateforme d'Apprentissage des Kanji
+# Kanji - Plateforme d'Apprentissage du Japonais
 
 Une application web pour apprendre et maîtriser les kanji japonais à travers des quiz interactifs, avec un système de dossiers de collection et suivi de progression.
 
@@ -187,11 +187,3 @@ npm run watch
 ## 📄 License
 
 Propriétaire - Tous droits réservés
-
-## 🤝 Contribution
-
-Pour toute contribution, veuillez créer une issue ou une pull request sur [GitHub](https://github.com/ToMaTo1206/kanji).
-
----
-
-**Bon apprentissage ! 学べ頑張って！**
