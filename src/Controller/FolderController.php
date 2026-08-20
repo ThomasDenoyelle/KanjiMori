@@ -59,7 +59,7 @@ final class FolderController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('library_folder_list');
+        return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
     }
 
     #[Route('/my-library/folder/{folder}/delete', name: 'library_folder_delete', requirements: ['folder' => '\d+'], methods: ['POST'])]
