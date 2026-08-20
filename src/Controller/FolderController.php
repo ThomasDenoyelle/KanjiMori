@@ -37,9 +37,13 @@ final class FolderController extends AbstractController
     public function exploreClass(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
     {
         $classList = $folderRepository->findAllJoindedClassByUser($user);
+        $class = new Folder();
+        $class->setIsPublic(true);
+        $newFolderForm = $this->createForm(FolderType::class, $class, ['user' => $user]);
 
         return $this->render('folder/explore_list.html.twig', [
             'classList' => $classList,
+            'newFolderForm' => $newFolderForm,
         ]);
     }
 
