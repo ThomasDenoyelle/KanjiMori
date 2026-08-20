@@ -21,7 +21,8 @@ class QuizAttemptRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('quizAttempt')
             ->leftJoin('quizAttempt.answerAttempts', 'answerAttempts')
-            ->select('quizAttempt, answerAttempts')
+            ->leftJoin('quizAttempt.quiz', 'quiz')
+            ->select('quizAttempt, answerAttempts, quiz')
             ->where('quizAttempt.author = :user')
             ->setParameter('user', $user->getId())
             ->orderBy('quizAttempt.createdAt', 'DESC')
