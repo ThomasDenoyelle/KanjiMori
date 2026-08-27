@@ -24,6 +24,14 @@ class RegistrationController extends AbstractController
     {
     }
 
+    /**
+     * Handles user registration.
+     *
+     * @param Request $request Incoming registration form submission.
+     * @param UserPasswordHasherInterface $userPasswordHasher Service used to hash the password.
+     * @param EntityManagerInterface $entityManager Entity manager used to persist the new user.
+     * @param Security $security Security service used to log the user in.
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -67,6 +75,12 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    /**
+     * Verifies the current user's email address.
+     *
+     * @param Request $request Incoming verification request.
+     * @param TranslatorInterface $translator Translator used for verification errors.
+     */
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
@@ -88,6 +102,11 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
     }
 
+    /**
+     * Resends the verification email to the current user.
+     *
+     * @param User $user Authenticated user requesting the resend.
+     */
     #[Route('/resend-verify-email', name: 'app_resend_verify_email')]
     public function resendVerifyEmail(#[CurrentUser] User $user): Response
     {

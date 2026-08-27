@@ -22,6 +22,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_USER")]
 final class GameController extends AbstractController
 {
+    /**
+     * Prepares a quiz attempt and game settings.
+     *
+     * @param Quiz|null $quiz Quiz to launch.
+     * @param QuizAttemptRepository $quizAttemptRepository Repository used to resume existing attempts.
+     * @param User $user Authenticated user starting the game.
+     * @param EntityManagerInterface $entityManager Entity manager used to persist a new attempt.
+     * @param Request $request Incoming setup form submission.
+     */
     #[Route('/quiz/{quiz}/setup', name: 'game_setup', requirements: ['quiz' => '\d+'])]
     public function setup(?Quiz $quiz, QuizAttemptRepository $quizAttemptRepository, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -108,6 +117,14 @@ final class GameController extends AbstractController
         ]);
     }
 
+    /**
+     * Plays the current question of a quiz attempt.
+     *
+     * @param QuizAttempt|null $quizAttempt Quiz attempt being played.
+     * @param User $user Authenticated user answering the quiz.
+     * @param EntityManagerInterface $entityManager Entity manager used to save the answer attempt.
+     * @param Request $request Incoming answer submission.
+     */
     #[Route('/quiz/play/{quizAttempt}', name: 'game_play', requirements: ['quizAttempt' => '\d+'])]
     public function play(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -218,6 +235,12 @@ final class GameController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the result summary for a quiz attempt.
+     *
+     * @param QuizAttempt|null $quizAttempt Quiz attempt to display.
+     * @param User $user Authenticated user viewing the result.
+     */
     #[Route('/quiz/result/{quizAttempt}', name: 'game_results', requirements: ['quizAttempt' => '\d+'])]
     public function result(?QuizAttempt $quizAttempt, #[CurrentUser] User $user): Response
     {
@@ -236,6 +259,12 @@ final class GameController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the current user's quiz attempt history.
+     *
+     * @param User $user Authenticated user whose history is loaded.
+     * @param QuizAttemptRepository $quizAttemptRepository Repository used to load quiz attempts.
+     */
     #[Route('/quiz/history', name: 'game_history', requirements: ['quizAttempt' => '\d+'])]
     public function history(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
     {
@@ -246,6 +275,14 @@ final class GameController extends AbstractController
         ]);
     }
 
+    /**
+     * Deletes a quiz attempt owned by the current user.
+     *
+     * @param User $user Authenticated user requesting the deletion.
+     * @param EntityManagerInterface $entityManager Entity manager used to remove the attempt.
+     * @param Request $request Incoming delete request.
+     * @param QuizAttempt|null $quizAttempt Quiz attempt to delete.
+     */
     #[Route('/quiz/game/delete/{quizAttempt}', name: 'game_delete', methods: ['POST'])]
     public function delete(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?QuizAttempt $quizAttempt): Response
     {
@@ -271,6 +308,12 @@ final class GameController extends AbstractController
         return $this->redirect($referer);
     }
 
+    /**
+     * Shows the correction for a submitted answer.
+     *
+     * @param User $user Authenticated user reviewing the correction.
+     * @param AnswerAttempt|null $answerAttempt Answer attempt to review.
+     */
     #[Route('/quiz/game/correction/{answerAttempt}', name: 'game_correction')]
     public function correction(#[CurrentUser] User $user, ?AnswerAttempt $answerAttempt): Response
     {
@@ -290,6 +333,14 @@ final class GameController extends AbstractController
         ]);
     }
 
+    /**
+     * Resets a quiz attempt by creating a fresh one.
+     *
+     * @param User $user Authenticated user resetting the attempt.
+     * @param QuizAttempt|null $quizAttempt Quiz attempt to reset.
+     * @param EntityManagerInterface $entityManager Entity manager used to replace the attempt.
+     * @param Request $request Incoming reset request.
+     */
     #[Route('/quiz/reset/{quizAttempt}', name: 'game_reset', methods: ['POST'])]
     public function reset(#[CurrentUser] User $user, ?QuizAttempt $quizAttempt, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -335,6 +386,12 @@ final class GameController extends AbstractController
         return $this->redirectToRoute('game_play', ['quizAttempt' => $newQuizAttempt->getId()]);
     }
 
+    /**
+     * Displays a study view for a quiz.
+     *
+     * @param Quiz $quiz Quiz to study.
+     * @param User $user Authenticated user viewing the study mode.
+     */
     #[Route('/quiz/{quiz}/study', name: 'game_study', requirements: ['quiz' => '\d+'])]
     public function study(Quiz $quiz, #[CurrentUser] User $user): Response
     {

@@ -20,6 +20,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 final class FolderController extends AbstractController
 {
+    /**
+     * Displays the current user's folders and the creation form.
+     *
+     * @param User $user Authenticated user requesting the page.
+     * @param FolderRepository $folderRepository Repository used to load the user's folders.
+     */
     #[Route('/my-library/folder', name: 'library_folder_list')]
     public function myFolder(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
     {
@@ -33,6 +39,12 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the public classes the current user has joined.
+     *
+     * @param User $user Authenticated user requesting the page.
+     * @param FolderRepository $folderRepository Repository used to load joined public classes.
+     */
     #[Route('/explore/class', name: 'explore_class_list')]
     public function exploreClass(#[CurrentUser] User $user, FolderRepository $folderRepository): Response
     {
@@ -47,6 +59,13 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    /**
+     * Creates a new folder for the current user.
+     *
+     * @param User $user Authenticated user creating the folder.
+     * @param Request $request Incoming form submission.
+     * @param EntityManagerInterface $entityManager Entity manager used to persist the folder.
+     */
     #[Route('/my-library/folder/new', name: 'library_folder_new')]
     public function new(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -62,6 +81,14 @@ final class FolderController extends AbstractController
         return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
     }
 
+    /**
+     * Deletes a folder owned by the current user.
+     *
+     * @param User $user Authenticated user requesting the deletion.
+     * @param Folder $folder Folder to delete.
+     * @param EntityManagerInterface $entityManager Entity manager used to remove the folder.
+     * @param Request $request Incoming delete request.
+     */
     #[Route('/my-library/folder/{folder}/delete', name: 'library_folder_delete', requirements: ['folder' => '\d+'], methods: ['POST'])]
     public function delete(#[CurrentUser] User $user, Folder $folder, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -81,6 +108,15 @@ final class FolderController extends AbstractController
         return $this->redirectToRoute('library_folder_list');
     }
 
+    /**
+     * Shows a folder with its quizzes, members, and edit form.
+     *
+     * @param Folder $folder Folder to display.
+     * @param User $user Authenticated user viewing the folder.
+     * @param QuizRepository $quizRepository Repository used to load the user's quizzes.
+     * @param UserRepository $userRepository Repository used to load related users.
+     * @param FolderRepository $folderRepository Repository used to load the full folder data.
+     */
     #[Route('/my-library/folder/{folder}/show', name: 'library_folder_show')]
     public function show(Folder $folder, #[CurrentUser] User $user, QuizRepository $quizRepository, UserRepository $userRepository, FolderRepository $folderRepository): Response
     {
@@ -105,6 +141,15 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    /**
+     * Toggles a quiz inside a folder.
+     *
+     * @param Folder $folder Folder being updated.
+     * @param Quiz $quiz Quiz being added to or removed from the folder.
+     * @param User $user Authenticated user managing the folder.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush the change.
+     * @param Request $request Incoming toggle request.
+     */
     #[Route('/my-library/folder/{folder}/toggle-quiz/{quiz}', name: 'library_folder_toggle_quiz', methods: ['POST'])]
     public function toggleQuiz(Folder $folder, Quiz $quiz, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -131,6 +176,14 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    /**
+     * Updates a folder's details.
+     *
+     * @param Folder $folder Folder being updated.
+     * @param User $user Authenticated user editing the folder.
+     * @param Request $request Incoming form submission.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush changes.
+     */
     #[Route('/my-library/folder/{folder}/update', name: 'library_folder_update', requirements: ['folder' => '\d+'], methods: ['POST'])]
     public function update(Folder $folder, #[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -151,6 +204,15 @@ final class FolderController extends AbstractController
         return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
     }
 
+    /**
+     * Toggles a member on a folder.
+     *
+     * @param Folder $folder Folder being updated.
+     * @param User $member User being added to or removed from the folder.
+     * @param User $user Authenticated user managing the members.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush the change.
+     * @param Request $request Incoming toggle request.
+     */
     #[Route('/my-library/folder/{folder}/toggle-member/{member}', name: 'library_folder_toggle_member', methods: ['POST'])]
     public function toggleMember(Folder $folder, User $member, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -177,6 +239,14 @@ final class FolderController extends AbstractController
         ]);
     }
 
+    /**
+     * Removes the current user from a class.
+     *
+     * @param Folder $folder Class the user is leaving.
+     * @param User $user Authenticated user leaving the class.
+     * @param EntityManagerInterface $entityManager Entity manager used to remove the membership.
+     * @param Request $request Incoming quit request.
+     */
     #[Route('/my-library/folder/{folder}/quit', name: 'library_folder_quit', methods: ['POST'])]
     public function quitFolder(Folder $folder, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {

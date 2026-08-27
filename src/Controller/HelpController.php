@@ -14,6 +14,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class HelpController extends AbstractController
 {
+    /**
+     * Creates a new feedback entry for the current user.
+     *
+     * @param EntityManagerInterface $entityManager Entity manager used to persist the feedback.
+     * @param Request $request Incoming feedback form submission.
+     * @param string $type Feedback type to create.
+     */
     #[Route('/feedbacks/{type}/new', name: 'feedback_new')]
     #[IsGranted('ROLE_USER')]
     public function feedbackNew(EntityManagerInterface $entityManager, Request $request, string $type): Response
@@ -38,6 +45,11 @@ final class HelpController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays the list of all feedback entries.
+     *
+     * @param FeedbackRepository $feedbackRepository Repository used to load feedback entries.
+     */
     #[Route('/admin/feedbacks', name: 'feedback_list')]
     #[IsGranted('ROLE_ADMIN')]
     public function feedbackList(FeedbackRepository $feedbackRepository): Response
@@ -49,6 +61,11 @@ final class HelpController extends AbstractController
         ]);
     }
 
+    /**
+     * Displays a single feedback entry.
+     *
+     * @param Feedback $feedback Feedback entry to display.
+     */
     #[Route('/admin/feedbacks/{feedback}', name: 'feedback_show')]
     #[IsGranted('ROLE_ADMIN')]
     public function feedbackShow(Feedback $feedback): Response
@@ -58,6 +75,12 @@ final class HelpController extends AbstractController
         ]);
     }
 
+    /**
+     * Toggles the validation state of a feedback entry.
+     *
+     * @param Feedback $feedback Feedback entry to validate or unvalidate.
+     * @param EntityManagerInterface $entityManager Entity manager used to persist the change.
+     */
     #[Route('/admin/feedbacks/{feedback}/validate', name: 'feedback_validate', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function feedbackValidate(Feedback $feedback, EntityManagerInterface $entityManager): Response
@@ -71,18 +94,27 @@ final class HelpController extends AbstractController
         return $this->redirectToRoute('feedback_show', ['feedback' => $feedback->getId()]);
     }
 
+    /**
+     * Displays the user guide page.
+     */
     #[Route('/guide', name: 'guide')]
     public function guide(): Response
     {
         return $this->render('help/guide.html.twig');
     }
 
+    /**
+     * Displays the legal mentions page.
+     */
     #[Route('/legal-mentions', name: 'legal_mentions')]
     public function legalMentions(): Response
     {
         return $this->render('help/legal_mentions.html.twig');
     }
 
+    /**
+     * Displays the privacy policy page.
+     */
     #[Route('/privacy', name: 'privacy')]
     public function privacy(): Response
     {

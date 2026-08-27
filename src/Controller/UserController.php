@@ -19,6 +19,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_USER")]
 final class UserController extends AbstractController
 {
+    /**
+     * Displays a user's profile and avatar form.
+     *
+     * @param User|null $user Profile owner to display.
+     * @param Request $request Incoming avatar form submission.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush avatar changes.
+     * @param QuizRepository $quizRepository Repository used to load the user's public quizzes.
+     */
     #[Route('/user/{user}/profil', name: 'user_profil')]
     public function profil(?User $user, Request $request, EntityManagerInterface $entityManager, QuizRepository $quizRepository): Response
     {
@@ -49,6 +57,13 @@ final class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * Updates the current user's profile.
+     *
+     * @param User $user Authenticated user being edited.
+     * @param Request $request Incoming profile form submission.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush profile changes.
+     */
     #[Route('/user/update', name: 'user_update')]
     public function update(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -66,6 +81,14 @@ final class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * Deletes the current user's account.
+     *
+     * @param User|null $user Authenticated user requesting the deletion.
+     * @param Request $request Incoming delete request.
+     * @param EntityManagerInterface $entityManager Entity manager used to remove the account.
+     * @param TokenStorageInterface $tokenStorage Token storage used to clear the authentication token.
+     */
     #[Route('/user/delete', name: 'user_delete', methods: ['POST'])]
     public function delete(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage): Response
     {
@@ -88,6 +111,12 @@ final class UserController extends AbstractController
     }
 
 
+    /**
+     * Displays the list of users to follow.
+     *
+     * @param User $user Authenticated user browsing the list.
+     * @param UserRepository $userRepository Repository used to load other users.
+     */
     #[Route('/user/list', name: 'user_list')]
     public function list(#[CurrentUser] User $user, UserRepository $userRepository): Response
     {
@@ -99,6 +128,14 @@ final class UserController extends AbstractController
     }
 
 
+    /**
+     * Toggles the follow state for another user.
+     *
+     * @param User $user Authenticated user following or unfollowing.
+     * @param User $targetUser User to follow or unfollow.
+     * @param EntityManagerInterface $entityManager Entity manager used to flush follow changes.
+     * @param Request $request Incoming toggle request.
+     */
     #[Route('/user/{targetUser}/toggle-follow', name: 'user_toggle_follow', methods: ['POST'])]
     public function toggleFollow(#[CurrentUser] User $user, User $targetUser, EntityManagerInterface $entityManager, Request $request): Response
     {

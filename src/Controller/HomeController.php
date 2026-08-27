@@ -12,6 +12,12 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 final class HomeController extends AbstractController
 {
+    /**
+     * Displays the home page with in-progress quiz attempts.
+     *
+     * @param User $user Authenticated user whose attempts are loaded.
+     * @param QuizAttemptRepository $quizAttemptRepository Repository used to load quiz attempts.
+     */
     #[Route('/', name: 'home')]
     public function home(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
     {
