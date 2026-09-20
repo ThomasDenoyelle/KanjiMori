@@ -93,6 +93,11 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "fix": [
+            "./vendor/bin/php-cs-fixer fix",
+            "./vendor/bin/php-cs-fixer check",
+            "./vendor/bin/twig-cs-fixer fix"
         ]
     },
     "conflict": {
