@@ -1,0 +1,115 @@
+{% for quiz in quizList %}
+    <div class="card bg-base-300 shadow-xl border border-base-200 hover:border-primary/50 transition-colors flex flex-col">
+        <div class="card-body p-6 flex flex-col grow">
+
+            <div class="flex">
+                <h2 class="card-title text-2xl mb-1 flex-wrap">{{ quiz.title|capitalize }}</h2>
+            </div>
+
+            {% if quiz.author != app.user %}
+
+                <div class="flex items-center gap-3">
+                    <div class="avatar">
+                        <div class="w-8 h-8 rounded-full ring ring-primary/30 ring-offset-base-300 ring-offset-2">
+                            {% if quiz.author.avatar %}
+                                <img src="{{ vich_uploader_asset(quiz.author, 'avatarFile') }}" alt="Avatar de {{ quiz.author.firstname }}" />
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ quiz.author.firstname }}+{{ quiz.author.lastname }}&background=random" alt="Avatar par défaut" />
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-sm font-medium text-base-content/80">
+                        <a href="{{ path('user_profil', {user: quiz.author.id}) }}" class="link link-hover">
+                            {{ quiz.author.firstname }} {{ quiz.author.lastname|first }}.
+                        </a>
+                    </div>
+                </div>
+
+            {% elseif quiz.author === app.user %}
+
+                <div class="flex items-center gap-3">
+                    <a href="{{ path('library_quiz_update', { quiz: quiz.id }) }}">
+                        <button class="btn btn-sm btn-circle btn-warning" title="Supprimer le quiz">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                    </a>
+                    <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quiz ? Cette action est irréversible.');" class="inline-block">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
+                        <button class="btn btn-sm btn-circle btn-error" title="Supprimer le quiz">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+            <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-2 border-t border-base-content/10">
+                <button type="button" onclick="document.getElementById('questions_modal_{{ quiz.id }}').showModal()" class="badge badge-outline badge-sm font-medium gap-1 hover:bg-base-200 hover:border-primary transition-colors cursor-pointer">
+                    <i class="fa-solid fa-clipboard-question text-primary"></i>
+                    {{ quiz.questions|length }} question{{ quiz.questions|length > 1 ? 's' : '' }}
+                    <i class="fa-solid fa-eye ml-1 opacity-50 text-xs"></i>
+                </button>
+                <span class="text-sm">{{ quiz.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
+            </div>
+
+            <div class="card-actions flex grow mt-4">
+                <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary grow">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    Étudier
+                </a>
+                <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-success btn-sm grow">
+                    <i class="fa-solid fa-play"></i> Jouer
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <dialog id="questions_modal_{{ quiz.id }}" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box w-11/12 max-w-2xl">
+            <h3 class="font-bold text-2xl mb-4 flex items-center gap-3">
+                <i class="fa-solid fa-list text-primary"></i> Contenu du quiz
+            </h3>
+
+            <p class="text-base-content/70 mb-4 font-semibold">{{ quiz.title }}</p>
+
+            <div class="overflow-x-auto border border-base-200 rounded-xl">
+                <table class="table table-pin-rows w-full shadow-2xl bg-base-200">
+                    <thead class="bg-base-200">
+                    <tr>
+                        <th class="w-12">#</th>
+                        <th class="text-center">Kanji</th>
+                        <th class="text-center">Lecture</th>
+                        <th class="text-center">Traduction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in quiz.questions %}
+                        <tr>
+                            <th class="text-base-content/50">{{ loop.index }}</th>
+                            <td class="text-center">{{ question.kanji }}</td>
+                            <td class="text-center">{{ question.reading }}</td>
+                            <td class="text-center">{{ question.translation }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-action mt-6">
+                <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-primary">
+                    <i class="fa-solid fa-play"></i> Jouer à ce quiz
+                </a>
+                <form method="dialog">
+                    <button class="btn btn-ghost">Fermer</button>
+                </form>
+            </div>
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+            <button>Fermer</button>
+        </form>
+    </dialog>
+
+{% endfor %}
