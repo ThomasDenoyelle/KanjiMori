@@ -1,80 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des quiz{% endblock %}
+{% block title %}Explorer les quiz - {{ app_name|default('Kanji App') }}{% endblock %}
 
 {% block body %}
-    {% if quizList is empty %}
-        <div role="alert" class="alert alert-warning mt-5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span>Vous n'avez créé aucun quiz pour le moment ! <a href="{{ path('library_quiz_new') }}" class="link link-primary hover:link-info">Créer un quiz ?</a></span>
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-4">
+
+            <div class="flex flex-col gap-2 text-center sm:text-left">
+                <h1 class="text-4xl font-bold flex items-center gap-3 justify-center sm:justify-start">
+                    <i class="fa-solid fa-globe text-primary"></i> Mes Quiz
+                </h1>
+                <p class="text-base-content/70 text-lg">Créer, modifier, supprimer et jouer aux quiz que tu as créés !</p>
+            </div>
+
+            <div class="divider mt-0"></div>
+
+            {% if quizList is empty %}
+                <div class="alert alert-info shadow-sm mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Il n'y a aucun quiz public pour le moment. Reviens un peu plus tard !</span>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    {{ include('quiz/_quiz_card.html.twig', {quizList: quizList}) }}
+
+                </div>
+            {% endif %}
+
         </div>
-    {% else %}
-        <div class="overflow-x-auto rounded-box border-4 border-base-content/5 bg-base-300 mt-5" data-controller="datatable" data-datatable-title-value="Liste des quiz">
-            <table class="table" id="quiz-list">
-
-                <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Création</th>
-                        <th class="tooltip tooltip-primary" data-tip="Nombre de questions">Qst <i class="fa-solid fa-circle-info text-primary"></i></th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                {% for quiz in quizList %}
-                    <tr>
-                        <td>{{ quiz.title|capitalize }}</td>
-                        <td>{{ quiz.createdAt|date('d/m/y H:i', 'Europe/Paris') }}</td>
-                        <td>{{ quiz.questions|length }}</td>
-                        <td class="px-0">
-                            <div class="gap-2 justify-end sm:flex hidden pe-4">
-                                {% if quiz.questions|length > 0 %}
-                                    <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
-                                    <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
-                                {% endif %}
-
-                                <a href="{{ path('library_quiz_update', {quiz: quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
-
-                                <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
-                                    <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
-                                </form>
-                            </div>
-
-                            <div class="justify-end dropdown dropdown-left sm:hidden flex">
-                                <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
-                                <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
-                                    {% if quiz.questions|length > 0 %}
-                                        <li>
-                                            <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
-                                        </li>
-                                    {% endif %}
-                                    <li>
-                                        <a href="{{ path('library_quiz_update', {quiz: quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
-                                    </li>
-                                    <li>
-                                        <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
-                                            <button class="btn btn-sm btn-error w-full"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
-                                        </form>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-
-            </table>
-        </div>
-
-    {% endif %}
-
+    </div>
 {% endblock %}
