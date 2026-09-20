@@ -47,7 +47,7 @@ class FolderRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function findFolderWithEverything(Folder $folder): ?Folder

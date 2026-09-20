@@ -17,7 +17,7 @@ class QuizRepository extends ServiceEntityRepository
         parent::__construct($registry, Quiz::class);
     }
 
-    public function findAllQuizByUser(User $user) : array
+    public function findAllQuizByUser(User $user): array
     {
         return $this->createQueryBuilder('quiz')
             ->leftJoin('quiz.questions', 'questions')
@@ -26,10 +26,9 @@ class QuizRepository extends ServiceEntityRepository
             ->setParameter('user', $user->getId())
             ->getQuery()
             ->getResult();
-
     }
 
-    public function findAllPublicQuiz(User $user) : array
+    public function findAllPublicQuiz(User $user): array
     {
         return $this->createQueryBuilder('quiz')
             ->leftJoin('quiz.questions', 'questions')
@@ -52,7 +51,6 @@ class QuizRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
-
 }

@@ -19,8 +19,8 @@ class UserType extends AbstractType
                     'class' => 'input input-bordered w-full max-w-xs mt-2',
                 ],
                 'row_attr' => [
-                    'class' => 'form-control w-full max-w-xs mb-4'
-                ]
+                    'class' => 'form-control w-full max-w-xs mb-4',
+                ],
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom',
@@ -28,12 +28,12 @@ class UserType extends AbstractType
                     'class' => 'input input-bordered w-full max-w-xs mt-2',
                 ],
                 'row_attr' => [
-                    'class' => 'form-control w-full max-w-xs mb-4'
-                ]
+                    'class' => 'form-control w-full max-w-xs mb-4',
+                ],
             ])
             ->add('email', null, [
                 'attr' => ['class' => 'input input-bordered w-full max-w-xs mt-2'],
-                'row_attr' => ['class' => 'form-control w-full max-w-xs mb-4']
+                'row_attr' => ['class' => 'form-control w-full max-w-xs mb-4'],
             ])
         ;
     }

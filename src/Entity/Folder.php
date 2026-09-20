@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: FolderRepository::class)]
-#[ORM\HasLifecycleCallbacks]
+#[HasLifecycleCallbacks]
 #[ApiResource(
     normalizationContext: ['groups' => ['folder:read']],
     processor: CurrentUserProcessor::class

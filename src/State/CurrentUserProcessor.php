@@ -15,17 +15,17 @@ class CurrentUserProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')] private ProcessorInterface $processor,
         private Security $security,
-    )
-    {
+    ) {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($operation->getMethod() === 'POST') {
+        if ('POST' === $operation->getMethod()) {
             if ($data instanceof Quiz || $data instanceof Folder || $data instanceof QuizAttempt) {
                 $data->setAuthor($this->security->getUser());
             }
         }
+
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 }

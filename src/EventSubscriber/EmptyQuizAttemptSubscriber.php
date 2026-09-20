@@ -10,8 +10,9 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 class EmptyQuizAttemptSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
-    ){}
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function onLoginSuccessEvent(LoginSuccessEvent $event): void
     {

@@ -13,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -54,7 +54,6 @@ class UserFixtures extends Fixture
         $magenta->setIsVerified(true);
         $magenta->setPassword($this->passwordHasher->hashPassword($magenta, 'password123'));
         $manager->persist($magenta);
-
 
         $quizElements = new Quiz();
         $quizElements->setTitle('Les éléments de base (N5)');
@@ -97,8 +96,6 @@ class UserFixtures extends Fixture
             $question->setQuiz($quizTime);
             $manager->persist($question);
         }
-
-
 
         $quizPublic1 = new Quiz();
         $quizPublic1->setTitle('Salutations de tous les jours');
@@ -171,7 +168,6 @@ class UserFixtures extends Fixture
         $folderStudy->addQuiz($quizElements);
         $folderStudy->addMember($aelis);
         $manager->persist($folderStudy);
-
 
         $manager->flush();
     }

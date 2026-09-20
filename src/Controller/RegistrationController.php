@@ -27,16 +27,17 @@ class RegistrationController extends AbstractController
     /**
      * Handles user registration.
      *
-     * @param Request $request Incoming registration form submission.
-     * @param UserPasswordHasherInterface $userPasswordHasher Service used to hash the password.
-     * @param EntityManagerInterface $entityManager Entity manager used to persist the new user.
-     * @param Security $security Security service used to log the user in.
+     * @param Request                     $request            incoming registration form submission
+     * @param UserPasswordHasherInterface $userPasswordHasher service used to hash the password
+     * @param EntityManagerInterface      $entityManager      entity manager used to persist the new user
+     * @param Security                    $security           security service used to log the user in
      */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security): Response
     {
         if ($this->isGranted('ROLE_USER')) {
             $this->addFlash('danger', 'Vous ne pouvez pas créer un compte en étant connecté');
+
             return $this->redirectToRoute('home');
         }
 
@@ -78,8 +79,8 @@ class RegistrationController extends AbstractController
     /**
      * Verifies the current user's email address.
      *
-     * @param Request $request Incoming verification request.
-     * @param TranslatorInterface $translator Translator used for verification errors.
+     * @param Request             $request    incoming verification request
+     * @param TranslatorInterface $translator translator used for verification errors
      */
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
@@ -99,13 +100,14 @@ class RegistrationController extends AbstractController
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre adresse email a bien été vérifiée !');
+
         return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
     }
 
     /**
      * Resends the verification email to the current user.
      *
-     * @param User $user Authenticated user requesting the resend.
+     * @param User $user authenticated user requesting the resend
      */
     #[Route('/resend-verify-email', name: 'app_resend_verify_email')]
     public function resendVerifyEmail(#[CurrentUser] User $user): Response
@@ -114,6 +116,7 @@ class RegistrationController extends AbstractController
 
         if ($user->isVerified()) {
             $this->addFlash('info', 'Votre compte est déjà vérifié.');
+
             return $this->redirectToRoute('user_profil', ['user' => $user->getId()]);
         }
 

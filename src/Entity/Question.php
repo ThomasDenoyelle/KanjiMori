@@ -44,7 +44,6 @@ class Question
         $this->answerAttempts = new ArrayCollection();
     }
 
-
     public function getId(): ?int
     {
         return $this->id;

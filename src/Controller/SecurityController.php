@@ -12,7 +12,7 @@ class SecurityController extends AbstractController
     /**
      * Displays the login form.
      *
-     * @param AuthenticationUtils $authenticationUtils Authentication helper used to read the last login error and username.
+     * @param AuthenticationUtils $authenticationUtils authentication helper used to read the last login error and username
      */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response

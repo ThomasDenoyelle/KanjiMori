@@ -18,37 +18,37 @@ class FeedbackType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices' => [
                     'Signaler un bug' => 'bug',
-                    'Suggérer une idée' => 'idea'
+                    'Suggérer une idée' => 'idea',
                 ],
                 'attr' => [
-                    'class' => 'input input-bordered w-full'
+                    'class' => 'input input-bordered w-full',
                 ],
                 'label_attr' => [
-                    'class' => 'label font-bold'
+                    'class' => 'label font-bold',
                 ],
-                'required' => true
+                'required' => true,
             ])
-            ->add('title',TextType::class,[
+            ->add('title', TextType::class, [
                 'label' => 'Titre',
                 'attr' => [
                     'placeholder' => 'Problème sur les quiz publics ...',
-                    'class' => 'input input-bordered w-full'
+                    'class' => 'input input-bordered w-full',
                 ],
                 'label_attr' => [
-                    'class' => 'label font-bold'
+                    'class' => 'label font-bold',
                 ],
-                'required' => true
+                'required' => true,
             ])
-            ->add('description', TextareaType::class,[
+            ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'attr' => [
                     'placeholder' => 'Décrivez votre problème ou votre suggestion en détail ...',
-                    'class' => 'textarea textarea-bordered h-32 w-full'
+                    'class' => 'textarea textarea-bordered h-32 w-full',
                 ],
                 'label_attr' => [
-                    'class' => 'label font-bold'
+                    'class' => 'label font-bold',
                 ],
-                'required' => true
+                'required' => true,
             ]);
     }
 

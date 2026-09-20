@@ -19,39 +19,42 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted("ROLE_USER")]
+#[IsGranted('ROLE_USER')]
 final class GameController extends AbstractController
 {
     /**
      * Prepares a quiz attempt and game settings.
      *
-     * @param Quiz|null $quiz Quiz to launch.
-     * @param QuizAttemptRepository $quizAttemptRepository Repository used to resume existing attempts.
-     * @param User $user Authenticated user starting the game.
-     * @param EntityManagerInterface $entityManager Entity manager used to persist a new attempt.
-     * @param Request $request Incoming setup form submission.
+     * @param Quiz|null              $quiz                  quiz to launch
+     * @param QuizAttemptRepository  $quizAttemptRepository repository used to resume existing attempts
+     * @param User                   $user                  authenticated user starting the game
+     * @param EntityManagerInterface $entityManager         entity manager used to persist a new attempt
+     * @param Request                $request               incoming setup form submission
      */
     #[Route('/quiz/{quiz}/setup', name: 'game_setup', requirements: ['quiz' => '\d+'])]
     public function setup(?Quiz $quiz, QuizAttemptRepository $quizAttemptRepository, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quiz) {
             $this->addFlash('error', 'Quiz introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($quiz->getQuestions()->isEmpty()) {
             $this->addFlash('error', 'Le quiz ne contient aucune question, veuillez en ajouter pour pouvoir le lancer !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($user !== $quiz->getAuthor() && !$quiz->isPublic()) {
             $this->addFlash('error', 'Action non autorisée !');
+
             return $this->redirectToRoute('home');
         }
 
         $form = $this->createFormBuilder()
             ->add('mode', ChoiceType::class, [
-                'choices'  => [
+                'choices' => [
                     'Kanji' => 'mode_kanji',
                     'Lecture' => 'mode_reading',
                     'Traduction' => 'mode_translation',
@@ -62,17 +65,17 @@ final class GameController extends AbstractController
                 ],
                 'label_attr' => [
                     'class' => 'label',
-                ]
+                ],
             ])
             ->add('isShuffled', CheckboxType::class, [
-                'label'    => 'Mélanger les questions',
+                'label' => 'Mélanger les questions',
                 'required' => false,
                 'attr' => [
                     'class' => 'checkbox checkbox-primary',
                 ],
                 'label_attr' => [
                     'class' => 'label',
-                ]
+                ],
             ])
             ->getForm();
 
@@ -84,6 +87,7 @@ final class GameController extends AbstractController
                 $currentAnswerAttempt = count($existingQuizAttempt->getAnswerAttempts());
                 if ($currentAnswerAttempt < $existingQuizAttempt->getMaxScore()) {
                     $this->addFlash('info', 'Reprise de votre quiz en cours !');
+
                     return $this->redirectToRoute('game_play', ['quizAttempt' => $existingQuizAttempt->getId()]);
                 }
             }
@@ -108,6 +112,7 @@ final class GameController extends AbstractController
 
             $entityManager->persist($quizAttempt);
             $entityManager->flush();
+
             return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
@@ -120,21 +125,23 @@ final class GameController extends AbstractController
     /**
      * Plays the current question of a quiz attempt.
      *
-     * @param QuizAttempt|null $quizAttempt Quiz attempt being played.
-     * @param User $user Authenticated user answering the quiz.
-     * @param EntityManagerInterface $entityManager Entity manager used to save the answer attempt.
-     * @param Request $request Incoming answer submission.
+     * @param QuizAttempt|null       $quizAttempt   quiz attempt being played
+     * @param User                   $user          authenticated user answering the quiz
+     * @param EntityManagerInterface $entityManager entity manager used to save the answer attempt
+     * @param Request                $request       incoming answer submission
      */
     #[Route('/quiz/play/{quizAttempt}', name: 'game_play', requirements: ['quizAttempt' => '\d+'])]
     public function play(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Action non autorisée !');
+
             return $this->redirectToRoute('home');
         }
 
@@ -142,6 +149,7 @@ final class GameController extends AbstractController
 
         if ($currentIndexQuestion >= $quizAttempt->getMaxScore()) {
             $this->addFlash('info', 'Quiz terminé !');
+
             return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
@@ -149,28 +157,28 @@ final class GameController extends AbstractController
 
         $currentQuestionId = $questionOrder[$currentIndexQuestion];
 
-        $currentQuestion = $quizAttempt->getQuiz()->getQuestions()->filter(function(Question $question) use ($currentQuestionId) {
+        $currentQuestion = $quizAttempt->getQuiz()->getQuestions()->filter(function (Question $question) use ($currentQuestionId) {
             return $question->getId() === $currentQuestionId;
         })->first();
 
         if (!$currentQuestion) {
             $this->addFlash('error', 'Une question de ce quiz a disparu.');
+
             return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
         $formBuilder = $this->createFormBuilder();
         $mode = $quizAttempt->getMode();
 
-
-        if ($mode === 'mode_kanji') {
+        if ('mode_kanji' === $mode) {
             $formBuilder
                 ->add('givenReading', TextType::class, ['label' => 'Lecture', 'attr' => ['autocomplete' => 'off']])
                 ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)', 'attr' => ['autocomplete' => 'off']]);
-        } elseif ($mode === 'mode_reading') {
+        } elseif ('mode_reading' === $mode) {
             $formBuilder
                 ->add('givenKanji', TextType::class, ['label' => 'Kanji', 'attr' => ['autocomplete' => 'off']])
                 ->add('givenTranslation', TextType::class, ['label' => 'Traduction (Français)', 'attr' => ['autocomplete' => 'off']]);
-        } elseif ($mode === 'mode_translation') {
+        } elseif ('mode_translation' === $mode) {
             $formBuilder
                 ->add('givenKanji', TextType::class, ['label' => 'Kanji', 'attr' => ['autocomplete' => 'off']])
                 ->add('givenReading', TextType::class, ['label' => 'Lecture', 'attr' => ['autocomplete' => 'off']]);
@@ -202,11 +210,11 @@ final class GameController extends AbstractController
 
             $isCorrect = false;
 
-            if ($mode === 'mode_kanji') {
+            if ('mode_kanji' === $mode) {
                 $isCorrect = ($expectedReading === $givenReading && $expectedTranslation === $givenTranslation);
-            } elseif ($mode === 'mode_reading') {
+            } elseif ('mode_reading' === $mode) {
                 $isCorrect = ($expectedKanji === $givenKanji && $expectedTranslation === $givenTranslation);
-            } elseif ($mode === 'mode_translation') {
+            } elseif ('mode_translation' === $mode) {
                 $isCorrect = ($expectedKanji === $givenKanji && $expectedReading === $givenReading);
             }
 
@@ -215,16 +223,14 @@ final class GameController extends AbstractController
                 $quizAttempt->setScore($quizAttempt->getScore() + 1);
             }
 
-
             $entityManager->persist($answerAttempt);
             $entityManager->flush();
 
             if ($isCorrect) {
                 return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
-
-            } else {
-                return $this->redirectToRoute('game_correction', ['answerAttempt' => $answerAttempt->getId()]);
             }
+
+            return $this->redirectToRoute('game_correction', ['answerAttempt' => $answerAttempt->getId()]);
         }
 
         return $this->render('game/play.html.twig', [
@@ -238,19 +244,21 @@ final class GameController extends AbstractController
     /**
      * Displays the result summary for a quiz attempt.
      *
-     * @param QuizAttempt|null $quizAttempt Quiz attempt to display.
-     * @param User $user Authenticated user viewing the result.
+     * @param QuizAttempt|null $quizAttempt quiz attempt to display
+     * @param User             $user        authenticated user viewing the result
      */
     #[Route('/quiz/result/{quizAttempt}', name: 'game_results', requirements: ['quizAttempt' => '\d+'])]
     public function result(?QuizAttempt $quizAttempt, #[CurrentUser] User $user): Response
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Accès refusé !');
+
             return $this->redirectToRoute('home');
         }
 
@@ -262,8 +270,8 @@ final class GameController extends AbstractController
     /**
      * Displays the current user's quiz attempt history.
      *
-     * @param User $user Authenticated user whose history is loaded.
-     * @param QuizAttemptRepository $quizAttemptRepository Repository used to load quiz attempts.
+     * @param User                  $user                  authenticated user whose history is loaded
+     * @param QuizAttemptRepository $quizAttemptRepository repository used to load quiz attempts
      */
     #[Route('/quiz/history', name: 'game_history', requirements: ['quizAttempt' => '\d+'])]
     public function history(#[CurrentUser] User $user, QuizAttemptRepository $quizAttemptRepository): Response
@@ -278,25 +286,27 @@ final class GameController extends AbstractController
     /**
      * Deletes a quiz attempt owned by the current user.
      *
-     * @param User $user Authenticated user requesting the deletion.
-     * @param EntityManagerInterface $entityManager Entity manager used to remove the attempt.
-     * @param Request $request Incoming delete request.
-     * @param QuizAttempt|null $quizAttempt Quiz attempt to delete.
+     * @param User                   $user          authenticated user requesting the deletion
+     * @param EntityManagerInterface $entityManager entity manager used to remove the attempt
+     * @param Request                $request       incoming delete request
+     * @param QuizAttempt|null       $quizAttempt   quiz attempt to delete
      */
     #[Route('/quiz/game/delete/{quizAttempt}', name: 'game_delete', methods: ['POST'])]
     public function delete(#[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request, ?QuizAttempt $quizAttempt): Response
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($quizAttempt->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
+
             return $this->redirectToRoute('library_quiz_list');
         }
 
-        if ($this->isCsrfTokenValid('delete' . $quizAttempt->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$quizAttempt->getId(), $request->request->get('_token'))) {
             $entityManager->remove($quizAttempt);
             $entityManager->flush();
             $this->addFlash('success', 'Votre quiz a bien été supprimé');
@@ -305,28 +315,30 @@ final class GameController extends AbstractController
         }
 
         $referer = $request->headers->get('referer');
+
         return $this->redirect($referer);
     }
 
     /**
      * Shows the correction for a submitted answer.
      *
-     * @param User $user Authenticated user reviewing the correction.
-     * @param AnswerAttempt|null $answerAttempt Answer attempt to review.
+     * @param User               $user          authenticated user reviewing the correction
+     * @param AnswerAttempt|null $answerAttempt answer attempt to review
      */
     #[Route('/quiz/game/correction/{answerAttempt}', name: 'game_correction')]
     public function correction(#[CurrentUser] User $user, ?AnswerAttempt $answerAttempt): Response
     {
         if (!$answerAttempt) {
             $this->addFlash('error', 'Réponse introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($answerAttempt->getQuizAttempt()->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
+
             return $this->redirectToRoute('library_quiz_list');
         }
-
 
         return $this->render('game/correction.html.twig', [
             'answerAttempt' => $answerAttempt,
@@ -336,26 +348,29 @@ final class GameController extends AbstractController
     /**
      * Resets a quiz attempt by creating a fresh one.
      *
-     * @param User $user Authenticated user resetting the attempt.
-     * @param QuizAttempt|null $quizAttempt Quiz attempt to reset.
-     * @param EntityManagerInterface $entityManager Entity manager used to replace the attempt.
-     * @param Request $request Incoming reset request.
+     * @param User                   $user          authenticated user resetting the attempt
+     * @param QuizAttempt|null       $quizAttempt   quiz attempt to reset
+     * @param EntityManagerInterface $entityManager entity manager used to replace the attempt
+     * @param Request                $request       incoming reset request
      */
     #[Route('/quiz/reset/{quizAttempt}', name: 'game_reset', methods: ['POST'])]
     public function reset(#[CurrentUser] User $user, ?QuizAttempt $quizAttempt, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
+
             return $this->redirectToRoute('home');
         }
 
         if ($quizAttempt->getAuthor() !== $user) {
             $this->addFlash('error', 'Action non autorisée !');
+
             return $this->redirectToRoute('library_quiz_list');
         }
 
-        if (!$this->isCsrfTokenValid('reset' . $quizAttempt->getId(), $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('reset'.$quizAttempt->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+
             return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
         }
 
@@ -365,7 +380,7 @@ final class GameController extends AbstractController
             $order[] = $question->getId();
         }
 
-        if ($request->request->get('shuffle') == "1") {
+        if ('1' == $request->request->get('shuffle')) {
             shuffle($order);
         }
 
@@ -389,8 +404,8 @@ final class GameController extends AbstractController
     /**
      * Displays a study view for a quiz.
      *
-     * @param Quiz $quiz Quiz to study.
-     * @param User $user Authenticated user viewing the study mode.
+     * @param Quiz $quiz quiz to study
+     * @param User $user authenticated user viewing the study mode
      */
     #[Route('/quiz/{quiz}/study', name: 'game_study', requirements: ['quiz' => '\d+'])]
     public function study(Quiz $quiz, #[CurrentUser] User $user): Response
@@ -408,6 +423,7 @@ final class GameController extends AbstractController
         }
         if (!$hasAccess) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce quiz.');
+
             return $this->redirectToRoute('home');
         }
 

@@ -17,15 +17,15 @@ final class HelpController extends AbstractController
     /**
      * Creates a new feedback entry for the current user.
      *
-     * @param EntityManagerInterface $entityManager Entity manager used to persist the feedback.
-     * @param Request $request Incoming feedback form submission.
-     * @param string $type Feedback type to create.
+     * @param EntityManagerInterface $entityManager entity manager used to persist the feedback
+     * @param Request                $request       incoming feedback form submission
+     * @param string                 $type          feedback type to create
      */
     #[Route('/feedbacks/{type}/new', name: 'feedback_new')]
     #[IsGranted('ROLE_USER')]
     public function feedbackNew(EntityManagerInterface $entityManager, Request $request, string $type): Response
     {
-        if ($type != 'idea' && $type != 'bug') {
+        if ('idea' != $type && 'bug' != $type) {
             return $this->redirectToRoute('home');
         }
         $feedback = new Feedback();
@@ -37,6 +37,7 @@ final class HelpController extends AbstractController
             $entityManager->persist($feedback);
             $entityManager->flush();
             $this->addFlash('success', 'Votre retour à bien été sauvegardé !');
+
             return $this->redirectToRoute('home');
         }
 
@@ -48,7 +49,7 @@ final class HelpController extends AbstractController
     /**
      * Displays the list of all feedback entries.
      *
-     * @param FeedbackRepository $feedbackRepository Repository used to load feedback entries.
+     * @param FeedbackRepository $feedbackRepository repository used to load feedback entries
      */
     #[Route('/admin/feedbacks', name: 'feedback_list')]
     #[IsGranted('ROLE_ADMIN')]
@@ -64,7 +65,7 @@ final class HelpController extends AbstractController
     /**
      * Displays a single feedback entry.
      *
-     * @param Feedback $feedback Feedback entry to display.
+     * @param Feedback $feedback feedback entry to display
      */
     #[Route('/admin/feedbacks/{feedback}', name: 'feedback_show')]
     #[IsGranted('ROLE_ADMIN')]
@@ -78,19 +79,20 @@ final class HelpController extends AbstractController
     /**
      * Toggles the validation state of a feedback entry.
      *
-     * @param Feedback $feedback Feedback entry to validate or unvalidate.
-     * @param EntityManagerInterface $entityManager Entity manager used to persist the change.
+     * @param Feedback               $feedback      feedback entry to validate or unvalidate
+     * @param EntityManagerInterface $entityManager entity manager used to persist the change
      */
     #[Route('/admin/feedbacks/{feedback}/validate', name: 'feedback_validate', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function feedbackValidate(Feedback $feedback, EntityManagerInterface $entityManager): Response
     {
-        if ($feedback->isValid()){
+        if ($feedback->isValid()) {
             $feedback->setIsValid(false);
-        } else{
+        } else {
             $feedback->setIsValid(true);
         }
         $entityManager->flush();
+
         return $this->redirectToRoute('feedback_show', ['feedback' => $feedback->getId()]);
     }
 

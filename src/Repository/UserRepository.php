@@ -53,6 +53,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 }

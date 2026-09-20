@@ -20,7 +20,7 @@ class QuizType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Leçon Kanji',
                     'class' => 'form-control',
-                ]
+                ],
             ])
             ->add('questions', CollectionType::class, [
                 'entry_type' => QuestionType::class,
@@ -30,13 +30,13 @@ class QuizType extends AbstractType
                 'prototype' => true,
                 'entry_options' => [
                     'label' => false,
-                ]
+                ],
             ])
             ->add('isPublic', CheckboxType::class, [
                 'required' => false,
                 'attr' => [
                     'class' => 'toggle toggle-primary',
-                ]
+                ],
             ])
         ;
     }
