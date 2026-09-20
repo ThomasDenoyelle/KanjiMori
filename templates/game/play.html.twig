@@ -60,14 +60,14 @@
                             </button>
                         </div>
 
-                        {{ form_start(form, {'attr': {'class': 'flex flex-col h-full'}}) }}
+                        {{ form_start(form, {attr: {class: 'flex flex-col h-full'}}) }}
                         <div class="flex flex-col gap-4 grow justify-center">
 
                             {% if form.givenKanji is defined %}
                                 <div class="form-control w-full">
-                                    {{ form_label(form.givenKanji, null, {'label_attr': {'class': 'label font-semibold'}}) }}
+                                    {{ form_label(form.givenKanji, null, {label_attr: {class: 'label font-semibold'}}) }}
                                     <div class="join w-full">
-                                        {{ form_widget(form.givenKanji, {'id': 'input_given_kanji', 'attr': {'class': 'input input-bordered input-lg join-item w-full text-center text-xl font-bold'}}) }}
+                                        {{ form_widget(form.givenKanji, {id: 'input_given_kanji', attr: {class: 'input input-bordered input-lg join-item w-full text-center text-xl font-bold'}}) }}
 
                                         <button type="button" class="btn btn-lg btn-primary join-item"
                                                 data-action="click->kanji-draw#open"
@@ -82,16 +82,16 @@
 
                             {% if form.givenReading is defined %}
                                 <div class="form-control w-full">
-                                    {{ form_label(form.givenReading, null, {'label_attr': {'class': 'label font-semibold'}}) }}
-                                    {{ form_widget(form.givenReading, {'attr': {'class': 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
+                                    {{ form_label(form.givenReading, null, {label_attr: {class: 'label font-semibold'}}) }}
+                                    {{ form_widget(form.givenReading, {attr: {class: 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
                                     <div class="text-error text-sm mt-1">{{ form_errors(form.givenReading) }}</div>
                                 </div>
                             {% endif %}
 
                             {% if form.givenTranslation is defined %}
                                 <div class="form-control w-full">
-                                    {{ form_label(form.givenTranslation, null, {'label_attr': {'class': 'label font-semibold'}}) }}
-                                    {{ form_widget(form.givenTranslation, {'attr': {'class': 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
+                                    {{ form_label(form.givenTranslation, null, {label_attr: {class: 'label font-semibold'}}) }}
+                                    {{ form_widget(form.givenTranslation, {attr: {class: 'input input-bordered input-lg w-full text-center text-xl font-bold'}}) }}
                                     <div class="text-error text-sm mt-1">{{ form_errors(form.givenTranslation) }}</div>
                                 </div>
                             {% endif %}
@@ -151,7 +151,7 @@
 
                 <div class="flex flex-col gap-3">
 
-                    <form method="post" action="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer ? Ton score actuel sera perdu.')" data-turbo="false">
+                    <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer ? Ton score actuel sera perdu.')" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
                         <input type="hidden" name="shuffle" value="0">
                         <button type="submit" class="btn btn-outline btn-primary w-full">
@@ -159,7 +159,7 @@
                         </button>
                     </form>
 
-                    <form method="post" action="{{ path('game_reset', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer en mélangeant les questions ?')" data-turbo="false">
+                    <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer en mélangeant les questions ?')" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
                         <input type="hidden" name="shuffle" value="1">
                         <button type="submit" class="btn btn-outline btn-secondary w-full">

@@ -43,7 +43,7 @@
                     <a href="{{ path('feedback_list') }}" class="btn btn-ghost">
                         <i class="fa-solid fa-arrow-left"></i> Retour à la liste
                     </a>
-                    <form action="{{ path('feedback_validate', {'feedback': feedback.id}) }}" method="post">
+                    <form action="{{ path('feedback_validate', {feedback: feedback.id}) }}" method="post">
                         {% if not feedback.isValid %}
                         <button type="submit" class="btn btn-success">
                             <i class="fa-solid fa-check-circle"></i> Marquer comme traité

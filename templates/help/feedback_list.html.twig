@@ -33,14 +33,14 @@
                         <td>{{ feedback.valid ? 'Traité' : 'En cours' }}</td>
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
-                                <a href="{{ path('feedback_show', {'feedback': feedback.id}) }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                                <a href="{{ path('feedback_show', {feedback: feedback.id}) }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
                             </div>
 
                             <div class="justify-end dropdown dropdown-left sm:hidden flex">
                                 <div tabindex="0" role="button" class="btn m-1"><i class="fa-solid fa-bars"></i></div>
                                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
                                     <li>
-                                        <a href="{{ path('feedback_show', {'feedback': feedback.id}) }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
+                                        <a href="{{ path('feedback_show', {feedback: feedback.id}) }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Voir</a>
                                     </li>
                                 </ul>
                             </div>

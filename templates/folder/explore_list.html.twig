@@ -55,12 +55,12 @@
 
                                 <div class="card-actions justify-end mt-auto pt-4 border-t border-base-200/50 flex-nowrap">
 
-                                    <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-sm btn-primary grow sm:grow-0">
+                                    <a href="{{ path('library_folder_show', {folder: folder.id}) }}" class="btn btn-sm btn-primary grow sm:grow-0">
                                         <i class="fa-solid fa-folder-open"></i> Ouvrir
                                     </a>
 
                                     {% if app.user != folder.author and app.user in folder.members %}
-                                        <form method="post" action="{{ path('library_folder_quit', {'folder': folder.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir quitter cette classe ?');">
+                                        <form method="post" action="{{ path('library_folder_quit', {folder: folder.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir quitter cette classe ?');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('quit_folder_' ~ folder.id) }}">
 
                                             <button type="submit" class="btn btn-sm btn-error btn-soft">
@@ -85,7 +85,7 @@
                 <i class="fa-solid fa-folder-plus text-primary"></i> Créer une classe
             </h3>
 
-            {{ form_start(newFolderForm, {'action': path('library_folder_new')}) }}
+            {{ form_start(newFolderForm, {action: path('library_folder_new')}) }}
             <div class="flex flex-col gap-4">
 
                 <div class="form-control w-full">

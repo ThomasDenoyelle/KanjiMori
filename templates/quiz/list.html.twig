@@ -32,13 +32,13 @@
                         <td class="px-0">
                             <div class="gap-2 justify-end sm:flex hidden pe-4">
                                 {% if quiz.questions|length > 0 %}
-                                    <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
-                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                    <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
+                                    <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
                                 {% endif %}
 
-                                <a href="{{ path('library_quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                                <a href="{{ path('library_quiz_update', {quiz: quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
 
-                                <form method="post" action="{{ path('library_quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
                                     <button class="btn btn-sm btn-error"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
                                 </form>
@@ -49,17 +49,17 @@
                                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 gap-2 shadow-sm">
                                     {% if quiz.questions|length > 0 %}
                                         <li>
-                                            <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
+                                            <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-graduation-cap"></i> Étudier</a>
                                         </li>
                                         <li>
-                                            <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
+                                            <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-sm btn-success"><i class="fa-solid fa-play"></i> Lancer</a>
                                         </li>
                                     {% endif %}
                                     <li>
-                                        <a href="{{ path('library_quiz_update', {'quiz': quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+                                        <a href="{{ path('library_quiz_update', {quiz: quiz.id}) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
                                     </li>
                                     <li>
-                                        <form method="post" action="{{ path('library_quiz_delete', {'quiz': quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
+                                        <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');" class="p-0 flex">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
                                             <button class="btn btn-sm btn-error w-full"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
                                         </form>

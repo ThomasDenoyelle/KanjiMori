@@ -37,7 +37,7 @@
                                 <div class="card-body">
                                     <h3 class="card-title text-xl">
                                         {{ quizAttempt.quiz.title }}
-                                        <form method="post" action="{{ path('game_delete', {'quizAttempt': quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                        <form method="post" action="{{ path('game_delete', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
                                             <button class="btn btn-sm btn-error btn-circle"><i class="fa-solid fa-trash-can"></i></button>
                                         </form>
@@ -59,7 +59,7 @@
                                     </div>
 
                                     <div class="card-actions justify-end mt-2">
-                                        <a href="{{ path('game_play', {'quizAttempt': quizAttempt.id}) }}" class="btn btn-primary w-full">
+                                        <a href="{{ path('game_play', {quizAttempt: quizAttempt.id}) }}" class="btn btn-primary w-full">
                                             Continuer <i class="fa-solid fa-arrow-right ml-1"></i>
                                         </a>
                                     </div>

@@ -16,35 +16,35 @@
                     </div>
                 {% endfor %}
 
-                {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col gap-4'}}) }}
+                {{ form_start(registrationForm, {attr: {class: 'flex flex-col gap-4'}}) }}
 
                 <div class="form-control">
-                    {{ form_label(registrationForm.firstname, 'Prénom', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
-                    {{ form_widget(registrationForm.firstname, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    {{ form_label(registrationForm.firstname, 'Prénom', {label_attr: {class: 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.firstname, {attr: {class: 'input input-bordered w-full'}}) }}
                     <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.firstname) }}</div>
                 </div>
 
                 <div class="form-control">
-                    {{ form_label(registrationForm.lastname, 'Nom', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
-                    {{ form_widget(registrationForm.lastname, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    {{ form_label(registrationForm.lastname, 'Nom', {label_attr: {class: 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.lastname, {attr: {class: 'input input-bordered w-full'}}) }}
                     <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.lastname) }}</div>
                 </div>
 
                 <div class="form-control">
-                    {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
-                    {{ form_widget(registrationForm.email, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    {{ form_label(registrationForm.email, 'Adresse email', {label_attr: {class: 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.email, {attr: {class: 'input input-bordered w-full'}}) }}
                     <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.email) }}</div>
                 </div>
 
                 <div class="form-control">
-                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'label label-text font-semibold'}}) }}
-                    {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', {label_attr: {class: 'label label-text font-semibold'}}) }}
+                    {{ form_widget(registrationForm.plainPassword, {attr: {class: 'input input-bordered w-full'}}) }}
                     <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.plainPassword) }}</div>
                 </div>
 
                 <div class="form-control mt-2">
                     <label class="label cursor-pointer justify-start gap-4">
-                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'checkbox checkbox-primary'}}) }}
+                        {{ form_widget(registrationForm.agreeTerms, {attr: {class: 'checkbox checkbox-primary'}}) }}
                         <span class="label-text">J'accepte les conditions d'utilisation</span>
                     </label>
                     <div class="text-error text-sm mt-1">{{ form_errors(registrationForm.agreeTerms) }}</div>

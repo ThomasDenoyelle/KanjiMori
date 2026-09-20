@@ -85,11 +85,11 @@
                             </div>
 
                             <div class="flex-none w-full sm:w-auto">
-                                <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary">
+                                <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary">
                                     <i class="fa-solid fa-graduation-cap"></i>
                                     Étudier
                                 </a>
-                                <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-success btn-sm">
+                                <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-success btn-sm">
                                     <i class="fa-solid fa-play"></i> Jouer
                                 </a>
                             </div>
@@ -128,11 +128,11 @@
                                 </div>
 
                                 <div class="modal-action mt-6">
-                                    <a href="{{ path('game_study', {'quiz': quiz.id}) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary">
                                         <i class="fa-solid fa-graduation-cap"></i>
                                         Étudier
                                     </a>
-                                    <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-success btn-sm">
                                         <i class="fa-solid fa-play"></i> Jouer à ce quiz
                                     </a>
                                     <form method="dialog">
@@ -168,7 +168,7 @@
                             <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
                                 <span class="font-bold truncate mr-2">{{ quiz.title }}</span>
 
-                                <form method="post" action="{{ path('library_folder_toggle_quiz', {'folder': folder.id, 'quiz': quiz.id}) }}">
+                                <form method="post" action="{{ path('library_folder_toggle_quiz', {folder: folder.id, quiz: quiz.id}) }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ folder.id ~ quiz.id) }}">
 
                                     {% if folder.quizzes.contains(quiz) %}
@@ -188,7 +188,7 @@
             </div>
 
             <div class="modal-action mt-8">
-                <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
+                <a href="{{ path('library_folder_show', {folder: folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
             </div>
         </div>
 
@@ -203,7 +203,7 @@
                 <i class="fa-solid fa-folder-plus text-primary"></i> Modifier un dossier
             </h3>
 
-            {{ form_start(updateFolderForm, {'action': path('library_folder_update', {'folder': folder.id})}) }}
+            {{ form_start(updateFolderForm, {action: path('library_folder_update', {folder: folder.id})}) }}
             <div class="flex flex-col gap-4">
 
                 <div class="form-control w-full">
@@ -271,7 +271,7 @@
                                             <span class="font-bold truncate mr-2">{{ targetUser.firstname }} {{ targetUser.lastname }}</span>
                                         </div>
 
-                                        <form method="post" action="{{ path('library_folder_toggle_member', {'folder': folder.id, 'member': targetUser.id}) }}">
+                                        <form method="post" action="{{ path('library_folder_toggle_member', {folder: folder.id, member: targetUser.id}) }}">
                                             <input type="hidden" name="_token" value="{{ csrf_token('toggle_member' ~ folder.id ~ targetUser.id) }}">
 
                                             {% if folder.members.contains(targetUser) %}
@@ -296,7 +296,7 @@
                 </div>
 
                 <div class="modal-action mt-8">
-                    <a href="{{ path('library_folder_show', {'folder': folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
+                    <a href="{{ path('library_folder_show', {folder: folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
                 </div>
             </div>
 

@@ -1,8 +1,8 @@
 {{ form_start(form) }}
 
 <div class="mb-4">
-    {{ form_label(form.title, 'Titre du Quiz', {'label_attr': {'class': 'label font-bold text-lg'}}) }}
-    {{ form_widget(form.title, {'attr': {'class': 'input input-bordered w-full'}}) }}
+    {{ form_label(form.title, 'Titre du Quiz', {label_attr: {class: 'label font-bold text-lg'}}) }}
+    {{ form_widget(form.title, {attr: {class: 'input input-bordered w-full'}}) }}
     <div class="text-error text-sm mt-1">{{ form_errors(form.title) }}</div>
 </div>
 
@@ -17,17 +17,17 @@
 
         <div class="md:col-span-3">
             <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Kanji</span></label>
-            {{ form_widget(form.questions.vars.prototype.kanji, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_widget(form.questions.vars.prototype.kanji, {attr: {class: 'input input-bordered w-full'}}) }}
         </div>
 
         <div class="md:col-span-3">
             <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Lecture</span></label>
-            {{ form_widget(form.questions.vars.prototype.reading, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_widget(form.questions.vars.prototype.reading, {attr: {class: 'input input-bordered w-full'}}) }}
         </div>
 
         <div class="md:col-span-4">
             <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Traduction</span></label>
-            {{ form_widget(form.questions.vars.prototype.translation, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_widget(form.questions.vars.prototype.translation, {attr: {class: 'input input-bordered w-full'}}) }}
         </div>
 
     </div>
@@ -62,17 +62,17 @@
 
                     <div class="md:col-span-3">
                         <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Kanji</span></label>
-                        {{ form_widget(questionForm.kanji, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                        {{ form_widget(questionForm.kanji, {attr: {class: 'input input-bordered w-full'}}) }}
                     </div>
 
                     <div class="md:col-span-3">
                         <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Lecture</span></label>
-                        {{ form_widget(questionForm.reading, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                        {{ form_widget(questionForm.reading, {attr: {class: 'input input-bordered w-full'}}) }}
                     </div>
 
                     <div class="md:col-span-4">
                         <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Traduction</span></label>
-                        {{ form_widget(questionForm.translation, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                        {{ form_widget(questionForm.translation, {attr: {class: 'input input-bordered w-full'}}) }}
                     </div>
 
                 </div>
@@ -90,7 +90,7 @@
             <span class="text-sm font-medium text-base-content/50 peer-checked:text-base-content/50 transition-colors">
                 <i class="fa-solid fa-lock mr-1"></i> Privé
             </span>
-            {{ form_widget(form.isPublic, {'attr': {'class': 'toggle toggle-primary'}}) }}
+            {{ form_widget(form.isPublic, {attr: {class: 'toggle toggle-primary'}}) }}
             <span class="text-sm font-medium text-base-content/50 peer-checked:text-primary peer-checked:font-bold transition-colors">
                 <i class="fa-solid fa-earth-europe mr-1"></i> Public
             </span>

@@ -85,7 +85,7 @@
 
                                 {% set isFollowing = user in app.user.following %}
 
-                                <form method="post" action="{{ path('user_toggle_follow', {'targetUser': user.id}) }}" class="w-full mt-2">
+                                <form method="post" action="{{ path('user_toggle_follow', {targetUser: user.id}) }}" class="w-full mt-2">
                                     <input type="hidden" name="_token" value="{{ csrf_token('toggle_follow_' ~ user.id) }}">
 
                                     {% if isFollowing %}
@@ -115,7 +115,6 @@
                     </div>
                 </div>
 
-
                 {% if publicQuizzes is empty %}
                     <div class="alert alert-info shadow-sm">
                         <i class="fa-solid fa-circle-info text-xl"></i>
@@ -139,7 +138,7 @@
                                     </div>
 
                                     <div class="card-actions justify-end mt-2 pt-2 border-t border-base-200/50">
-                                        <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary btn-sm w-full">
+                                        <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-primary btn-sm w-full">
                                             <i class="fa-solid fa-play"></i> Jouer
                                         </a>
                                     </div>
@@ -178,7 +177,7 @@
                                     </div>
 
                                     <div class="modal-action mt-6">
-                                        <a href="{{ path('game_setup', {'quiz': quiz.id}) }}" class="btn btn-primary">
+                                        <a href="{{ path('game_setup', {quiz: quiz.id}) }}" class="btn btn-primary">
                                             <i class="fa-solid fa-play"></i> Jouer à ce quiz
                                         </a>
                                         <form method="dialog">
@@ -234,7 +233,7 @@
                         <label class="label">
                             <span class="label-text font-semibold">Uploader une nouvelle image</span>
                         </label>
-                        {{ form_widget(avatarForm.avatarFile.file, {'attr': {'class': 'file-input file-input-bordered file-input-primary w-full shadow-sm'}}) }}
+                        {{ form_widget(avatarForm.avatarFile.file, {attr: {class: 'file-input file-input-bordered file-input-primary w-full shadow-sm'}}) }}
                         <div class="text-error text-sm mt-1">{{ form_errors(avatarForm.avatarFile.file) }}</div>
                     </div>
 
@@ -264,7 +263,7 @@
                     <p class="text-sm text-base-content/70 italic text-center py-4">Aucun abonné pour le moment.</p>
                 {% else %}
                     {% for follower in user.followers %}
-                        <a href="{{ path('user_profil', {'user': follower.id}) }}" class="flex items-center gap-4 p-3 bg-base-200 rounded-xl hover:bg-base-300 border border-transparent hover:border-primary/30 transition-all" data-turbo-frame="_top">
+                        <a href="{{ path('user_profil', {user: follower.id}) }}" class="flex items-center gap-4 p-3 bg-base-200 rounded-xl hover:bg-base-300 border border-transparent hover:border-primary/30 transition-all" data-turbo-frame="_top">
                             <div class="avatar">
                                 <div class="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
                                     {% if follower.avatar %}
@@ -300,7 +299,7 @@
                     <p class="text-sm text-base-content/70 italic text-center py-4">Cet utilisateur ne suit personne pour le moment.</p>
                 {% else %}
                     {% for followed in user.following %}
-                        <a href="{{ path('user_profil', {'user': followed.id}) }}" class="flex items-center gap-4 p-3 bg-base-200 rounded-xl hover:bg-base-300 border border-transparent hover:border-primary/30 transition-all" data-turbo-frame="_top">
+                        <a href="{{ path('user_profil', {user: followed.id}) }}" class="flex items-center gap-4 p-3 bg-base-200 rounded-xl hover:bg-base-300 border border-transparent hover:border-primary/30 transition-all" data-turbo-frame="_top">
                             <div class="avatar">
                                 <div class="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
                                     {% if followed.avatar %}
