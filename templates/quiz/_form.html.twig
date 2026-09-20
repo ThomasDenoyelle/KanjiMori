@@ -1,6 +1,6 @@
 {{ form_start(form) }}
 
-<div class="mb-2">
+<div class="mb-4">
     {{ form_label(form.title, 'Titre du Quiz', {'label_attr': {'class': 'label font-bold text-lg'}}) }}
     {{ form_widget(form.title, {'attr': {'class': 'input input-bordered w-full'}}) }}
     <div class="text-error text-sm mt-1">{{ form_errors(form.title) }}</div>
@@ -9,20 +9,28 @@
 <div class="divider">Questions</div>
 
 {% set questionPrototype %}
-    <tr class="hover border-b border-base-300">
-        <td class="p-2 font-bold text-center text-base-content/50 before:content-[counter(question)] [counter-increment:question]"></td>
+    <div class="relative flex flex-col md:grid md:grid-cols-12 md:items-start gap-4 p-4 hover:bg-base-200/30 transition-colors pt-12 md:pt-4">
 
-        <td class="p-2">
-            {{ form_widget(form.questions.vars.prototype.kanji, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-        </td>
-        <td class="p-2">
-            {{ form_widget(form.questions.vars.prototype.reading, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-        </td>
-        <td class="p-2">
-            {{ form_widget(form.questions.vars.prototype.translation, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-        </td>
-        <td class="action-cell text-right w-16 p-2"></td>
-    </tr>
+        <div class="absolute top-4 left-4 md:static md:col-span-1 flex md:justify-center md:items-center font-bold text-base-content/50 text-sm md:before:content-[counter(question)] before:content-['Question_'_counter(question)] [counter-increment:question] md:h-12"></div>
+
+        <div class="action-cell absolute top-2 right-2 md:static md:col-span-1 flex justify-end md:justify-center md:items-center md:h-12">ff</div>
+
+        <div class="md:col-span-3">
+            <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Kanji</span></label>
+            {{ form_widget(form.questions.vars.prototype.kanji, {'attr': {'class': 'input input-bordered w-full'}}) }}
+        </div>
+
+        <div class="md:col-span-3">
+            <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Lecture</span></label>
+            {{ form_widget(form.questions.vars.prototype.reading, {'attr': {'class': 'input input-bordered w-full'}}) }}
+        </div>
+
+        <div class="md:col-span-4">
+            <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Traduction</span></label>
+            {{ form_widget(form.questions.vars.prototype.translation, {'attr': {'class': 'input input-bordered w-full'}}) }}
+        </div>
+
+    </div>
 {% endset %}
 
 <div
@@ -30,41 +38,46 @@
     data-collection-allow-add-value="true"
     data-collection-allow-delete-value="true"
     data-collection-button-add-html-value='<button type="button" class="btn btn-primary w-full mt-4"><i class="fa-solid fa-plus"></i> Ajouter une question</button>'
-    data-collection-button-delete-html-value='<button type="button" class="btn btn-error btn-sm btn-square"><i class="fa-solid fa-trash-can text-neutral"></i></button>'
+    data-collection-button-delete-html-value='<button type="button" class="btn btn-error btn-sm btn-square"><i class="fa-solid fa-trash-can"></i></button>'
     data-collection-prototype-value="{{ questionPrototype|e('html_attr') }}"
 >
 
-    <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 shadow-sm">
-        <table class="table table-fixed w-full">
-            <thead class="bg-base-200">
-            <tr>
-                <th class="p-4 w-12 text-center">N°</th>
-                <th class="p-4">Kanji</th>
-                <th class="p-4">Lecture</th>
-                <th class="p-4">Traduction</th>
-                <th class="p-4 w-16"></th>
-            </tr>
-            </thead>
+    <div class="overflow-hidden rounded-box border border-base-content/10 bg-base-100 shadow-sm">
 
-            <tbody data-collection-target="collection" class="[counter-reset:question]">
+        <div class="hidden md:grid md:grid-cols-12 gap-4 p-4 bg-base-200 border-b border-base-content/10 font-bold text-sm uppercase text-base-content/70">
+            <div class="col-span-1 text-center">N°</div>
+            <div class="col-span-3">Kanji</div>
+            <div class="col-span-3">Lecture</div>
+            <div class="col-span-4">Traduction</div>
+            <div class="col-span-1"></div>
+        </div>
+
+        <div data-collection-target="collection" class="[counter-reset:question] divide-y divide-base-300">
             {% for questionForm in form.questions %}
-                <tr class="hover border-b border-base-300">
-                    <td class="p-2 font-bold text-center text-base-content/50 before:content-[counter(question)] [counter-increment:question]"></td>
+                <div class="relative flex flex-col md:grid md:grid-cols-12 md:items-start gap-4 p-4 hover:bg-base-200/30 transition-colors pt-12 md:pt-4">
 
-                    <td class="p-2">
-                        {{ form_widget(questionForm.kanji, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-                    </td>
-                    <td class="p-2">
-                        {{ form_widget(questionForm.reading, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-                    </td>
-                    <td class="p-2">
-                        {{ form_widget(questionForm.translation, {'attr': {'class': 'input input-bordered w-full input-sm'}}) }}
-                    </td>
-                    <td class="action-cell text-right w-16 p-2"></td>
-                </tr>
+                    <div class="absolute top-4 left-4 md:static md:col-span-1 flex md:justify-center md:items-center font-bold text-base-content/50 text-sm md:before:content-[counter(question)] before:content-['Question_'_counter(question)] [counter-increment:question] md:h-12"></div>
+
+                    <div class="action-cell absolute top-2 right-2 md:static md:col-span-1 flex justify-end md:justify-center md:items-center md:h-12"></div>
+
+                    <div class="md:col-span-3">
+                        <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Kanji</span></label>
+                        {{ form_widget(questionForm.kanji, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Lecture</span></label>
+                        {{ form_widget(questionForm.reading, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    </div>
+
+                    <div class="md:col-span-4">
+                        <label class="label md:hidden pt-0 pb-1"><span class="label-text text-xs font-bold uppercase text-base-content/70">Traduction</span></label>
+                        {{ form_widget(questionForm.translation, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                    </div>
+
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     </div>
 
     {% do form.questions.setRendered() %}
@@ -72,27 +85,24 @@
 
 <div class="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
 
-    <div class="form-control">
-
-        <div class="flex items-center gap-3">
+    <div class="form-control w-full sm:w-auto bg-base-200/50 p-3 rounded-box border border-base-300">
+        <div class="flex items-center justify-center sm:justify-start gap-3">
             <span class="text-sm font-medium text-base-content/50 peer-checked:text-base-content/50 transition-colors">
                 <i class="fa-solid fa-lock mr-1"></i> Privé
             </span>
-
-                {{ form_widget(form.isPublic) }}
-
-                <span class="text-sm font-medium text-base-content/50 peer-checked:text-primary peer-checked:font-bold transition-colors">
+            {{ form_widget(form.isPublic, {'attr': {'class': 'toggle toggle-primary'}}) }}
+            <span class="text-sm font-medium text-base-content/50 peer-checked:text-primary peer-checked:font-bold transition-colors">
                 <i class="fa-solid fa-earth-europe mr-1"></i> Public
             </span>
         </div>
     </div>
 
-    <div class="flex gap-2">
-        <a href="{{ path('library_quiz_list') }}" class="btn btn-ghost">
+    <div class="flex w-full sm:w-auto gap-2">
+        <a href="{{ path('library_quiz_list') }}" class="btn btn-ghost flex-1 sm:flex-none">
             <i class="fa-solid fa-arrow-left"></i> Annuler
         </a>
-        <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-floppy-disk"></i> Enregistrer le Quiz
+        <button type="submit" class="btn btn-primary flex-1 sm:flex-none">
+            <i class="fa-solid fa-floppy-disk"></i> Enregistrer
         </button>
     </div>
 
