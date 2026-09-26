@@ -167,6 +167,13 @@
                         </button>
                     </form>
 
+                    <form method="post" action="{{ path('game_skip', {quizAttempt: quizAttempt.id}) }}" data-turbo="false">
+                        <input type="hidden" name="_token" value="{{ csrf_token('skip' ~ quizAttempt.id) }}">
+                        <button type="submit" class="btn btn-warning w-full" onclick="document.getElementById('settings').close()">
+                            <i class="fa-solid fa-forward-step mr-2"></i> Passer cette question
+                        </button>
+                    </form>
+
                     <div class="divider"></div>
 
                     <a href="{{ path('home') }}" class="btn btn-error w-full" data-turbo-frame="_top">
