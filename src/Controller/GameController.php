@@ -441,4 +441,62 @@ final class GameController extends AbstractController
             'questionsJson' => json_encode($questionsData),
         ]);
     }
+
+    /**
+     * Skips the current question of a quiz attempt.
+     */
+    #[Route('/quiz/skip/{quizAttempt}', name: 'game_skip', requirements: ['quizAttempt' => '\d+'], methods: ['POST'])]
+    public function skip(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Quiz introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($user !== $quizAttempt->getAuthor()) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('home');
+        }
+
+        if (!$this->isCsrfTokenValid('skip' . $quizAttempt->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Action non autorisée (Token CSRF invalide).');
+            return $this->redirectToRoute('game_play', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        $currentIndexQuestion = count($quizAttempt->getAnswerAttempts());
+        if ($currentIndexQuestion >= $quizAttempt->getMaxScore()) {
+            return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        $questionOrder = $quizAttempt->getQuestionOrder();
+        $currentQuestionId = $questionOrder[$currentIndexQuestion];
+
+        $currentQuestion = $quizAttempt->getQuiz()->getQuestions()->filter(function (Question $question) use ($currentQuestionId) {
+            return $question->getId() === $currentQuestionId;
+        })->first();
+
+        if (!$currentQuestion) {
+            $this->addFlash('error', 'Une question de ce quiz a disparu.');
+            return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        $answerAttempt = new AnswerAttempt();
+        $answerAttempt->setQuizAttempt($quizAttempt);
+        $answerAttempt->setQuestion($currentQuestion);
+
+        $answerAttempt->setAskedKanji($currentQuestion->getKanji());
+        $answerAttempt->setAskedReading($currentQuestion->getReading());
+        $answerAttempt->setAskedTranslation($currentQuestion->getTranslation());
+
+        $answerAttempt->setGivenKanji(null);
+        $answerAttempt->setGivenReading(null);
+        $answerAttempt->setGivenTranslation(null);
+
+        $answerAttempt->setIsCorrect(false);
+
+        $entityManager->persist($answerAttempt);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('game_correction', ['answerAttempt' => $answerAttempt->getId()]);
+    }
 }
