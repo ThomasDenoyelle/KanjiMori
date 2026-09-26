@@ -60,7 +60,7 @@
                             </button>
                         </div>
 
-                        {{ form_start(form, {attr: {class: 'flex flex-col h-full'}}) }}
+                        {{ form_start(form, {attr: {class: 'flex flex-col h-full', 'data-turbo-frame': '_top'}}) }}
                         <div class="flex flex-col gap-4 grow justify-center">
 
                             {% if form.givenKanji is defined %}
@@ -107,6 +107,49 @@
 
                 </div>
             </div>
+
+            <dialog id="settings" class="modal modal-bottom sm:modal-middle">
+                <div class="modal-box">
+                    <h3 class="text-2xl font-bold text-center mb-6">Paramètres de la partie</h3>
+
+                    <div class="flex flex-col gap-3">
+
+                        <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer ? Ton score actuel sera perdu.')" data-turbo="false">
+                            <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
+                            <input type="hidden" name="shuffle" value="0">
+                            <button type="submit" class="btn btn-outline btn-primary w-full">
+                                <i class="fa-solid fa-rotate-left"></i> Recommencer
+                            </button>
+                        </form>
+
+                        <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer en mélangeant les questions ?')" data-turbo="false">
+                            <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
+                            <input type="hidden" name="shuffle" value="1">
+                            <button type="submit" class="btn btn-outline btn-secondary w-full">
+                                <i class="fa-solid fa-shuffle"></i> Recommencer (Mélanger)
+                            </button>
+                        </form>
+
+                        <form method="post" action="{{ path('game_skip', {quizAttempt: quizAttempt.id}) }}" data-turbo="false">
+                            <input type="hidden" name="_token" value="{{ csrf_token('skip' ~ quizAttempt.id) }}">
+                            <button type="submit" class="btn btn-warning w-full" onclick="document.getElementById('settings').close()">
+                                <i class="fa-solid fa-forward-step mr-2"></i> Passer cette question
+                            </button>
+                        </form>
+
+                        <div class="divider"></div>
+
+                        <a href="{{ path('home') }}" class="btn btn-error w-full" data-turbo-frame="_top">
+                            <i class="fa-solid fa-sign-out-alt"></i> Quitter et revenir plus tard
+                        </a>
+                    </div>
+                </div>
+
+                <form method="dialog" class="modal-backdrop">
+                    <button>Fermer</button>
+                </form>
+            </dialog>
+
         </turbo-frame>
 
         <dialog data-kanji-draw-target="dialog" class="modal modal-bottom sm:modal-middle">
@@ -143,48 +186,6 @@
                     <form method="dialog"><button class="btn btn-ghost">Terminer</button></form>
                 </div>
             </div>
-        </dialog>
-
-        <dialog id="settings" class="modal modal-bottom sm:modal-middle">
-            <div class="modal-box">
-                <h3 class="text-2xl font-bold text-center mb-6">Paramètres de la partie</h3>
-
-                <div class="flex flex-col gap-3">
-
-                    <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer ? Ton score actuel sera perdu.')" data-turbo="false">
-                        <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
-                        <input type="hidden" name="shuffle" value="0">
-                        <button type="submit" class="btn btn-outline btn-primary w-full">
-                            <i class="fa-solid fa-rotate-left"></i> Recommencer
-                        </button>
-                    </form>
-
-                    <form method="post" action="{{ path('game_reset', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir recommencer en mélangeant les questions ?')" data-turbo="false">
-                        <input type="hidden" name="_token" value="{{ csrf_token('reset' ~ quizAttempt.id) }}">
-                        <input type="hidden" name="shuffle" value="1">
-                        <button type="submit" class="btn btn-outline btn-secondary w-full">
-                            <i class="fa-solid fa-shuffle"></i> Recommencer (Mélanger)
-                        </button>
-                    </form>
-
-                    <form method="post" action="{{ path('game_skip', {quizAttempt: quizAttempt.id}) }}" data-turbo="false">
-                        <input type="hidden" name="_token" value="{{ csrf_token('skip' ~ quizAttempt.id) }}">
-                        <button type="submit" class="btn btn-warning w-full" onclick="document.getElementById('settings').close()">
-                            <i class="fa-solid fa-forward-step mr-2"></i> Passer cette question
-                        </button>
-                    </form>
-
-                    <div class="divider"></div>
-
-                    <a href="{{ path('home') }}" class="btn btn-error w-full" data-turbo-frame="_top">
-                        <i class="fa-solid fa-sign-out-alt"></i> Quitter et revenir plus tard
-                    </a>
-                </div>
-            </div>
-
-            <form method="dialog" class="modal-backdrop">
-                <button>Fermer</button>
-            </form>
         </dialog>
 
     </div>
