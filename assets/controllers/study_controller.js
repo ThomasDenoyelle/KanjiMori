@@ -43,4 +43,37 @@ export default class extends Controller {
     flip() {
         this.flashcardTarget.classList.toggle('swap-active');
     }
+
+    skip(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        const currentQuestion = this.questions[this.currentIndex];
+        if (!currentQuestion) return;
+
+        const attemptData = {
+            questionId: currentQuestion.id,
+            isCorrect: false,
+            isSkipped: true,
+            askedKanji: currentQuestion.kanji,
+            askedReading: currentQuestion.reading,
+            askedTranslation: currentQuestion.translation,
+            givenKanji: null,
+            givenReading: null,
+            givenTranslation: null
+        };
+
+        this.recordedAnswers.push(attemptData);
+
+        this.resetQuestionInputs();
+
+        this.currentIndex++;
+
+        if (this.currentIndex < this.questions.length) {
+            this.renderQuestion();
+        } else {
+            this.submitQuiz();
+        }
+    }
 }
