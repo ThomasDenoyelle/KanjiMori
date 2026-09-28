@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Folder;
+use App\Repository\FolderRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -14,6 +16,9 @@ class FolderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Folder|null $folder */
+        $folder = $builder->getData();
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
@@ -36,8 +41,12 @@ class FolderType extends AbstractType
                     'rows' => 3,
                 ],
             ])
-            ->add('isPublic', CheckboxType::class, [
-                'label' => 'Partagé ce dossier avec d\'autres utilisateurs',
+        ;
+        $isSubFolder = $folder && $folder->getParent() !== null;
+
+        if (!$isSubFolder) {
+            $builder->add('isPublic', CheckboxType::class, [
+                'label' => 'Partager ce dossier avec d\'autres utilisateurs',
                 'required' => false,
                 'label_attr' => [
                     'class' => 'label font-semibold',
@@ -45,8 +54,8 @@ class FolderType extends AbstractType
                 'attr' => [
                     'class' => 'toggle toggle-primary',
                 ],
-            ])
-        ;
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

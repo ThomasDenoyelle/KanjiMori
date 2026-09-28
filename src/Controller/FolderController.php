@@ -65,17 +65,41 @@ final class FolderController extends AbstractController
      * @param User                   $user          authenticated user creating the folder
      * @param Request                $request       incoming form submission
      * @param EntityManagerInterface $entityManager entity manager used to persist the folder
+     * @param FolderRepository       $folderRepository repository used to load the user's folders
      */
     #[Route('/my-library/folder/new', name: 'library_folder_new')]
-    public function new(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function new(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, FolderRepository $folderRepository): Response
     {
         $folder = new Folder();
         $folder->setAuthor($user);
+
+        if ($parentId = $request->query->get('parent')) {
+            $parent = $folderRepository->findOneBy(['id' => $parentId, 'author' => $user]);
+            if ($parent) {
+                $folder->setParent($parent);
+                $folder->setIsPublic($parent->isPublic());
+            }
+        } else {
+            $folder->setIsPublic(false);
+        }
+
         $form = $this->createForm(FolderType::class, $folder, ['user' => $user]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($folder->getParent()) {
+                $folder->setIsPublic($folder->getParent()->isPublic());
+            }
+
             $entityManager->persist($folder);
             $entityManager->flush();
+            if ($folder->getParent()) {
+                return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getParent()->getId()]);
+            }
+            return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
+        }
+
+        if ($folder->getParent()) {
+            return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getParent()->getId()]);
         }
 
         return $this->redirectToRoute('library_folder_show', ['folder' => $folder->getId()]);
@@ -123,7 +147,7 @@ final class FolderController extends AbstractController
     {
         $currentFolder = $folderRepository->findFolderWithEverything($folder);
 
-        if ($currentFolder->getAuthor() !== $user && !$currentFolder->getMembers()->contains($user)) {
+        if (!$currentFolder || !$currentFolder->isAccessibleBy($user)) {
             $this->addFlash('error', 'Action non autorisé ou dossier introuvable !');
 
             return $this->redirectToRoute('library_folder_list');
@@ -135,11 +159,16 @@ final class FolderController extends AbstractController
 
         $updateFolderForm = $this->createForm(FolderType::class, $currentFolder, ['user' => $user]);
 
+        $newChildFolder = new Folder();
+        $newChildFolder->setParent($currentFolder);
+        $newChildFolderForm = $this->createForm(FolderType::class, $newChildFolder, ['user' => $user]);
+
         return $this->render('folder/show.html.twig', [
             'folder' => $currentFolder,
             'quizList' => $quizList,
             'updateFolderForm' => $updateFolderForm,
             'mutualFriends' => $mutualFriends,
+            'newChildFolderForm' => $newChildFolderForm,
         ]);
     }
 

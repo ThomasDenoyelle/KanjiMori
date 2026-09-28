@@ -240,4 +240,19 @@ class Quiz
 
         return $this;
     }
+
+    public function isAccessibleBy(User $user): bool
+    {
+        if ($this->isPublic() || $this->getAuthor() === $user) {
+            return true;
+        }
+
+        foreach ($this->getFolders() as $folder) {
+            if ($folder->isAccessibleBy($user)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
