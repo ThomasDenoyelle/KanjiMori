@@ -66,6 +66,8 @@ class FolderRepository extends ServiceEntityRepository
             ->addSelect('c')
             ->leftJoin('f.parent', 'p')
             ->addSelect('p')
+            ->leftJoin('p.members', 'pm')
+            ->addSelect('pm')
             ->where('f.id = :id')
             ->setParameter('id', $folder->getId())
             ->getQuery()
