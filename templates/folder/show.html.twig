@@ -4,19 +4,19 @@
 
 {% block body %}
     <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
-        <div class="w-full max-w-7xl flex flex-col gap-8">
+        <div class="w-full max-w-7xl flex flex-col gap-6">
 
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 bg-base-300 p-6 rounded-3xl shadow-sm border border-base-200">
                 <div class="flex flex-col gap-3">
                     <div class="flex items-center gap-1">
-                        <h1 class="text-4xl font-bold flex items-center gap-1">
+                        <h1 class="text-4xl font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-folder text-primary"></i>
                             {{ folder.title }}
                         </h1>
                         {% if folder.author == app.user %}
-                        <button class="btn btn-ghost px-1" onclick="update_folder_modal.showModal()">
-                            <i class="fa-solid fa-folder-open text-primary text-2xl"></i>
-                            <i class="fa-solid fa-pen-to-square text-primary text-2xl"></i>
-                        </button>
+                            <button class="btn btn-ghost px-2" onclick="update_folder_modal.showModal()" title="Modifier le dossier">
+                                <i class="fa-solid fa-pen-to-square text-primary text-xl"></i>
+                            </button>
                         {% endif %}
                     </div>
 
@@ -40,30 +40,79 @@
                                 <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
                                 <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
                             </button>
-                            {% if folder.isPublic %}
+                        {% else %}
+                            <span class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3">
+                                <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
+                            </span>
+                        {% endif %}
+
+                        {% if folder.isPublic and folder.parent is null %}
+                            {% if folder.author == app.user %}
                                 <button class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer" onclick="manage_members_modal.showModal()">
                                     <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
                                     <i class="fa-solid fa-pen-to-square ml-1 opacity-50 text-xs"></i>
                                 </button>
+                            {% else %}
+                                <span class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3">
+                                    <i class="fa-solid fa-users"></i> {{ folder.members|length }} membre(s)
+                                </span>
                             {% endif %}
-                        {% else %}
-
-                        <span class="badge badge-outline hover:bg-base-200 hover:border-primary transition-colors gap-2 font-medium py-3 px-3 cursor-pointer">
-                            <i class="fa-solid fa-list-check"></i> {{ folder.quizzes|length }} quiz
-                        </span>
-
                         {% endif %}
-
                     </div>
                 </div>
+
+                {% if folder.author == app.user %}
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button class="btn btn-outline btn-primary btn-sm sm:btn-md flex-1 sm:flex-none" onclick="new_child_folder_modal.showModal()">
+                            <i class="fa-solid fa-folder-plus"></i> Nouveau sous-dossier
+                        </button>
+                    </div>
+                {% endif %}
             </div>
 
-            <div class="divider mt-0 mb-0">Contenu du dossier</div>
+            {% if folder.children is not empty or folder.author == app.user %}
+                <div class="flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-folder-tree text-primary"></i> Sous-dossiers ({{ folder.children|length }})
+                        </h2>
+                    </div>
+
+                    {% if folder.children is empty %}
+                        <div class="alert alert-neutral border border-base-200 text-sm">
+                            <i class="fa-solid fa-circle-info text-primary"></i>
+                            <span>Aucun sous-dossier ici. Vous pouvez en créer un pour organiser vos leçons ou chapitres.</span>
+                        </div>
+                    {% else %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {% for child in folder.children %}
+                                <a href="{{ path('library_folder_show', {folder: child.id}) }}" class="flex flex-col justify-between p-5 bg-base-300 rounded-2xl border border-base-200 hover:border-primary transition-all hover:-translate-y-0.5 shadow-sm">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-folder text-primary text-xl"></i>
+                                            <span class="font-bold text-lg truncate">{{ child.title }}</span>
+                                        </div>
+                                        {% if child.description %}
+                                            <p class="text-xs text-base-content/70 line-clamp-2">{{ child.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex items-center gap-3 mt-4 text-xs text-base-content/60">
+                                        <span><i class="fa-solid fa-list-check"></i> {{ child.quizzes|length }} quiz</span>
+                                        <span><i class="fa-solid fa-folder-tree"></i> {{ child.children|length }} dossier(s)</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="divider mt-2 mb-0">Quiz du dossier</div>
 
             {% if folder.quizzes is empty %}
                 <div class="alert alert-info shadow-sm mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Ce dossier est vide. Cliquez sur "Gérer les quiz" pour commencer à le remplir !</span>
+                    <span>Ce dossier ne contient aucun quiz direct. Cliquez sur "Gérer les quiz" pour en ajouter !</span>
                 </div>
             {% else %}
                 <div class="flex flex-col gap-3 mt-2">
@@ -153,97 +202,141 @@
     </div>
 
     {% if folder.author == app.user %}
-    <dialog id="manage_quizzes_modal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box">
-            <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
-                <i class="fa-solid fa-list-check text-primary"></i> Gérer les quiz
-            </h3>
+        <dialog id="new_child_folder_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-2xl mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-folder-plus text-primary"></i> Créer un sous-dossier
+                </h3>
 
-            <div class="flex flex-col gap-2 max-h-96 overflow-y-auto pr-2">
-                {% if quizList is empty %}
-                    <p class="text-sm text-base-content/70 italic">Vous n'avez créé aucun quiz pour le moment.</p>
-                {% else %}
-                    {% for quiz in quizList %}
-                        <turbo-frame id="quiz-toggle-{{ quiz.id }}">
-                            <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
-                                <span class="font-bold truncate mr-2">{{ quiz.title }}</span>
+                <p class="text-sm text-base-content/70 mb-4">
+                    Sous-dossier dans : <span class="font-bold text-primary">{{ folder.title }}</span>
+                </p>
 
-                                <form method="post" action="{{ path('library_folder_toggle_quiz', {folder: folder.id, quiz: quiz.id}) }}">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ folder.id ~ quiz.id) }}">
+                {{ form_start(newChildFolderForm, {action: path('library_folder_new', {parent: folder.id})}) }}
+                <div class="flex flex-col gap-4">
 
-                                    {% if folder.quizzes.contains(quiz) %}
-                                        <button type="submit" class="btn btn-sm btn-error btn-soft w-24">
-                                            <i class="fa-solid fa-minus"></i> Retirer
-                                        </button>
-                                    {% else %}
-                                        <button type="submit" class="btn btn-sm btn-success btn-soft w-24">
-                                            <i class="fa-solid fa-plus"></i> Ajouter
-                                        </button>
-                                    {% endif %}
-                                </form>
-                            </div>
-                        </turbo-frame>
-                    {% endfor %}
-                {% endif %}
-            </div>
+                    <div class="form-control w-full">
+                        {{ form_label(newChildFolderForm.title) }}
+                        {{ form_widget(newChildFolderForm.title) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(newChildFolderForm.title) }}</div>
+                    </div>
 
-            <div class="modal-action mt-8">
-                <a href="{{ path('library_folder_show', {folder: folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
-            </div>
-        </div>
+                    <div class="form-control w-full">
+                        {{ form_label(newChildFolderForm.description) }}
+                        {{ form_widget(newChildFolderForm.description) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(newChildFolderForm.description) }}</div>
+                    </div>
 
-        <form method="dialog" class="modal-backdrop">
-            <button>Fermer</button>
-        </form>
-    </dialog>
-
-    <dialog id="update_folder_modal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box">
-            <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
-                <i class="fa-solid fa-folder-plus text-primary"></i> Modifier un dossier
-            </h3>
-
-            {{ form_start(updateFolderForm, {action: path('library_folder_update', {folder: folder.id})}) }}
-            <div class="flex flex-col gap-4">
-
-                <div class="form-control w-full">
-                    {{ form_label(updateFolderForm.title) }}
-                    {{ form_widget(updateFolderForm.title) }}
-                    <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.title) }}</div>
                 </div>
 
-                <div class="form-control w-full">
-                    {{ form_label(updateFolderForm.description) }}
-                    {{ form_widget(updateFolderForm.description) }}
-                    <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.description) }}</div>
+                <div class="modal-action mt-6">
+                    <button type="button" class="btn btn-ghost" onclick="new_child_folder_modal.close()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Créer le sous-dossier
+                    </button>
                 </div>
-
-                <div class="form-control w-full mt-2">
-                    <label class="label cursor-pointer justify-start gap-4">
-                        {{ form_widget(updateFolderForm.isPublic) }}
-                        <span class="label-text font-semibold">Rendre ce dossier partagé</span>
-                    </label>
-                    <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.isPublic) }}</div>
-                </div>
-
+                {{ form_end(newChildFolderForm) }}
             </div>
 
-            <div class="modal-action mt-8">
-                <button type="button" class="btn btn-ghost" onclick="update_folder_modal.close()">Annuler</button>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-check"></i> Créer
-                </button>
-            </div>
-            {{ form_end(updateFolderForm) }}
-        </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>Fermer</button>
+            </form>
+        </dialog>
 
-        <form method="dialog" class="modal-backdrop">
-            <button>Fermer</button>
-        </form>
-    </dialog>
+        <dialog id="manage_quizzes_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-list-check text-primary"></i> Gérer les quiz
+                </h3>
+
+                <div class="flex flex-col gap-2 max-h-96 overflow-y-auto pr-2">
+                    {% if quizList is empty %}
+                        <p class="text-sm text-base-content/70 italic">Vous n'avez créé aucun quiz pour le moment.</p>
+                    {% else %}
+                        {% for quiz in quizList %}
+                            <turbo-frame id="quiz-toggle-{{ quiz.id }}">
+                                <div class="flex justify-between items-center p-3 bg-base-100 rounded-xl border border-base-200">
+                                    <span class="font-bold truncate mr-2">{{ quiz.title }}</span>
+
+                                    <form method="post" action="{{ path('library_folder_toggle_quiz', {folder: folder.id, quiz: quiz.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ folder.id ~ quiz.id) }}">
+
+                                        {% if folder.quizzes.contains(quiz) %}
+                                            <button type="submit" class="btn btn-sm btn-error btn-soft w-24">
+                                                <i class="fa-solid fa-minus"></i> Retirer
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-success btn-soft w-24">
+                                                <i class="fa-solid fa-plus"></i> Ajouter
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </turbo-frame>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="modal-action mt-8">
+                    <a href="{{ path('library_folder_show', {folder: folder.id}) }}" class="btn btn-primary" data-turbo="false">Terminer</a>
+                </div>
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+                <button>Fermer</button>
+            </form>
+        </dialog>
+
+        {# Modale Modifier le dossier #}
+        <dialog id="update_folder_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-pen-to-square text-primary"></i> Modifier le dossier
+                </h3>
+
+                {{ form_start(updateFolderForm, {action: path('library_folder_update', {folder: folder.id})}) }}
+                <div class="flex flex-col gap-4">
+
+                    <div class="form-control w-full">
+                        {{ form_label(updateFolderForm.title) }}
+                        {{ form_widget(updateFolderForm.title) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.title) }}</div>
+                    </div>
+
+                    <div class="form-control w-full">
+                        {{ form_label(updateFolderForm.description) }}
+                        {{ form_widget(updateFolderForm.description) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.description) }}</div>
+                    </div>
+
+                    {% if updateFolderForm.isPublic is defined %}
+                        <div class="form-control w-full mt-2">
+                            <label class="label cursor-pointer justify-start gap-4">
+                                {{ form_widget(updateFolderForm.isPublic) }}
+                                <span class="label-text font-semibold">Rendre ce dossier partagé</span>
+                            </label>
+                            <div class="text-error text-sm mt-1">{{ form_errors(updateFolderForm.isPublic) }}</div>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <div class="modal-action mt-8">
+                    <button type="button" class="btn btn-ghost" onclick="update_folder_modal.close()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Enregistrer les modifications
+                    </button>
+                </div>
+                {{ form_end(updateFolderForm) }}
+            </div>
+
+            <form method="dialog" class="modal-backdrop">
+                <button>Fermer</button>
+            </form>
+        </dialog>
     {% endif %}
 
-    {% if folder.author == app.user and folder.isPublic %}
+    {% if folder.author == app.user and folder.isPublic and folder.parent is null %}
         <dialog id="manage_members_modal" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
                 <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
@@ -291,7 +384,7 @@
                             {% endif %}
                         {% endfor %}
                     {% else %}
-                        <p class="text-sm text-base-content/70 italic">Vous n'avez aucun ami en commun pour partagé ce dossier.</p>
+                        <p class="text-sm text-base-content/70 italic">Vous n'avez aucun ami en commun pour partager ce dossier.</p>
                     {% endif %}
                 </div>
 
