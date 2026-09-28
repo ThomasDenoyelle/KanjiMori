@@ -46,7 +46,7 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        if ($user !== $quiz->getAuthor() && !$quiz->isPublic()) {
+        if (!$quiz->isAccessibleBy($user)) {
             $this->addFlash('error', 'Action non autorisée !');
 
             return $this->redirectToRoute('home');
@@ -410,19 +410,8 @@ final class GameController extends AbstractController
     #[Route('/quiz/{quiz}/study', name: 'game_study', requirements: ['quiz' => '\d+'])]
     public function study(Quiz $quiz, #[CurrentUser] User $user): Response
     {
-        $hasAccess = false;
-        if ($quiz->isPublic() || $quiz->getAuthor() === $user) {
-            $hasAccess = true;
-        } else {
-            foreach ($quiz->getFolders() as $folder) {
-                if ($folder->getAuthor() === $user || $folder->getMembers()->contains($user)) {
-                    $hasAccess = true;
-                    break;
-                }
-            }
-        }
-        if (!$hasAccess) {
-            $this->addFlash('error', 'Vous n\'avez pas accès à ce quiz.');
+        if (!$quiz->isAccessibleBy($user)) {
+            $this->addFlash('error', 'Action non autorisée !');
 
             return $this->redirectToRoute('home');
         }
