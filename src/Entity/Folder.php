@@ -254,4 +254,32 @@ class Folder
 
         return $this;
     }
+
+    public function getRootFolder(): self
+    {
+        $current = $this;
+        while ($current->getParent() !== null) {
+            $current = $current->getParent();
+        }
+
+        return $current;
+    }
+
+    public function isAccessibleBy(User $user): bool
+    {
+        if ($this->getAuthor() === $user) {
+            return true;
+        }
+
+        if ($this->getMembers()->contains($user)) {
+            return true;
+        }
+
+        $root = $this->getRootFolder();
+        if ($root->getAuthor() === $user || $root->getMembers()->contains($user)) {
+            return true;
+        }
+
+        return false;
+    }
 }
