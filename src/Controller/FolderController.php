@@ -147,7 +147,7 @@ final class FolderController extends AbstractController
     {
         $currentFolder = $folderRepository->findFolderWithEverything($folder);
 
-        if ($currentFolder->getAuthor() !== $user && !$currentFolder->getMembers()->contains($user)) {
+        if (!$currentFolder || !$currentFolder->isAccessibleBy($user)) {
             $this->addFlash('error', 'Action non autorisé ou dossier introuvable !');
 
             return $this->redirectToRoute('library_folder_list');
