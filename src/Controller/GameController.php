@@ -252,18 +252,26 @@ final class GameController extends AbstractController
     {
         if (!$quizAttempt) {
             $this->addFlash('error', 'Quiz introuvable !');
-
             return $this->redirectToRoute('home');
         }
 
         if ($user !== $quizAttempt->getAuthor()) {
             $this->addFlash('error', 'Accès refusé !');
-
             return $this->redirectToRoute('home');
+        }
+
+        $failedCount = 0;
+        $failedQuestionIds = [];
+        foreach ($quizAttempt->getAnswerAttempts() as $answer) {
+            if (!$answer->isCorrect() && !in_array($answer->getQuestion()->getId(), $failedQuestionIds, true)) {
+                $failedQuestionIds[] = $answer->getQuestion()->getId();
+                $failedCount++;
+            }
         }
 
         return $this->render('game/result.html.twig', [
             'quizAttempt' => $quizAttempt,
+            'failedCount' => $failedCount,
         ]);
     }
 
@@ -487,5 +495,53 @@ final class GameController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('game_correction', ['answerAttempt' => $answerAttempt->getId()]);
+    }
+
+
+    /**
+     * Make a new quiz attempt with only the questions that were answered incorrectly in a previous attempt.
+     */
+    #[Route('/quiz/retry-errors/{quizAttempt}', name: 'game_retry_errors', requirements: ['quizAttempt' => '\d+'])]
+    public function retryErrors(?QuizAttempt $quizAttempt, #[CurrentUser] User $user, EntityManagerInterface $entityManager): Response
+    {
+        if (!$quizAttempt) {
+            $this->addFlash('error', 'Partie introuvable !');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($user !== $quizAttempt->getAuthor()) {
+            $this->addFlash('error', 'Action non autorisée !');
+            return $this->redirectToRoute('home');
+        }
+
+        $failedQuestionIds = [];
+        foreach ($quizAttempt->getAnswerAttempts() as $answerAttempt) {
+            if (!$answerAttempt->isCorrect()) {
+                $questionId = $answerAttempt->getQuestion()->getId();
+                if (!in_array($questionId, $failedQuestionIds, true)) {
+                    $failedQuestionIds[] = $questionId;
+                }
+            }
+        }
+
+        if (empty($failedQuestionIds)) {
+            $this->addFlash('success', 'Félicitations, vous avez déjà réussi toutes les questions !');
+            return $this->redirectToRoute('game_results', ['quizAttempt' => $quizAttempt->getId()]);
+        }
+
+        $retryAttempt = new QuizAttempt();
+        $retryAttempt->setQuiz($quizAttempt->getQuiz());
+        $retryAttempt->setAuthor($user);
+        $retryAttempt->setMode($quizAttempt->getMode());
+        $retryAttempt->setQuestionOrder($failedQuestionIds);
+        $retryAttempt->setScore(0);
+        $retryAttempt->setMaxScore(count($failedQuestionIds));
+
+        $entityManager->persist($retryAttempt);
+        $entityManager->flush();
+
+        $this->addFlash('info', sprintf('Session de rattrapage lancée sur %d question(s) !', count($failedQuestionIds)));
+
+        return $this->redirectToRoute('game_play', ['quizAttempt' => $retryAttempt->getId()]);
     }
 }
