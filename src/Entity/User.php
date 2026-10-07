@@ -119,6 +119,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $feedbacks;
 
+    /**
+     * @var Collection<int, VocabularySheet>
+     */
+    #[ORM\OneToMany(targetEntity: VocabularySheet::class, mappedBy: 'author', orphanRemoval: true)]
+    private Collection $vocabularySheets;
+
     public function __construct()
     {
         $this->quizAttempts = new ArrayCollection();
@@ -127,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->following = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
+        $this->vocabularySheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -463,6 +470,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($feedback->getAuthor() === $this) {
                 $feedback->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VocabularySheet>
+     */
+    public function getVocabularySheets(): Collection
+    {
+        return $this->vocabularySheets;
+    }
+
+    public function addVocabularySheet(VocabularySheet $vocabularySheet): static
+    {
+        if (!$this->vocabularySheets->contains($vocabularySheet)) {
+            $this->vocabularySheets->add($vocabularySheet);
+            $vocabularySheet->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVocabularySheet(VocabularySheet $vocabularySheet): static
+    {
+        if ($this->vocabularySheets->removeElement($vocabularySheet)) {
+            // set the owning side to null (unless already changed)
+            if ($vocabularySheet->getAuthor() === $this) {
+                $vocabularySheet->setAuthor(null);
             }
         }
 
