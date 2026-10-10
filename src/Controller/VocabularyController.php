@@ -14,10 +14,10 @@ final class VocabularyController extends AbstractController
     #[Route('/my-library/vocabulary', name: 'library_vocabulary_list')]
     public function myVocabulary(#[CurrentUser] User $user, VocabularySheetRepository $vocabularySheetRepository): Response
     {
-        $vocabularySheets = $vocabularySheetRepository->findBy(['user' => $user]);
+        $vocabularySheetList = $vocabularySheetRepository->findBy(['author' => $user]);
 
         return $this->render('vocabulary/library_list.html.twig', [
-            'vocabularySheets' => $vocabularySheets,
+            'vocabularySheetList' => $vocabularySheetList,
         ]);
     }
 }
