@@ -28,7 +28,7 @@ class VocabularySheet
     /**
      * @var Collection<int, VocabularyItem>
      */
-    #[ORM\OneToMany(targetEntity: VocabularyItem::class, mappedBy: 'sheet', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: VocabularyItem::class, mappedBy: 'sheet', cascade: ['persist', 'remove'], orphanRemoval: true,)]
     private Collection $items;
 
     public function __construct()
