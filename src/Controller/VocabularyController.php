@@ -47,4 +47,44 @@ final class VocabularyController extends AbstractController
             'isNew' => true,
         ]);
     }
+
+    #[Route('/my-library/vocabulary/generate', name: 'library_vocabulary_generate', methods: ['POST'])]
+    public function generate(
+        Request $request,
+        ApiService $apiService,
+        EntityManagerInterface $em,
+        #[CurrentUser] User $user
+    ): Response {
+        $text = (string) $request->request->get('japanese_text', '');
+        $title = (string) $request->request->get('sheet_title', 'Nouvelle fiche');
+
+        if (empty(trim($text))) {
+            $this->addFlash('danger', 'Veuillez renseigner un texte en japonais.');
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        $vocabulary = $apiService->analyseText($text);
+
+        $sheet = new VocabularySheet();
+        $sheet->setAuthor($user);
+        $sheet->setTitle($title);
+
+        foreach ($vocabulary as $itemData) {
+            $item = new VocabularyItem();
+            $item->setKanji($itemData['kanji'] ?? '');
+            $item->setReading($itemData['reading'] ?? '');
+            $item->setTranslation($itemData['translation'] ?? '');
+            $sheet->addItem($item);
+        }
+
+        $form = $this->createForm(VocabularySheetType::class, $sheet, [
+            'action' => $this->generateUrl('library_vocabulary_new'),
+        ]);
+
+        return $this->render('vocabulary/form.html.twig', [
+            'form' => $form,
+            'sheet' => $sheet,
+            'isNew' => true,
+        ]);
+    }
 }
