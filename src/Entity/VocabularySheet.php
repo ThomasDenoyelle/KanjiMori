@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VocabularySheetRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class VocabularySheet
 {
     #[ORM\Id]
@@ -105,5 +106,11 @@ class VocabularySheet
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }
