@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ sheet.title ? sheet.title : 'Nouvelle fiche de vocabulaire' }}{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center w-full min-h-[70vh] p-3 sm:p-6 lg:p-8">
+        <div class="w-full max-w-7xl flex flex-col gap-6 bg-base-300 rounded-2xl shadow-sm border border-base-200">
+
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 pb-2">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-pen-to-square text-primary"></i>
+                        <span>{{ isNew ? 'Créer une fiche' : 'Modifier la fiche' }}</span>
+                    </h1>
+                </div>
+            </div>
+
+            {{ form_start(form, {'attr': {'class': 'flex flex-col gap-6 w-full'}}) }}
+
+            <div class="px-6">
+                <div class="card">
+                    <div class="form-control w-full">
+                        <label class="label font-bold text-base pt-0">
+                            <span class="label-text">Titre de la fiche</span>
+                        </label>
+                        {{ form_widget(form.title, {
+                            'attr': {
+                                'class': 'input input-bordered w-full text-base sm:text-lg',
+                                'placeholder': 'Ex: Vocabulaire - Leçon 1'
+                            }
+                        }) }}
+                        <div class="text-error text-sm mt-1">{{ form_errors(form.title) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            {% set prototypeHtml %}
+                <div class="collection-item card bg-base-100 shadow-sm border border-base-200 p-4 transition-all">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center w-full">
+                        <div class="md:col-span-4">
+                            <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Kanji / Mot</label>
+                            {{ form_widget(form.items.vars.prototype.kanji, {
+                                'attr': {'class': 'input input-bordered w-full font-bold text-lg', 'placeholder': 'Mot (ex: 猫)'}
+                            }) }}
+                        </div>
+                        <div class="md:col-span-4">
+                            <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Lecture (Hiragana)</label>
+                            {{ form_widget(form.items.vars.prototype.reading, {
+                                'attr': {'class': 'input input-bordered w-full text-base-content/80', 'placeholder': 'Lecture (ex: ねこ)'}
+                            }) }}
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Traduction</label>
+                            {{ form_widget(form.items.vars.prototype.translation, {
+                                'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Sens (ex: chat)'}
+                            }) }}
+                        </div>
+                        <div class="md:col-span-1 flex justify-end items-center">
+                            <button type="button"
+                                    class="btn btn-ghost btn-circle text-error hover:bg-error/10"
+                                    data-action="form-collection#removeItem"
+                                    title="Supprimer la ligne">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endset %}
+
+            <div class="flex flex-col gap-4 w-full px-6"
+                 data-controller="form-collection"
+                 data-form-collection-prototype-value="{{ prototypeHtml|e('html_attr') }}">
+
+                <div class="flex items-center justify-between px-1">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-primary"></i> Mots de vocabulaire
+                    </h2>
+                </div>
+
+                <div class="hidden md:grid md:grid-cols-12 gap-3 px-6 font-semibold text-sm text-base-content/70">
+                    <div class="md:col-span-4">Kanji / Mot original</div>
+                    <div class="md:col-span-4">Lecture (Hiragana)</div>
+                    <div class="md:col-span-3">Traduction française</div>
+                    <div class="md:col-span-1 text-right">Action</div>
+                </div>
+
+                <div class="flex flex-col gap-3 w-full" data-form-collection-target="collectionContainer">
+                    {% for itemForm in form.items %}
+                        <div class="collection-item card bg-base-100 shadow-sm border border-base-200 p-4 transition-all">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center w-full">
+                                <div class="md:col-span-4">
+                                    <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Kanji / Mot</label>
+                                    {{ form_widget(itemForm.kanji, {
+                                        'attr': {'class': 'input input-bordered w-full font-bold text-lg', 'placeholder': 'Mot (ex: 猫)'}
+                                    }) }}
+                                </div>
+                                <div class="md:col-span-4">
+                                    <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Lecture (Hiragana)</label>
+                                    {{ form_widget(itemForm.reading, {
+                                        'attr': {'class': 'input input-bordered w-full text-base-content/80', 'placeholder': 'Lecture (ex: ねこ)'}
+                                    }) }}
+                                </div>
+                                <div class="md:col-span-3">
+                                    <label class="label md:hidden font-semibold text-xs text-base-content/70 pb-1">Traduction</label>
+                                    {{ form_widget(itemForm.translation, {
+                                        'attr': {'class': 'input input-bordered w-full', 'placeholder': 'Sens (ex: chat)'}
+                                    }) }}
+                                </div>
+                                <div class="md:col-span-1 flex justify-end items-center">
+                                    <button type="button"
+                                            class="btn btn-ghost btn-circle text-error hover:bg-error/10"
+                                            data-action="form-collection#removeItem"
+                                            title="Supprimer la ligne">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button type="button"
+                            class="btn btn-outline btn-primary gap-2 w-full sm:w-auto"
+                            data-action="form-collection#addItem">
+                        <i class="fa-solid fa-plus"></i> Ajouter un mot
+                    </button>
+                </div>
+            </div>
+
+            {% do form.items.setRendered() %}
+
+            <div class="w-full flex flex-col-reverse sm:flex-row justify-end items-center gap-3 p-6">
+                <a href="{{ path('library_vocabulary_list') }}" class="btn btn-ghost w-full sm:w-auto">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-primary px-8 w-full sm:w-auto gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Enregistrer la fiche
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}
