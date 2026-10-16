@@ -110,4 +110,23 @@ final class VocabularyController extends AbstractController
             'isNew' => false,
         ]);
     }
+
+    #[Route('/my-library/vocabulary/{vocabularySheet}/delete', name: 'library_vocabulary_delete', requirements: ['vocabularySheet' => '\d+'], methods: ['POST'])]
+    public function delete(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, VocabularySheet $vocabularySheet): Response
+    {
+        if ($vocabularySheet->getAuthor() !== $user) {
+            $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        if ($this->isCsrfTokenValid('delete_vocabulary_sheet_' . $vocabularySheet->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($vocabularySheet);
+            $entityManager->flush();
+            $this->addFlash("success", "Fiche supprimée avec succès.");
+        } else {
+            $this->addFlash("error", "Erreur lors de la suppression. La fiche n'a pas été supprimée.");
+        }
+
+        return $this->redirectToRoute('library_vocabulary_list');
+    }
 }
