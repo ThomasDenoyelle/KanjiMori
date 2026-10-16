@@ -129,4 +129,17 @@ final class VocabularyController extends AbstractController
 
         return $this->redirectToRoute('library_vocabulary_list');
     }
+
+    #[Route('/my-library/vocabulary/{vocabularySheet}/show', name: 'library_vocabulary_show', requirements: ['vocabularySheet' => '\d+'])]
+    public function show(#[CurrentUser] User $user, VocabularySheet $vocabularySheet): Response
+    {
+        if ($vocabularySheet->getAuthor() !== $user) {
+            $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        return $this->render('vocabulary/show.html.twig', [
+            'sheet' => $vocabularySheet,
+        ]);
+    }
 }
