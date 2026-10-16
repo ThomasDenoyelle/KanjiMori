@@ -5,12 +5,22 @@
 {% block body %}
     <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
         <div class="w-full max-w-7xl flex flex-col gap-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                <div class="flex flex-col gap-2">
+                    <h1 class="text-4xl font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-book text-primary"></i> Mes fiches de vocabulaire
+                    </h1>
+                    <p class="text-base-content/70 text-lg">Créer, modifier, supprimer et consulter les fiches de vocabulaire !</p>
+                </div>
 
-            <div class="flex flex-col gap-2 text-center sm:text-left">
-                <h1 class="text-4xl font-bold flex items-center gap-3 justify-center sm:justify-start">
-                    <i class="fa-solid fa-book text-primary"></i> Mes fiches de vocabulaire
-                </h1>
-                <p class="text-base-content/70 text-lg">Créer, modifier, supprimer et consulter les fiches de vocabulaire !</p>
+                <div class="gap-2 flex">
+                    <a href="{{ path('library_vocabulary_new') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> Créer une fiche
+                    </a>
+                    <button class="btn btn-primary shadow-sm" onclick="new_vocabulary_sheet_modal.showModal()">
+                        <i class="fa-solid fa-file-circle-plus"></i> Générer une fiche
+                    </button>
+                </div>
             </div>
 
             <div class="divider mt-0"></div>
@@ -30,4 +40,33 @@
 
         </div>
     </div>
+
+    <dialog id="new_vocabulary_sheet_modal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-2xl mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-file-circle-plus text-primary"></i> Générer une fiche
+            </h3>
+
+            <form action="{{ path('library_vocabulary_generate') }}" method="POST" data-turbo="false">
+                <div class="mb-3">
+                    <label for="japanese_text" class="block text-sm font-bold text-gray-700">Texte japonais</label>
+                    <textarea id="japanese_text" name="japanese_text" rows="4" required placeholder="Colle ton texte japonais ici..."
+                              class="mt-1 p-2 block w-full rounded-lg border-2 border-base-300 shadow-lg"></textarea>
+                </div>
+                <div class="modal-action mt-8">
+                    <button type="button" class="btn btn-ghost" onclick="new_vocabulary_sheet_modal.close()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Créer
+                    </button>
+                </div>
+
+            </form>
+
+
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+            <button>Fermer</button>
+        </form>
+    </dialog>
 {% endblock %}
