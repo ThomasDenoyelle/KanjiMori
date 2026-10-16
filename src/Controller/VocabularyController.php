@@ -87,4 +87,27 @@ final class VocabularyController extends AbstractController
             'isNew' => true,
         ]);
     }
+
+    #[Route('/my-library/vocabulary/{vocabularySheet}/update', name: 'library_vocabulary_update', requirements: ['vocabularySheet' => '\d+'])]
+    public function update(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, VocabularySheet $vocabularySheet): Response
+    {
+        if ($vocabularySheet->getAuthor() !== $user) {
+            $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        $form = $this->createForm(VocabularySheetType::class, $vocabularySheet);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        return $this->render('vocabulary/form.html.twig', [
+            'form' => $form,
+            'sheet' => $vocabularySheet,
+            'isNew' => false,
+        ]);
+    }
 }
