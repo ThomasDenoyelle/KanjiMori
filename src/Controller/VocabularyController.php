@@ -194,6 +194,8 @@ final class VocabularyController extends AbstractController
         $options->setChroot($this->getParameter('kernel.project_dir') . '/public/fonts');
         $options->setDefaultFont('NotoSansJP-Regular');
         $options->setIsFontSubsettingEnabled(true);
+        $options->setFontDir($cachePath);
+        $options->setFontCache($cachePath);
 
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
