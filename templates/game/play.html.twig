@@ -54,7 +54,13 @@
                     <div class="swap-on flex flex-col justify-center rounded-3xl bg-base-200 shadow-inner border-4 border-primary/20 p-8 w-full h-full">
 
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-2xl font-bold">Ta réponse</h3>
+                            {% if quizAttempt.mode == 'mode_kanji' %}
+                                <h3 class="text-2xl font-bold">{{ currentQuestion.kanji }}</h3>
+                            {% elseif quizAttempt.mode == 'mode_reading' %}
+                                <h3 class="text-2xl font-bold">{{ currentQuestion.reading }}</h3>
+                            {% elseif quizAttempt.mode == 'mode_translation' %}
+                                <h3 class="text-2xl font-bold">{{ currentQuestion.translation }}</h3>
+                            {% endif %}
                             <button class="btn btn-sm btn-ghost btn-circle" type="button" onclick="document.getElementById('flashcard').classList.remove('swap-active')" title="Revoir la question">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"></path></svg>
                             </button>
