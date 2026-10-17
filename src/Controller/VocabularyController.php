@@ -9,6 +9,8 @@ use App\Form\VocabularySheetType;
 use App\Repository\VocabularySheetRepository;
 use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -156,5 +158,46 @@ final class VocabularyController extends AbstractController
         return $this->render('vocabulary/show.html.twig', [
             'vocabularySheet' => $vocabularySheet,
         ]);
+    }
+
+    #[Route('/my-library/vocabulary/{vocabularySheet}/export-pdf', name: 'library_vocabulary_export_pdf', requirements: ['vocabularySheet' => '\d+'])]
+    public function exportPdf(#[CurrentUser] User $user, ?VocabularySheet $vocabularySheet): Response
+    {
+        if (!$vocabularySheet) {
+            $this->addFlash("error", "Fiche non trouvée.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        if ($vocabularySheet->getAuthor() !== $user) {
+            $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        $projectPath = $this->getParameter('kernel.project_dir');
+        $fontPath = $projectPath . '/public/fonts';
+        $cachePath = $projectPath . '/var/dompdf';
+
+        if (!is_dir($cachePath)) {
+            mkdir($cachePath, 0775, true);
+        }
+
+        $html = $this->renderView('vocabulary/export_pdf.html.twig', [
+            'vocabularySheet' => $vocabularySheet,
+            'fontPath' => $fontPath,
+            'cachePath' => $cachePath,
+        ]);
+
+        $options = new Options();
+        $options->setIsRemoteEnabled(true);
+        $options->setChroot($this->getParameter('kernel.project_dir') . '/public/fonts');
+        $options->setDefaultFont('NotoSansJP-Regular');
+        $options->setIsFontSubsettingEnabled(true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return new Response($dompdf->output(), 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="vocabulary_sheet_' . $vocabularySheet->getTitle() . '.pdf"']);
     }
 }
