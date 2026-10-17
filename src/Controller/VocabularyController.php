@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Question;
+use App\Entity\Quiz;
 use App\Entity\User;
 use App\Entity\VocabularyItem;
 use App\Entity\VocabularySheet;
@@ -199,5 +201,41 @@ final class VocabularyController extends AbstractController
         $dompdf->render();
 
         return new Response($dompdf->output(), 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="vocabulary_sheet_' . $vocabularySheet->getTitle() . '.pdf"']);
+    }
+
+    #[Route('/my-library/vocabulary/{vocabularySheet}/convert-to-quiz', name: 'library_vocabulary_convert_to_quiz', requirements: ['vocabularySheet' => '\d+'])]
+    public function convertToQuiz(#[CurrentUser] User $user, ?VocabularySheet $vocabularySheet, EntityManagerInterface $entityManager): Response
+    {
+        if (!$vocabularySheet) {
+            $this->addFlash("error", "Fiche non trouvée.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        if ($vocabularySheet->getAuthor() !== $user) {
+            $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
+        $quiz = new Quiz();
+        $quiz->setAuthor($user);
+        $quiz->setTitle($vocabularySheet->getTitle());
+
+        foreach ($vocabularySheet->getItems() as $item) {
+            if ($item->getKanji() === null && $item->getReading() === null && $item->getTranslation() === null) {
+                $this->addFlash("warning", "La fiche contient des éléments vides. Veuillez les remplir avant de convertir en quiz.");
+                return $this->redirectToRoute('library_vocabulary_list');
+            }
+            $question = new Question();
+            $question->setKanji($item->getKanji());
+            $question->setReading($item->getReading());
+            $question->setTranslation($item->getTranslation());
+            $quiz->addQuestion($question);
+        }
+
+        $entityManager->persist($quiz);
+        $entityManager->flush();
+        $this->addFlash("success", "La fiche a été convertie en quiz avec succès. Vous pouvez maintenant modifier votre quiz.");
+
+        return $this->redirectToRoute('library_quiz_update', ['quiz' => $quiz->getId()]);
     }
 }
