@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ vocabularySheet.title }}</title>
+    <style>
+        @font-face {
+            font-family: 'NotoSansJP';
+            font-weight: normal;
+            font-style: normal;
+            src: url('file://{{ fontPath }}/NotoSansJP-Regular.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'NotoSansJP';
+            font-weight: bold;
+            font-style: normal;
+            src: url('file://{{ fontPath }}/NotoSansJP-Bold.ttf') format('truetype');
+        }
+
+        * {
+            font-family: 'NotoSansJP', sans-serif;
+        }
+
+        body {
+            font-family: 'NotoSansJP', sans-serif;
+            color: #1f2937;
+            font-size: 11pt;
+            line-height: 1.4;
+        }
+
+        @page {
+            margin: 20mm 15mm;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 20pt;
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            color: #0f172a;
+        }
+
+        .metadata {
+            font-size: 9pt;
+            color: #64748b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: bold;
+            font-size: 10pt;
+            text-transform: uppercase;
+            padding: 8px 10px;
+            border-bottom: 1.5px solid #cbd5e1;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .col-index {
+            width: 6%;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 9pt;
+        }
+
+        .col-kanji {
+            width: 32%;
+            font-size: 14pt;
+            font-weight: bold;
+            color: black;
+        }
+
+        .col-reading {
+            width: 32%;
+            font-size: 14pt;
+            color: black;
+            font-weight: bold;
+        }
+
+        .col-translation {
+            width: 32%;
+            font-size: 14pt;
+            color: black;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: -10mm;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 8pt;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 class="title">{{ vocabularySheet.title }}</h1>
+    <div class="metadata">
+        KanjiMori • {{ vocabularySheet.items|length }} mot{{ vocabularySheet.items|length > 1 ? 's' : '' }} • Créée le {{ vocabularySheet.createdAt|date('d/m/Y') }}
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th class="col-index">#</th>
+        <th class="col-kanji">Mot / Kanji</th>
+        <th class="col-reading">Lecture (Hiragana)</th>
+        <th class="col-translation">Traduction</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in vocabularySheet.items %}
+        <tr>
+            <td class="col-index">{{ loop.index }}</td>
+            <td class="col-kanji">{{ item.kanji }}</td>
+            <td class="col-reading">{{ item.reading }}</td>
+            <td class="col-translation">{{ item.translation ?: '-' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="footer">
+    Fiche de révision générée depuis KanjiMori
+</div>
+
+</body>
+</html>
