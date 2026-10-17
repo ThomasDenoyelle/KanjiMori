@@ -78,6 +78,9 @@
                     <a href="{{ path('library_vocabulary_list') }}" class="btn btn-ghost flex-1 sm:flex-none">
                         <i class="fa-solid fa-arrow-left"></i> Retour
                     </a>
+                    <a href="{{ path('library_vocabulary_export_pdf', {vocabularySheet: vocabularySheet.id}) }}" class="btn btn-secondary flex-1 sm:flex-none" data-turbo="false">
+                        <i class="fa-solid fa-file-pdf"></i> Exporter
+                    </a>
                     <a href="{{ path('library_vocabulary_update', {vocabularySheet: vocabularySheet.id}) }}" class="btn btn-primary flex-1 sm:flex-none">
                         <i class="fa-solid fa-pen-to-square"></i> Modifier
                     </a>
