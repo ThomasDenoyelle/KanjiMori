@@ -6,30 +6,24 @@
                 <h2 class="card-title text-2xl mb-1 flex-wrap">{{ vocabularySheet.title|capitalize }}</h2>
             </div>
 
+            <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-2 border-t border-base-content/10">
+                <span class="text-sm">{{ vocabularySheet.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
+            </div>
 
-            <div class="flex items-center gap-3">
-                <a href="{{ path('library_vocabulary_update', {vocabularySheet: vocabularySheet.id}) }}">
-                    <button class="btn btn-sm btn-circle btn-warning" title="Modifier le quiz">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                </a>
+            <div class="card-actions flex grow mt-4">
                 <form method="post" action="{{ path('library_vocabulary_delete', {vocabularySheet: vocabularySheet.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quiz ? Cette action est irréversible.');" class="inline-block">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_vocabulary_sheet_' ~ vocabularySheet.id) }}">
                     <button class="btn btn-sm btn-circle btn-error" title="Supprimer le quiz">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </form>
-
-            </div>
-
-
-            <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-2 border-t border-base-content/10">
-                <span class="text-sm">{{ vocabularySheet.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
-            </div>
-
-            <div class="card-actions flex grow mt-4">
+                <a href="{{ path('library_vocabulary_update', {vocabularySheet: vocabularySheet.id}) }}">
+                    <button class="btn btn-sm btn-circle btn-warning" title="Modifier le quiz">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </a>
                 <a href="{{ path('library_vocabulary_show', {vocabularySheet: vocabularySheet.id}) }}" class="btn btn-success btn-sm grow">
-                    <i class="fa-solid fa-play"></i>
+                    <i class="fa-solid fa-eye"></i>
                     Consulter
                 </a>
             </div>
