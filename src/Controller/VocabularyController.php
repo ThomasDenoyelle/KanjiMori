@@ -89,8 +89,13 @@ final class VocabularyController extends AbstractController
     }
 
     #[Route('/my-library/vocabulary/{vocabularySheet}/update', name: 'library_vocabulary_update', requirements: ['vocabularySheet' => '\d+'])]
-    public function update(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, VocabularySheet $vocabularySheet): Response
+    public function update(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, ?VocabularySheet $vocabularySheet): Response
     {
+        if (!$vocabularySheet) {
+            $this->addFlash("error", "Fiche non trouvée.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
         if ($vocabularySheet->getAuthor() !== $user) {
             $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
             return $this->redirectToRoute('library_vocabulary_list');
@@ -112,8 +117,13 @@ final class VocabularyController extends AbstractController
     }
 
     #[Route('/my-library/vocabulary/{vocabularySheet}/delete', name: 'library_vocabulary_delete', requirements: ['vocabularySheet' => '\d+'], methods: ['POST'])]
-    public function delete(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, VocabularySheet $vocabularySheet): Response
+    public function delete(#[CurrentUser] User $user, Request $request, EntityManagerInterface $entityManager, ?VocabularySheet $vocabularySheet): Response
     {
+        if (!$vocabularySheet) {
+            $this->addFlash("error", "Fiche non trouvée.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
         if ($vocabularySheet->getAuthor() !== $user) {
             $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
             return $this->redirectToRoute('library_vocabulary_list');
@@ -131,15 +141,20 @@ final class VocabularyController extends AbstractController
     }
 
     #[Route('/my-library/vocabulary/{vocabularySheet}/show', name: 'library_vocabulary_show', requirements: ['vocabularySheet' => '\d+'])]
-    public function show(#[CurrentUser] User $user, VocabularySheet $vocabularySheet): Response
+    public function show(#[CurrentUser] User $user, ?VocabularySheet $vocabularySheet): Response
     {
+        if (!$vocabularySheet) {
+            $this->addFlash("error", "Fiche non trouvée.");
+            return $this->redirectToRoute('library_vocabulary_list');
+        }
+
         if ($vocabularySheet->getAuthor() !== $user) {
             $this->addFlash("error", "Vous n'avez pas la permission de modifier cette fiche.");
             return $this->redirectToRoute('library_vocabulary_list');
         }
 
         return $this->render('vocabulary/show.html.twig', [
-            'sheet' => $vocabularySheet,
+            'vocabularySheet' => $vocabularySheet,
         ]);
     }
 }
