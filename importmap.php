@@ -34,4 +34,7 @@ return [
     '@fortawesome/fontawesome-free/css/all.min.css' => ['version' => '7.3.0', 'type' => 'css'],
     'simple-datatables' => ['version' => '10.2.0'],
     'simple-datatables/dist/style.min.css' => ['version' => '10.2.0', 'type' => 'css'],
+    'idb' => ['version' => '8.0.4'],
+    'idb-keyval' => ['version' => '6.3.0'],
+    '@spomky-labs/pwa/helpers' => ['path' => './vendor/spomky-labs/pwa-bundle/assets/src/helpers.js'],
 ];
