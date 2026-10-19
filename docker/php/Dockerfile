@@ -8,13 +8,19 @@ RUN apk add --no-cache \
     libzip-dev \
     bash \
     nodejs \
-    npm
+    npm \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 RUN docker-php-ext-install \
     pdo_pgsql \
     intl \
     zip \
-    opcache
+    opcache \
+    gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
