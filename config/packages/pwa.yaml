@@ -1,5 +1,38 @@
-# Documentation available at https://pwa.spomky-labs.com/
-## Please add the favicons, manifest or serviceworker sections depending on your needs.
 pwa:
-    asset_compiler: false # Default to true. Will change to false in 2.0.0.
-    #image_processor: 'pwa.image_processor.imagick' # Or 'pwa.image_processor.gd'
+    image_processor: 'pwa.image_processor.gd'
+
+    manifest:
+        enabled: true
+        id: '/'
+        name: 'KanjiMori'
+        short_name: 'KanjiMori'
+        description: 'Réviser et apprendre le vocabulaire japonais.'
+        theme_color: '#1d232a'
+        background_color: '#1d232a'
+        display: 'standalone'
+        orientation: 'portrait'
+        start_url: '/'
+        icons:
+            -   src: 'icons/favicon-512x512.png'
+                sizes: [192, 512]
+                type: 'image/png'
+                purpose: 'any'
+            -   src: 'icons/favicon-512x512.png'
+                sizes: [192, 512]
+                type: 'image/png'
+                purpose: 'maskable'
+        screenshots:
+            -   src: 'screenshots/desktop.png'
+                width: 2920
+                height: 1522
+                format: 'image/png'
+                form_factor: 'wide'
+            -   src: 'screenshots/mobile.png'
+                width: 980
+                height: 1442
+                format: 'image/png'
+
+    favicons:
+        enabled: true
+        default:
+            src: 'icons/favicon-512x512.png'
