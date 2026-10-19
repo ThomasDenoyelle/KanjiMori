@@ -36,3 +36,7 @@ pwa:
         enabled: true
         default:
             src: 'icons/favicon-512x512.png'
+
+    serviceworker:
+        enabled: true
+        src: "sw.js"
