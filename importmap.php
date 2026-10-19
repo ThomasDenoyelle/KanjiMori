@@ -37,4 +37,5 @@ return [
     'idb' => ['version' => '8.0.4'],
     'idb-keyval' => ['version' => '6.3.0'],
     '@spomky-labs/pwa/helpers' => ['path' => './vendor/spomky-labs/pwa-bundle/assets/src/helpers.js'],
+    'workbox-window' => ['version' => '7.4.1'],
 ];
