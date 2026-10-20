@@ -40,3 +40,14 @@ pwa:
     serviceworker:
         enabled: true
         src: "sw.js"
+        skip_waiting: true
+        workbox:
+            asset_cache:
+                enabled: true
+            resource_caches:
+                -   match_callback: "({request}) => request.mode === 'navigate' || (request.headers.get('Accept') || '').includes('text/html')"
+                    cache_name: 'pages'
+                    strategy: 'NetworkFirst'
+                    network_timeout: 3
+            offline_fallback:
+                page: 'app_offline'
