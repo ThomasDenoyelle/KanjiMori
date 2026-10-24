@@ -45,9 +45,12 @@ pwa:
             asset_cache:
                 enabled: true
             resource_caches:
-                -   match_callback: "({request}) => request.mode === 'navigate' || (request.headers.get('Accept') || '').includes('text/html')"
+                -   match_callback: "({request, url}) => (request.mode === 'navigate' || (request.headers.get('Accept') || '').includes('text/html')) && !url.pathname.startsWith('/quiz/play/') && !url.pathname.startsWith('/quiz/game/correction/')"
                     cache_name: 'pages'
                     strategy: 'NetworkFirst'
                     network_timeout: 3
             offline_fallback:
                 page: 'app_offline'
+            warm_cache_urls:
+                - '/'
+                - '/my-library'
