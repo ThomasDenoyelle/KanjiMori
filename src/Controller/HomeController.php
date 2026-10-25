@@ -32,4 +32,10 @@ final class HomeController extends AbstractController
             'inProgressAttempts' => $inProgressAttempts,
         ]);
     }
+
+    #[Route('/offline', name: 'app_offline')]
+    public function offline(): Response
+    {
+        return $this->render('home/offline.html.twig');
+    }
 }
