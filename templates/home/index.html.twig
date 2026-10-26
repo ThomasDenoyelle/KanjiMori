@@ -4,21 +4,21 @@
 
 {% block body %}
     <div class="flex flex-col items-center w-full min-h-[70vh] p-4 lg:p-8">
-        <div class="w-full max-w-7xl flex flex-col gap-8">
+        <div class="w-full max-w-7xl flex flex-col gap-4">
 
             <div class="flex flex-col gap-2">
                 <h1 class="text-4xl font-bold">Bonjour, {{ app.user.firstname|capitalize }} !</h1>
-                <p class="text-base-content/70 text-lg">Prêt à continuer ton apprentissage aujourd'hui ?</p>
+                <p class="text-base-content/70 text-lg">Prêt à continuer tes quiz ?</p>
             </div>
 
             <div class="divider"></div>
 
             <div class="flex flex-col gap-4">
-                <div class="flex justify-between items-end">
+                <div class="flex justify-between items-end flex-wrap gap-2">
                     <h2 class="text-2xl font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-primary"></i> Reprendre mes quiz en cours
+                        <i class="fa-solid fa-clock-rotate-left text-primary"></i> Reprendre mes quiz
                     </h2>
-                    <a href="{{ path('library_quiz_list') }}" class="btn btn-sm btn-ghost">Voir tous vos quiz</a>
+                    <a href="{{ path('library_quiz_list') }}" class="btn btn-ghost">Voir tous vos quiz</a>
                 </div>
 
                 {% if inProgressAttempts is empty %}
@@ -37,10 +37,6 @@
                                 <div class="card-body">
                                     <h3 class="card-title text-xl">
                                         {{ quizAttempt.quiz.title }}
-                                        <form method="post" action="{{ path('game_delete', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
-                                            <button class="btn btn-sm btn-error btn-circle"><i class="fa-solid fa-trash-can"></i></button>
-                                        </form>
                                     </h3>
 
                                     <div class="flex justify-between text-sm text-base-content/70 mb-2 mt-1">
@@ -50,7 +46,7 @@
                                         <span>Lancé le {{ quizAttempt.createdAt|date('d/m', 'Europe/Paris') }}</span>
                                     </div>
 
-                                    <div class="flex flex-col gap-1 my-4">
+                                    <div class="flex flex-col gap-1 my-2">
                                         <div class="flex justify-between text-xs font-semibold">
                                             <span>Progression</span>
                                             <span>{{ currentProgress }} / {{ quizAttempt.maxScore }}</span>
@@ -58,8 +54,12 @@
                                         <progress class="progress progress-primary w-full" value="{{ currentProgress }}" max="{{ quizAttempt.maxScore }}"></progress>
                                     </div>
 
-                                    <div class="card-actions justify-end mt-2">
-                                        <a href="{{ path('game_play', {quizAttempt: quizAttempt.id}) }}" class="btn btn-primary w-full">
+                                    <div class="card-actions flex items-center justify-center mt-2">
+                                        <form method="post" action="{{ path('game_delete', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
+                                            <button class="btn btn-error btn-circle"><i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                        <a href="{{ path('game_play', {quizAttempt: quizAttempt.id}) }}" class="btn btn-primary grow">
                                             Continuer <i class="fa-solid fa-arrow-right ml-1"></i>
                                         </a>
                                     </div>
