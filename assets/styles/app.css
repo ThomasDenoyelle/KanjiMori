@@ -66,3 +66,36 @@ table.datatable-table th[aria-sort="descending"]::after {
     content: '↓';
     opacity: 1;
 }
+
+@media (width < 40rem) {
+    .megamenu [popover] {
+        width: 100%;
+        margin: 0;
+    }
+
+    .megamenu [popovertarget] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .megamenu [popovertarget]::before,
+    .megamenu [popovertarget]::after {
+        content: "";
+        display: block;
+        flex: 1;
+        width: auto;
+        height: 1px;
+        box-shadow: none;
+        rotate: 0deg;
+        opacity: 1;
+        background-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+    }
+
+    .megamenu .menu li > a {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+}

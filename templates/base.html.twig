@@ -21,7 +21,6 @@
         <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
-        {{ pwa() }}
     </head>
     <body class="flex flex-col min-h-screen font-nunito">
     <div class="navbar bg-base-200 shadow-sm">
@@ -69,7 +68,7 @@
                 {% if app.user %}
                     <button popovertarget="menu-explorer">Explorer</button>
                     <div id="menu-explorer" popover>
-                        <ul class="menu">
+                        <ul class="menu max-sm:w-full">
                             <li><a href="{{ path('explore_quiz_list') }}"><i class="fa-solid fa-globe"></i> Quiz publics</a></li>
                             <li><a href="{{ path('explore_class_list') }}"><i class="fa-solid fa-users"></i> Classes</a></li>
                             <li><a href="{{ path('user_list') }}"><i class="fa-solid fa-user-group"></i> Utilisateurs</a></li>
@@ -81,7 +80,7 @@
 
                     <button popovertarget="menu-espace">Ma Bibliothèque</button>
                     <div id="menu-espace" popover>
-                        <ul class="menu">
+                        <ul class="menu max-sm:w-full">
                             <li><a href="{{ path('library_quiz_list') }}"><i class="fa-solid fa-book"></i> Mes Quiz</a></li>
                             <li><a href="{{ path('library_folder_list') }}"><i class="fa-solid fa-folder"></i> Mes Dossiers</a></li>
                             <li><a href="{{ path('library_vocabulary_list') }}"><i class="fa-solid fa-book-open"></i> Mes Fiches</a></li>
@@ -89,7 +88,7 @@
                         </ul>
                     </div>
 
-                    <a href="{{ path('library_quiz_new') }}" class="btn btn-primary btn-sm ml-2 mr-2 font-bold shadow-sm">
+                    <a href="{{ path('library_quiz_new') }}" class="btn btn-primary btn-sm p-4 font-bold shadow-sm max-sm:w-full">
                         <i class="fa-solid fa-plus"></i> Créer
                     </a>
                 {% endif %}
