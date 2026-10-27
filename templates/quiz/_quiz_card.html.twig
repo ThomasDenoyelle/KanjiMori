@@ -25,23 +25,6 @@
                     </div>
                 </div>
 
-            {% elseif quiz.author === app.user %}
-
-                <div class="flex items-center gap-3">
-                    <a href="{{ path('library_quiz_update', { quiz: quiz.id }) }}">
-                        <button class="btn btn-sm btn-circle btn-warning" title="Modifier le quiz">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                    </a>
-                    <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quiz ? Cette action est irréversible.');" class="inline-block">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
-                        <button class="btn btn-sm btn-circle btn-error" title="Supprimer le quiz">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </form>
-
-                </div>
-
             {% endif %}
 
             <div class="flex justify-between items-center text-sm text-base-content/60 mt-auto pt-2 border-t border-base-content/10">
@@ -53,7 +36,22 @@
                 <span class="text-sm">{{ quiz.createdAt|date('d/m/Y', 'Europe/Paris') }}</span>
             </div>
 
-            <div class="card-actions flex grow mt-4">
+            <div class="card-actions flex grow flex-nowrap items-end mt-4">
+
+                {% if quiz.author === app.user %}
+                <a href="{{ path('library_quiz_update', { quiz: quiz.id }) }}">
+                    <button class="btn btn-sm btn-circle btn-warning" title="Modifier le quiz">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </a>
+                <form method="post" action="{{ path('library_quiz_delete', {quiz: quiz.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce quiz ? Cette action est irréversible.');" class="inline-block">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
+                    <button class="btn btn-sm btn-circle btn-error" title="Supprimer le quiz">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </form>
+                {% endif %}
+
                 <a href="{{ path('game_study', {quiz: quiz.id}) }}" class="btn btn-sm btn-primary grow">
                     <i class="fa-solid fa-graduation-cap"></i>
                     Étudier
