@@ -55,7 +55,7 @@
                                     </div>
 
                                     <div class="card-actions flex items-center justify-center mt-2">
-                                        <form method="post" action="{{ path('game_delete', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ce quiz et toutes ses questions ?');">
+                                        <form method="post" action="{{ path('game_delete', {quizAttempt: quizAttempt.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer cette tentative ?');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quizAttempt.id) }}">
                                             <button class="btn btn-error btn-circle"><i class="fa-solid fa-trash-can"></i></button>
                                         </form>

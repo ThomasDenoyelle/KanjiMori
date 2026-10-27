@@ -62,7 +62,7 @@
                 </svg>
             </button>
 
-            <div class="megamenu max-sm:megamenu-vertical p-2 border-base-300 mt-2" id="my-megamenu-1" popover>
+            <div class="megamenu max-sm:megamenu-vertical p-2 border-base-300 mt-2 gap-2" id="my-megamenu-1" popover>
                 <span class="megamenu-active"></span>
 
                 {% if app.user %}
@@ -88,7 +88,7 @@
                         </ul>
                     </div>
 
-                    <a href="{{ path('library_quiz_new') }}" class="btn btn-primary btn-sm p-4 font-bold shadow-sm max-sm:w-full">
+                    <a href="{{ path('library_quiz_new') }}" class="btn btn-primary btn-sm font-bold shadow-sm max-sm:w-full">
                         <i class="fa-solid fa-plus"></i> Créer
                     </a>
                 {% endif %}
